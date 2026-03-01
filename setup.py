@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Setup script for C2A-Cortex Integration
+Setup script for C2A Elegant - Constraint-to-Advantage Training
 """
 
 import subprocess
@@ -61,7 +61,7 @@ def create_directories():
 
 def main():
     """Main setup function"""
-    print("🧠 C2A-Cortex Integration Setup")
+    print("🧠 C2A Elegant Setup")
     print("=" * 40)
     
     # Install requirements
@@ -78,7 +78,9 @@ def main():
     
     print("\n🎯 Setup Complete!")
     print("\nTo start training:")
-    print("python c2a_cortex_integrated.py")
+    print("  python c2a_elegant_main.py")
+    print("\nOptional (in extras/):")
+    print("  python extras/c2a_cortex_integrated.py  # Legacy Cortex-style flow")
     print("\n🧠 Ready to turn constraints into advantages!")
 
 if __name__ == "__main__":

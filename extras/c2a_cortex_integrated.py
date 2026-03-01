@@ -25,9 +25,12 @@ except ImportError:
     SCENARIOS_AVAILABLE = False
     print("Warning: constraint_scenarios.py not found. Scenario mode disabled.")
 
-# Add parent directories to path for imports
-sys.path.append(str(Path(__file__).parent.parent / "C2A-AI"))
-sys.path.append(str(Path(__file__).parent.parent / "cortex"))
+# Add sibling repos to path only if they exist (optional)
+_extras_parent = Path(__file__).resolve().parent.parent
+for _sibling in ("C2A-AI", "cortex"):
+    _p = _extras_parent.parent / _sibling
+    if _p.is_dir():
+        sys.path.insert(0, str(_p))
 
 # Import core dependencies
 try:

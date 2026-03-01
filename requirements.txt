@@ -1,10 +1,14 @@
-# Most dependencies you already have from C2A-AI
-# Only install these if missing:
-
+# C2A Elegant - main app (python c2a_elegant_main.py)
+chromadb>=0.4.0
 sentence-transformers>=2.2.0
-# You already have: chromadb, ollama, sqlite3, numpy
+ollama>=0.1.0
+numpy>=1.24.0
 
-# Optional (only if you want other LLM providers):
+# Optional: other LLM providers (llm_client.py)
 # anthropic>=0.3.0
-# openai>=1.0.0  
+# openai>=1.0.0
 # google-generativeai>=0.3.0
+
+# Extras (only if you use those scripts):
+# - extras/ PDF ingestion: pymupdf, pytesseract, Pillow (and Tesseract OCR binary)
+# - extras/c2a_game_physics.py: streamlit, pymunk
