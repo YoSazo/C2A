@@ -4,8 +4,18 @@ Batch Ingestion Script - Text-based PDFs Only
 Automates ingestion of the 7 PDFs that work without OCR
 """
 
-from llm_meta_v2 import LLMMetaEngine
+import importlib.util
 from pathlib import Path
+
+# Load llm-meta-v2 (hyphenated filename) from same directory
+_extras_dir = Path(__file__).resolve().parent
+_spec = importlib.util.spec_from_file_location(
+    "llm_meta_v2",
+    _extras_dir / "llm-meta-v2.py",
+)
+_llm_meta_v2 = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_llm_meta_v2)
+LLMMetaEngine = _llm_meta_v2.LLMMetaEngine
 
 # Initialize the oracle
 print("Initializing LLM Meta Oracle...")
