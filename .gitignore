@@ -1,0 +1,34 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual envs
+.venv/
+venv/
+ENV/
+textual_env/
+
+# Local state / IDE
+desktop_state.json
+session_feedback
+*.save
+
+# Optional: uncomment to ignore memory DB (keep if you want to track it)
+# memory_data/
