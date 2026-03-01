@@ -8,6 +8,9 @@ This is the main orchestrator that brings together:
 - Sophisticated LLM judging (quality evaluation)
 - RLM processing (infinite context)
 - Beautiful UI (inspiring experience)
+- ScaffoldingScheduler (feature retirement on schedule)
+- SpeedTrack (automaticity installation through volume)
+- RealWorldLog (transfer confirmation)
 
 Philosophy: "Elegance is not optional; it is the medium through which transformation occurs."
 """
@@ -37,6 +40,9 @@ from rlm_engine import RLMConstraintAnalyzer, RLMQuery
 from ai_researcher import AIResearcher
 from llm_client import LLMClient, create_client_from_env
 from active_lesson import ActiveLessonManager
+from scaffolding_scheduler import scheduler as scaffolding_scheduler
+from speed_track import SpeedTrack
+from real_world_log import RealWorldLog
 
 # Desktop integration for full immersion
 try:
@@ -109,17 +115,17 @@ class MemorySystem:
             ids=[f"session_{session_data['session_id']}"]
         )
     
-    def _calculate_level(self, total_sessions: int, avg_score: float) -> int:
+    def _calculate_level(self, total_sessions: int, avg_score: float, speed_stats: dict = None) -> int:
         """
-        Calculate mastery level based on sessions and performance.
-        
+        Calculate mastery level based on sessions, performance, and speed gates.
+
         Formula: Level = (Sessions × 0.5) + (Average Score ÷ 10)
-        
-        This means:
-        - ~180-190 sessions to reach Level 100 (with good scores)
-        - Higher scores = faster progression
-        - Consistent training is key
-        
+
+        Speed gates (enforced by ScaffoldingScheduler):
+        - Cannot pass Level 15 without 50% of Speed Track responses under 30s
+        - Cannot pass Level 40 without 50% of Speed Track responses under 15s
+        - Cannot pass Level 70 without 50% of Speed Track responses under 8s
+
         Level milestones:
         - Level 1-10:  Constraints given explicitly
         - Level 11-20: Constraints hidden, must identify
@@ -127,14 +133,17 @@ class MemorySystem:
         - Level 90+:   Grandmaster territory
         - Level 100:   Physics Arena unlocks
         """
-        calculated = int((total_sessions * 0.5) + (avg_score / 10))
-        return max(1, min(100, calculated))
+        raw = int((total_sessions * 0.5) + (avg_score / 10))
+        raw = max(1, min(100, raw))
+        # Apply speed gate — caps level if speed thresholds not yet met
+        effective = scaffolding_scheduler.apply_speed_gate(raw, speed_stats or {})
+        return effective
     
-    def get_user_stats(self) -> Dict:
-        """Get user statistics from memory"""
+    def get_user_stats(self, speed_stats: dict = None) -> Dict:
+        """Get user statistics from memory, incorporating speed gate."""
         try:
             results = self.collection.get(include=["metadatas"])
-            
+
             if not results['metadatas']:
                 return {
                     'total_sessions': 0,
@@ -142,34 +151,29 @@ class MemorySystem:
                     'archetype_performance': {},
                     'average_score': 0
                 }
-            
+
             metadatas = results['metadatas']
-            
-            # Calculate stats
             total_sessions = len(metadatas)
-            
+
             scores = [m.get('session_score', 0) for m in metadatas]
             avg_score = sum(scores) / len(scores) if scores else 0
-            
-            # Calculate level using the proper formula
-            current_level = self._calculate_level(total_sessions, avg_score)
-            
-            # Archetype performance
+
+            # Level calculation now includes speed gate
+            current_level = self._calculate_level(total_sessions, avg_score, speed_stats)
+
             archetype_perf = {}
             for m in metadatas:
                 arch = m.get('archetype', 'unknown')
                 score = m.get('session_score', 0)
-                
                 if arch not in archetype_perf:
                     archetype_perf[arch] = []
                 archetype_perf[arch].append(score)
-            
-            # Average per archetype
+
             archetype_avg = {
-                arch: sum(scores) / len(scores) 
-                for arch, scores in archetype_perf.items()
+                arch: sum(s) / len(s)
+                for arch, s in archetype_perf.items()
             }
-            
+
             return {
                 'total_sessions': total_sessions,
                 'current_level': current_level,
@@ -177,7 +181,7 @@ class MemorySystem:
                 'average_score': avg_score,
                 'recent_sessions': metadatas[-10:] if len(metadatas) >= 10 else metadatas
             }
-            
+
         except Exception as e:
             print(f"Error getting stats: {e}")
             return {
@@ -203,24 +207,29 @@ class C2AElegant:
         self.judge = TransmutationJudge(model=model, llm_client=self.llm)
         # Use simplified RLM (no code generation) - works on 12GB VRAM!
         self.rlm_analyzer = RLMConstraintAnalyzer(
-            self.memory, 
+            self.memory,
             model=model,
             use_simplified=True  # Perfect for RTX 3060
         )
-        
-        # AI Researcher - Opus as Cognitive Scientist
-        # Observes sessions and generates insights about cognition & C2A
+
+        # AI Researcher - Observes sessions, generates cognitive insights
         self.researcher = AIResearcher()
-        
+
         # Active Lesson Manager - Tracks the lesson the user is working on
         self.lesson_manager = ActiveLessonManager()
-        
+
+        # Speed Track - The core automaticity installer
+        # Mandatory above Level 15. 20-50 archetype-tap reps. No LLM.
+        self.speed_track = SpeedTrack()
+
+        # Real-World Log - Transfer confirmation
+        # Available at Level 16 (optional). Mandatory at Level 41.
+        self.real_world_log = RealWorldLog(llm_client=self.llm)
+
         # Desktop Integration - Full Immersion Mode
-        # Updates Hyprland borders, Waybar, notifications, lock screen
         self.desktop = C2ADesktop() if HAS_DESKTOP_INTEGRATION else None
-        
-        # Session ID should continue from where we left off, not reset to 0
-        # Use timestamp-based IDs to avoid collisions
+
+        # Timestamp-based session IDs to avoid collisions
         self.session_id = int(datetime.now().timestamp())
         self.all_sessions = []  # Track all sessions for researcher
     
@@ -280,7 +289,8 @@ class C2AElegant:
         target_transmutations: int,
         active_lesson_prompt: str,
         level: int,
-        user_profile: Dict
+        user_profile: Dict,
+        correction_loop_active: bool = True,
     ) -> tuple:
         """
         Run transmutation phase with 2-round correction opportunities.
@@ -376,32 +386,29 @@ class C2AElegant:
                 else:
                     print(f"{Colors.RED}{velocity_msg_1} (Raw: {raw_score_1} → Final: {final_score_1}){Colors.RESET}")
             
-            # Check if it meets threshold
-            if score_1.overall_score >= threshold:
-                # SUCCESS - use this transmutation
-                print(f"{Colors.GREEN}✓ Threshold met ({score_1.overall_score} >= {threshold}){Colors.RESET}")
-                transmutations.append(trans_1)
-                durations.append(duration_1)
-                individual_scores.append(score_1)
-            else:
-                # FAILED - offer correction opportunity
+            # Always record Round 1
+            transmutations.append(trans_1)
+            durations.append(duration_1)
+            individual_scores.append(score_1)
+
+            # CORRECTION LOOP — only runs if scaffold allows it (Level < 16)
+            if correction_loop_active and score_1.overall_score < threshold:
                 self.ui.show_correction_prompt(
                     score_1.what_missed,
                     score_1.growth_edge,
                     1,
                     2
                 )
-                
-                # ROUND 2: Correction attempt
+
+                # ROUND 2: Correction attempt (60s limit, tighter)
                 trans_2, duration_2 = self.ui.get_transmutation_input(
                     "Retry:",
                     trans_num + 1,
                     target_transmutations,
                     time_limit=60
                 )
-                
+
                 if trans_2.strip():
-                    # Evaluate Round 2
                     print(f"\n{Colors.CYAN}Re-evaluating...{Colors.RESET}")
                     score_2 = self.judge.evaluate_transmutation(
                         trans_2,
@@ -410,46 +417,32 @@ class C2AElegant:
                         level,
                         active_lesson_prompt
                     )
-                    
-                    # VELOCITY GUILLOTINE - Apply time penalty to Round 2
+
                     raw_score_2 = score_2.overall_score
                     final_score_2, velocity_mult_2, velocity_msg_2 = self.judge.apply_velocity_penalty(
                         raw_score_2, duration_2
                     )
                     score_2.overall_score = final_score_2
-                    
-                    # Show pattern tag
-                    self.ui.show_pattern_tag(
-                        score_2.pattern_identified,
-                        score_2.overall_score
-                    )
-                    
-                    # Show velocity feedback for round 2
+
+                    self.ui.show_pattern_tag(score_2.pattern_identified, score_2.overall_score)
+
                     if velocity_mult_2 != 1.0:
-                        if velocity_mult_2 > 1.0:
-                            print(f"{Colors.GREEN}{velocity_msg_2} (Raw: {raw_score_2} → Final: {final_score_2}){Colors.RESET}")
-                        else:
-                            print(f"{Colors.RED}{velocity_msg_2} (Raw: {raw_score_2} → Final: {final_score_2}){Colors.RESET}")
-                    
-                    # Show improvement
+                        color = Colors.GREEN if velocity_mult_2 > 1.0 else Colors.RED
+                        print(f"{color}{velocity_msg_2} (Raw: {raw_score_2} → Final: {final_score_2}){Colors.RESET}")
+
                     self.ui.show_improvement_delta(score_1.overall_score, score_2.overall_score)
-                    
-                    # Use better of the two
+
+                    # Use better of the two rounds
                     if score_2.overall_score > score_1.overall_score:
-                        transmutations.append(trans_2)
-                        durations.append(duration_2)
-                        individual_scores.append(score_2)
+                        transmutations[-1] = trans_2
+                        durations[-1] = duration_2
+                        individual_scores[-1] = score_2
                         print(f"{Colors.GREEN}Using improved version ✓{Colors.RESET}")
                     else:
-                        transmutations.append(trans_1)
-                        durations.append(duration_1)
-                        individual_scores.append(score_1)
                         print(f"{Colors.YELLOW}Using original attempt{Colors.RESET}")
-                else:
-                    # No retry provided - use Round 1
-                    transmutations.append(trans_1)
-                    durations.append(duration_1)
-                    individual_scores.append(score_1)
+            elif not correction_loop_active and score_1.overall_score < threshold:
+                # Level 16+: first attempt stands, brief note only
+                print(f"{Colors.DIM}Score: {score_1.overall_score}. First attempt stands.{Colors.RESET}")
         
         return transmutations, durations, individual_scores
     
@@ -463,58 +456,85 @@ class C2AElegant:
     def main_menu(self):
         """Main menu loop"""
         while True:
-            # Get user stats
-            stats = self.memory.get_user_stats()
+            # Get speed stats for level gate
+            speed_stats = self.speed_track.get_stats_dict()
+            stats = self.memory.get_user_stats(speed_stats=speed_stats)
             current_level = stats['current_level']
             total_sessions = stats['total_sessions']
-            
-            # Determine current training phase
-            if current_level <= 10:
-                phase = "Phase 1: Transmutation"
-            elif current_level <= 30:
-                phase = "Phase 2: Detection"
-            elif current_level <= 50:
-                phase = "Phase 3: Personal Domain"
-            else:
-                phase = "Phase 4: Real Life"
-            
+
+            # Get scaffolding state for this level
+            scaffold = scaffolding_scheduler.get_feature_state(current_level)
+            phase_info = scaffolding_scheduler.describe_current_phase(current_level)
+
             # Build status line
-            status = f"Level {current_level}/100  |  {total_sessions} Sessions  |  {phase}"
-            
-            # Build menu options
+            status = (
+                f"Level {current_level}/100  |  {total_sessions} Sessions  |  "
+                f"Phase {phase_info['phase']}: {phase_info['name']}"
+            )
+
+            # Real-world log today status
+            rwl_today = self.real_world_log.get_today_status()
+            rwl_label = "📓 Real-World Log"
+            if scaffold.real_world_log_mandatory:
+                done = rwl_today['entries_logged']
+                rwl_label += f" ({'✓' if rwl_today['is_complete'] else f'{done}/3'})"
+
+            # Build menu options — gated by scaffolding state
             options = [
                 ("1", "Begin Training Session", True),
-                ("2", "⚡ Flash Drill (10s Reflex Training)", True),
-                ("3", "Deep Analysis (RLM)", total_sessions >= 5),
-                ("4", "View Progress", total_sessions > 0),
-                ("5", "Research Dashboard (AI Insights)", total_sessions >= 3),
-                ("6", "Archetype Gallery", True),
-                ("7", "Set Your Domain", True),
-                ("8", "Physics Arena (Level 100 Unlock)", current_level >= 100),
-                ("9", "Exit", True)
+                ("2", "⚡ Speed Track (Automaticity Drill)",
+                       scaffold.speed_track_active),
+                ("3", "⚡ Flash Drill (Legacy 10s Reflex)", True),
+                ("4", rwl_label,
+                       scaffold.real_world_log_available),
+                ("5", "Deep Analysis (RLM)", total_sessions >= 5),
+                ("6", "View Progress", total_sessions > 0),
+                ("7", "Research Dashboard (AI Insights)", total_sessions >= 3),
+                ("8", "Archetype Gallery", True),
+                ("9", "Set Your Domain", True),
+                ("0", "Physics Arena (Level 100 Unlock)", current_level >= 100),
+                ("q", "Exit", True),
             ]
-            
+
             self.ui.show_menu("C2A ELEGANT", options, status)
-            
-            choice = input(f"\001{Colors.BRIGHT_WHITE}\002❯ \001{Colors.RESET}\002").strip()
-            
+
+            # Show next retirement event as a subtle reminder
+            next_event = scaffolding_scheduler.get_next_retirement(current_level)
+            if next_event:
+                print(f"{Colors.DIM}  Next: Level {next_event['level']} — {next_event['event']}{Colors.RESET}")
+
+            choice = input(f"\001{Colors.BRIGHT_WHITE}\002❯ \001{Colors.RESET}\002").strip().lower()
+
             if choice == "1":
                 self.training_session()
-            elif choice == "2":
+            elif choice == "2" and scaffold.speed_track_active:
+                self.speed_track.run_session(level=current_level)
+                input(f"\n{Colors.DIM}Press Enter to continue...{Colors.RESET}")
+            elif choice == "3":
                 self.flash_drill()
-            elif choice == "3" and total_sessions >= 5:
+            elif choice == "4" and scaffold.real_world_log_available:
+                self.real_world_log.run_daily_log(level=current_level)
+                # Trigger weekly review if due
+                if self.real_world_log.should_run_weekly_review():
+                    do_review = input(
+                        f"\n{Colors.GOLD}Weekly review available. Run now? (y/n): {Colors.RESET}"
+                    ).strip().lower()
+                    if do_review == 'y':
+                        self.real_world_log.run_weekly_review(level=current_level)
+                input(f"\n{Colors.DIM}Press Enter to continue...{Colors.RESET}")
+            elif choice == "5" and total_sessions >= 5:
                 self.deep_analysis()
-            elif choice == "4" and total_sessions > 0:
+            elif choice == "6" and total_sessions > 0:
                 self.view_progress()
-            elif choice == "5" and total_sessions >= 3:
+            elif choice == "7" and total_sessions >= 3:
                 self.research_dashboard()
-            elif choice == "6":
+            elif choice == "8":
                 self.show_archetype_gallery()
-            elif choice == "7":
-                self.set_domain_menu()
-            elif choice == "8" and current_level >= 100:
-                self.physics_arena()
             elif choice == "9":
+                self.set_domain_menu()
+            elif choice == "0" and current_level >= 100:
+                self.physics_arena()
+            elif choice == "q":
                 self.exit_gracefully()
                 break
             else:
@@ -645,8 +665,12 @@ class C2AElegant:
     def training_session(self):
         """Run a complete training session"""
         
+        # Get speed stats + scaffolding state for this session
+        speed_stats = self.speed_track.get_stats_dict()
+        stats = self.memory.get_user_stats(speed_stats=speed_stats)
+        scaffold = scaffolding_scheduler.get_feature_state(stats['current_level'])
+
         # Get user profile for personalization
-        stats = self.memory.get_user_stats()
         user_profile = {
             'domain': self._get_user_domain(),
             'total_sessions': stats['total_sessions'],
@@ -734,8 +758,9 @@ class C2AElegant:
         threshold = self.get_adaptive_threshold(level, archetype.name, stats)
         
         # ═══════════════════════════════════════════════════════════════
-        # NEW: TWO-ROUND CORRECTION LOOP
-        # Immediate feedback with retry opportunity for below-threshold scores
+        # CORRECTION LOOP — retired at Level 16 by ScaffoldingScheduler
+        # Below Level 16: 2 rounds, retry on fail
+        # Level 16+: first attempt stands, no retries
         # ═══════════════════════════════════════════════════════════════
         transmutations, durations, individual_scores = self.run_transmutation_with_correction(
             scenario=scenario,
@@ -743,15 +768,20 @@ class C2AElegant:
             target_transmutations=target_transmutations,
             active_lesson_prompt=active_lesson_prompt,
             level=level,
-            user_profile=user_profile
+            user_profile=user_profile,
+            correction_loop_active=scaffold.correction_loop_active,
         )
-        
-        # Get meta-reflection
-        print(f"\n{Colors.BRIGHT_CYAN}{'─' * 60}{Colors.RESET}")
-        print(f"{Colors.BRIGHT_CYAN}Meta-Cognitive Reflection{Colors.RESET}")
-        print(f"{Colors.BRIGHT_CYAN}{'─' * 60}{Colors.RESET}\n")
-        print(f"{Colors.CYAN}How did your thinking evolve during this session?{Colors.RESET}")
-        meta_reflection = input(f"\001{Colors.BRIGHT_WHITE}\002❯ \001{Colors.RESET}\002")
+
+        # ═══════════════════════════════════════════════════════════════
+        # META-REFLECTION — retired at Level 20 by ScaffoldingScheduler
+        # ═══════════════════════════════════════════════════════════════
+        meta_reflection = ""
+        if scaffold.meta_reflection_active:
+            print(f"\n{Colors.BRIGHT_CYAN}{'─' * 60}{Colors.RESET}")
+            print(f"{Colors.BRIGHT_CYAN}Meta-Cognitive Reflection{Colors.RESET}")
+            print(f"{Colors.BRIGHT_CYAN}{'─' * 60}{Colors.RESET}\n")
+            print(f"{Colors.CYAN}How did your thinking evolve during this session?{Colors.RESET}")
+            meta_reflection = input(f"\001{Colors.BRIGHT_WHITE}\002❯ \001{Colors.RESET}\002")
         
         # Build session evaluation from individual scores (already evaluated in correction loop)
         print(f"\n{Colors.CYAN}Synthesizing session analysis...{Colors.RESET}")
@@ -803,8 +833,8 @@ class C2AElegant:
         # Level progress - calculate actual progression
         new_total_sessions = stats['total_sessions'] + 1
         new_avg_score = ((stats['average_score'] * stats['total_sessions']) + evaluation.session_score) / new_total_sessions
-        new_level = self.memory._calculate_level(new_total_sessions, new_avg_score)
-        
+        new_level = self.memory._calculate_level(new_total_sessions, new_avg_score, speed_stats)
+
         # Calculate progress toward next level
         # Sessions needed for level 100 with current avg score: solve for sessions in formula
         # 100 = (sessions * 0.5) + (avg_score / 10)
@@ -820,13 +850,40 @@ class C2AElegant:
             print(f"\n{Colors.BRIGHT_GREEN}{'═' * 60}{Colors.RESET}")
             print(f"{Colors.BRIGHT_GREEN}⬆️  LEVEL UP! {level} → {new_level}{Colors.RESET}")
             print(f"{Colors.BRIGHT_GREEN}{'═' * 60}{Colors.RESET}")
-        
+
+            # Notify if a speed gate is now active
+            gate_status = scaffolding_scheduler.check_speed_gate(new_level, speed_stats)
+            if not gate_status.passed:
+                print(f"\n{Colors.YELLOW}⚠ Speed gate active: {gate_status.message}{Colors.RESET}")
+                print(f"{Colors.DIM}  Complete Speed Track sessions to unlock further progression.{Colors.RESET}")
+
+        # ═══════════════════════════════════════════════════════════════
+        # AI RESEARCHER — frequency controlled by ScaffoldingScheduler
+        # Level 0-19: every session | Level 20-40: every 10 | Level 41+: every 20
+        # ═══════════════════════════════════════════════════════════════
+        new_total = stats['total_sessions'] + 1
+        if scaffolding_scheduler.should_run_researcher(new_level, new_total):
+            try:
+                session_data_for_researcher = {
+                    'session_id': self.session_id,
+                    'level': level,
+                    'archetype': archetype.name,
+                    'session_score': evaluation.session_score,
+                    'transmutations': transmutations,
+                    'meta_reflection': meta_reflection,
+                }
+                self.researcher.observe_session(
+                    session_data_for_researcher,
+                    self.all_sessions,
+                    user_profile
+                )
+            except Exception:
+                pass  # Researcher failure never blocks training
+
         # ═══════════════════════════════════════════════════════════════
         # DESKTOP INTEGRATION: Session End
-        # Return to neutral borders, update waybar, send notifications
         # ═══════════════════════════════════════════════════════════════
         if self.desktop:
-            # Check if lesson was mastered this session
             lesson_mastered = False
             lesson_title = None
             if self.lesson_manager.has_active_lesson():
@@ -834,11 +891,14 @@ class C2AElegant:
                 if lesson and lesson.demonstrated:
                     lesson_mastered = True
                     lesson_title = lesson.title
-            
-            # Check for breakthrough (high score + pattern recognition)
+
+            # Fix: patterns_identified does not exist on SessionEvaluation
+            # Use archetype_feedback keys instead
             breakthrough = evaluation.session_score >= 85
-            pattern = evaluation.patterns_identified[0] if evaluation.patterns_identified else None
-            
+            pattern = None
+            if individual_scores:
+                pattern = individual_scores[-1].pattern_identified
+
             self.desktop.on_session_end(
                 score=evaluation.session_score,
                 archetype=archetype.name.lower(),
@@ -849,7 +909,7 @@ class C2AElegant:
                 breakthrough=breakthrough,
                 pattern=pattern
             )
-        
+
         input(f"\n{Colors.DIM}Press Enter to continue...{Colors.RESET}")
     
     def _get_user_domain(self) -> str:
@@ -1558,10 +1618,25 @@ Respond in JSON:
             # Record the attempt
             result = self.lesson_manager.record_attempt(
                 evaluation.session_score,
-                any_lesson_applied
+                any_lesson_applied,
+                level=level,
             )
-            
-            if result['status'] == 'mastered':
+
+            if result['status'] == 'expired':
+                print(f"\n{Colors.DIM}{'─' * 60}{Colors.RESET}")
+                print(f"{Colors.DIM}{result.get('message', 'Lesson retired. Next incoming.')}{Colors.RESET}")
+                print(f"{Colors.DIM}{'─' * 60}{Colors.RESET}")
+                # Assign new lesson from this session's growth edge
+                if best:
+                    self.lesson_manager.create_lesson_from_feedback(
+                        self.session_id,
+                        best.growth_edge,
+                        best.pattern_identified,
+                        scenario.archetype,
+                        evaluation.session_score
+                    )
+
+            elif result['status'] == 'mastered':
                 # Show mastery message
                 print(f"\n{Colors.BRIGHT_GREEN}{'═' * 60}{Colors.RESET}")
                 print(f"{Colors.BRIGHT_GREEN}🎓 LESSON MASTERED: {result['lesson_title']}{Colors.RESET}")

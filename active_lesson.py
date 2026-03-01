@@ -224,36 +224,70 @@ class ActiveLessonManager:
         else:
             return "Am I truly transmuting, or just coping with this constraint?"
     
-    def record_attempt(self, score: int, lesson_applied: bool) -> Dict:
+    def record_attempt(self, score: int, lesson_applied: bool, level: int = 0) -> Dict:
         """
         Record an attempt at the current lesson.
-        
+
+        Mastery condition: score >= MASTERY_THRESHOLD AND lesson_applied.
+
+        Expiry condition (Level 41+, from ScaffoldingScheduler):
+        At Level 41+, lessons auto-retire after 5 attempts regardless of mastery.
+        The system trusts the reps are doing the install even when the lesson
+        isn't consciously applied. Keeping the conscious layer engaged indefinitely
+        is counterproductive at this stage.
+
         Args:
             score: The session score
             lesson_applied: Whether the judge determined the lesson was applied
-            
+            level: Current user level (used to determine expiry policy)
+
         Returns:
-            Dict with status: 'no_lesson', 'continue', 'mastered'
+            Dict with status: 'no_lesson', 'continue', 'mastered', 'expired'
         """
         if not self.current_lesson:
             return {'status': 'no_lesson'}
-        
+
         self.current_lesson.attempts += 1
-        
+
         if score > self.current_lesson.best_score_while_active:
             self.current_lesson.best_score_while_active = score
-        
+
         # Check for mastery: score >= threshold AND lesson was applied
         if score >= self.MASTERY_THRESHOLD and lesson_applied:
             self.current_lesson.demonstrated = True
             self.current_lesson.demonstrated_at = datetime.now().isoformat()
+            mastered_attempts = self.current_lesson.attempts
+            self._archive_lesson(self.current_lesson)
+            self.current_lesson = None
             self._save()
             return {
                 'status': 'mastered',
-                'attempts': self.current_lesson.attempts,
-                'lesson_title': self.current_lesson.title
+                'attempts': mastered_attempts,
+                'lesson_title': self.lesson_history[-1]['title'] if self.lesson_history else ''
             }
-        
+
+        # Expiry policy (ScaffoldingScheduler: Level 41+ → max 5 attempts)
+        # Import here to avoid circular imports at module level
+        try:
+            from scaffolding_scheduler import scheduler as scaffolding_scheduler
+            max_attempts = scaffolding_scheduler.get_feature_state(level).active_lesson_max_attempts
+        except Exception:
+            max_attempts = None
+
+        if max_attempts is not None and self.current_lesson.attempts >= max_attempts:
+            # Auto-retire — system trusts the reps
+            self._archive_lesson(self.current_lesson)
+            self.current_lesson = None
+            self._save()
+            return {
+                'status': 'expired',
+                'attempts': max_attempts,
+                'message': (
+                    f"Lesson retired after {max_attempts} attempts. "
+                    "The reps are doing the install. Next lesson incoming."
+                )
+            }
+
         self._save()
         return {
             'status': 'continue',
