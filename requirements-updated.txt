@@ -1,0 +1,20 @@
+# LLM Meta - Requirements
+
+# Core dependencies
+ollama
+chromadb
+
+# PDF support
+pymupdf
+
+# OCR support (for scanned PDFs)
+pytesseract
+Pillow
+
+# Note: You also need to install Tesseract OCR binary:
+# Windows: https://github.com/UB-Mannheim/tesseract/wiki
+# - Download installer from: https://github.com/UB-Mannheim/tesseract/wiki
+# - Add to PATH: C:\Program Files\Tesseract-OCR
+# 
+# Mac: brew install tesseract
+# Linux: sudo apt-get install tesseract-ocr
