@@ -41,6 +41,7 @@ from ai_researcher import AIResearcher
 from llm_client import LLMClient, create_client_from_env
 from active_lesson import ActiveLessonManager
 from scaffolding_scheduler import scheduler as scaffolding_scheduler
+from progression import calculate_level
 from speed_track import SpeedTrack
 from real_world_log import RealWorldLog
 
@@ -64,23 +65,34 @@ class MemorySystem:
         self.initialize()
     
     def initialize(self):
-        """Initialize ChromaDB and embeddings"""
-        try:
-            data_dir = Path(__file__).parent / "memory_data"
-            data_dir.mkdir(exist_ok=True)
-            
-            self.client = chromadb.PersistentClient(path=str(data_dir))
-            self.collection = self.client.get_or_create_collection(
+        """Initialize ChromaDB and embeddings with safe fallback storage."""
+        data_dir = Path(__file__).parent / "memory_data"
+        fallback_dir = Path(__file__).parent / "memory_data_recovery"
+
+        def _connect(path: Path):
+            path.mkdir(exist_ok=True)
+            client = chromadb.PersistentClient(path=str(path))
+            collection = client.get_or_create_collection(
                 name=self.collection_name,
-                metadata={"description": "C2A Elegant training sessions"}
+                metadata={"description": "C2A Elegant training sessions"},
             )
-            
-            self.embedder = SentenceTransformer('all-MiniLM-L6-v2')
-            
-        except Exception as e:
-            print(f"Memory initialization error: {e}")
-            raise
-    
+            return client, collection
+
+        try:
+            self.client, self.collection = _connect(data_dir)
+            self.storage_path = data_dir
+        except BaseException as primary_error:
+            print(f"WARNING: memory init failed at '{data_dir}': {primary_error}")
+            print(f"WARNING: retrying with recovery path '{fallback_dir}'")
+            try:
+                self.client, self.collection = _connect(fallback_dir)
+                self.storage_path = fallback_dir
+            except BaseException as fallback_error:
+                print(f"Memory initialization error: {fallback_error}")
+                raise
+
+        self.embedder = SentenceTransformer("all-MiniLM-L6-v2")
+
     def store_session(self, session_data: Dict):
         """Store training session in memory"""
         
@@ -116,28 +128,13 @@ class MemorySystem:
         )
     
     def _calculate_level(self, total_sessions: int, avg_score: float, speed_stats: dict = None) -> int:
-        """
-        Calculate mastery level based on sessions, performance, and speed gates.
-
-        Formula: Level = (Sessions × 0.5) + (Average Score ÷ 10)
-
-        Speed gates (enforced by ScaffoldingScheduler):
-        - Cannot pass Level 15 without 50% of Speed Track responses under 30s
-        - Cannot pass Level 40 without 50% of Speed Track responses under 15s
-        - Cannot pass Level 70 without 50% of Speed Track responses under 8s
-
-        Level milestones:
-        - Level 1-10:  Constraints given explicitly
-        - Level 11-20: Constraints hidden, must identify
-        - Level 21+:   Personal mode unlocks (force_personal)
-        - Level 90+:   Grandmaster territory
-        - Level 100:   Physics Arena unlocks
-        """
-        raw = int((total_sessions * 0.5) + (avg_score / 10))
-        raw = max(1, min(100, raw))
-        # Apply speed gate — caps level if speed thresholds not yet met
-        effective = scaffolding_scheduler.apply_speed_gate(raw, speed_stats or {})
-        return effective
+        """Calculate mastery level based on sessions, score, and speed gates."""
+        return calculate_level(
+            total_sessions=total_sessions,
+            avg_score=avg_score,
+            scheduler=scaffolding_scheduler,
+            speed_stats=speed_stats,
+        )
     
     def get_user_stats(self, speed_stats: dict = None) -> Dict:
         """Get user statistics from memory, incorporating speed gate."""
@@ -195,20 +192,20 @@ class MemorySystem:
 class C2AElegant:
     """The main C2A Elegant training system"""
 
-    def __init__(self, model: str = "qwen2.5:32b", llm_client: Optional[LLMClient] = None):
-        self.model = model
+    def __init__(self, model: Optional[str] = None, llm_client: Optional[LLMClient] = None):
         self.ui = ElegantUI()
         self.memory = MemorySystem()
 
         # Unified LLM client (local Ollama / Anthropic / NVIDIA NIM)
         self.llm = llm_client or create_client_from_env()
+        self.model = model or getattr(self.llm, "model", None) or "qwen2.5:14b"
 
-        self.scenario_engine = LLMScenarioEngine(model=model, llm_client=self.llm)
-        self.judge = TransmutationJudge(model=model, llm_client=self.llm)
+        self.scenario_engine = LLMScenarioEngine(model=self.model, llm_client=self.llm)
+        self.judge = TransmutationJudge(model=self.model, llm_client=self.llm)
         # Use simplified RLM (no code generation) - works on 12GB VRAM!
         self.rlm_analyzer = RLMConstraintAnalyzer(
             self.memory,
-            model=model,
+            model=self.model,
             use_simplified=True  # Perfect for RTX 3060
         )
 
@@ -2309,7 +2306,7 @@ def main():
     print(f"{Colors.CYAN}Initializing C2A Elegant...{Colors.RESET}")
     
     try:
-        system = C2AElegant(model="qwen2.5:32b")
+        system = C2AElegant()
         system.run()
     except KeyboardInterrupt:
         print(f"\n\n{Colors.YELLOW}Session interrupted. Your progress is saved.{Colors.RESET}")

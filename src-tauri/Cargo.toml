@@ -1,0 +1,21 @@
+[package]
+name = "c2a-desktop"
+version = "0.1.0"
+description = "C2A Training Grounds Desktop"
+authors = ["C2A"]
+license = "MIT"
+repository = ""
+edition = "2021"
+rust-version = "1.70"
+
+[build-dependencies]
+tauri-build = { version = "1", features = [] }
+
+[dependencies]
+tauri = { version = "1", features = ["shell-open", "dialog"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]

@@ -1,40 +1,53 @@
-# C2A — Constraint-to-Advantage Training
+﻿# C2A - Constraint-to-Advantage Training
 
-Cognitive training system that turns constraints into advantages, with memory-enhanced coaching and a terminal UI.
+Cognitive training system that turns constraints into advantages, with memory-enhanced coaching and a desktop app.
 
 ## Quick start
 
 ```bash
 pip install -r requirements.txt
-python setup.py          # optional: check deps and Ollama
-python c2a_elegant_main.py
+python setup.py
+python C2A.py
 ```
 
-## What’s in the repo
+## Project layout
 
 | Path | Purpose |
 |------|--------|
-| `c2a_elegant_main.py` | **Main entry** — training flow, memory, RLM, lessons |
-| `elegant_ui.py` | Terminal UI (colors, prompts, layout) |
-| `c2a_desktop.py` | Optional desktop integration (Waybar, borders, wallpaper) |
-| `constraint_archetypes.py` | Five constraint archetypes (scarcity, velocity, etc.) |
-| `llm_scenario_engine.py` | LLM-generated scenarios |
-| `llm_transmutation_judge.py` | Scoring and feedback |
-| `llm_client.py` | LLM backend (Ollama, Anthropic, OpenAI, etc.) |
-| `rlm_engine.py` | RLM analysis and safe execution |
-| `active_lesson.py` | Active lesson and growth-edge tracking |
-| `ai_researcher.py` | Session notes and research observations |
-| `extras/` | Legacy/optional: Cortex flow, physics game, PDF ingestion, tests |
+| `C2A.py` | Stable launcher entry (web backend) |
+| `c2a_runtime/` | Core runtime files that actually power C2A |
+| `c2a_runtime/C2A.py` | Main runtime server implementation |
+| `ui/c2a_training.html` | Active Training Grounds UI |
+| `ui/inspiration/` | Inspiration/reference UI files |
+| `src-tauri/` | Tauri desktop wrapper |
+| `extras/` | Optional scripts and smoke tests |
+| `docs/` | Conversation/history notes |
+
+If you want one folder to point another LLM at, use: `c2a_runtime/`.
 
 ## Requirements
 
-- **Python 3.10+**
-- **Ollama** (recommended): [ollama.ai](https://ollama.ai), then e.g. `ollama pull mistral`
-- See `requirements.txt` for pip packages; `requirements_elegant.txt` and `requirements-updated.txt` are legacy variants.
+- Python 3.10+
+- Ollama (recommended): [ollama.ai](https://ollama.ai)
+- A local model such as `qwen2.5:14b` or `mistral`
 
 ## Commands
 
-- `python c2a_elegant_main.py` — start training
-- `python extras/test_elegant.py` — run component tests
+- `python C2A.py` - start C2A Training Grounds (default)
+- `python extras/test_elegant.py` - run smoke tests
+- `npm run tauri:dev` - run desktop app
+- `npm run tauri:build` - build installers
 
-*“The essence of intelligence is turning constraints into advantages.”*
+## Desktop app (Tauri)
+
+Prerequisites:
+- Python 3.10+ (with `py` launcher)
+- Node.js 18+
+- Rust toolchain (`rustup`, `cargo`, `rustc`)
+- Microsoft C++ Build Tools (for Rust on Windows)
+
+Installer output:
+- `src-tauri/target/release/bundle/msi/*.msi`
+- `src-tauri/target/release/bundle/nsis/*.exe`
+
+"The essence of intelligence is turning constraints into advantages."

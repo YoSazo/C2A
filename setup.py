@@ -1,87 +1,80 @@
 #!/usr/bin/env python3
-"""
-Setup script for C2A Elegant - Constraint-to-Advantage Training
-"""
+"""Setup script for C2A Elegant."""
 
 import subprocess
 import sys
-import os
 from pathlib import Path
 
-def install_requirements():
-    """Install only new required packages"""
-    print("📦 Checking for missing packages...")
-    
-    # Only install sentence-transformers if missing
+
+def install_requirements() -> bool:
+    """Install missing runtime dependencies."""
+    print("[INFO] Checking for missing packages...")
+
     try:
-        import sentence_transformers
-        print("✓ sentence-transformers already installed")
+        import sentence_transformers  # noqa: F401
+        print("[OK] sentence-transformers already installed")
     except ImportError:
-        print("📥 Installing sentence-transformers...")
+        print("[INFO] Installing sentence-transformers...")
         try:
             subprocess.check_call([sys.executable, "-m", "pip", "install", "sentence-transformers>=2.2.0"])
-            print("✓ sentence-transformers installed")
+            print("[OK] sentence-transformers installed")
         except subprocess.CalledProcessError:
-            print("❌ Failed to install sentence-transformers")
+            print("[FAIL] Failed to install sentence-transformers")
             return False
-    
-    print("✓ All dependencies ready")
+
+    print("[OK] Dependency check complete")
     return True
 
-def check_ollama():
-    """Check if Ollama is available"""
-    print("🤖 Checking Ollama installation...")
+
+def check_ollama() -> bool:
+    """Check whether Ollama is installed and has at least one preferred model."""
+    print("[INFO] Checking Ollama installation...")
     try:
         result = subprocess.run(["ollama", "--version"], capture_output=True, text=True)
-        if result.returncode == 0:
-            print("✓ Ollama found")
-            
-            # Check if mistral model is available
-            result = subprocess.run(["ollama", "list"], capture_output=True, text=True)
-            if "mistral" in result.stdout:
-                print("✓ Mistral model available")
-            else:
-                print("📥 Downloading Mistral model...")
-                subprocess.run(["ollama", "pull", "mistral"])
-                print("✓ Mistral model downloaded")
-            return True
-        else:
-            print("❌ Ollama not found. Please install from https://ollama.ai")
+        if result.returncode != 0:
+            print("[FAIL] Ollama not found. Install from https://ollama.ai")
             return False
+
+        print("[OK] Ollama found")
+        result = subprocess.run(["ollama", "list"], capture_output=True, text=True)
+        if "qwen2.5" in result.stdout or "mistral" in result.stdout:
+            print("[OK] Found an installed local model")
+            return True
+
+        print("[INFO] No preferred model found. Pulling qwen2.5:14b...")
+        subprocess.run(["ollama", "pull", "qwen2.5:14b"])
+        print("[OK] Model pull attempted")
+        return True
     except FileNotFoundError:
-        print("❌ Ollama not found. Please install from https://ollama.ai")
+        print("[FAIL] Ollama not found. Install from https://ollama.ai")
         return False
 
-def create_directories():
-    """Create necessary directories"""
-    print("📁 Creating directories...")
+
+def create_directories() -> None:
+    """Create required directories."""
+    print("[INFO] Creating directories...")
     memory_dir = Path(__file__).parent / "memory_data"
     memory_dir.mkdir(exist_ok=True)
-    print("✓ Memory directory created")
+    print("[OK] Memory directory ready")
 
-def main():
-    """Main setup function"""
-    print("🧠 C2A Elegant Setup")
+
+def main() -> None:
+    """Main setup function."""
+    print("C2A Elegant Setup")
     print("=" * 40)
-    
-    # Install requirements
+
     if not install_requirements():
         sys.exit(1)
-    
-    # Create directories
+
     create_directories()
-    
-    # Check Ollama
+
     ollama_ok = check_ollama()
     if not ollama_ok:
-        print("\n⚠️  Ollama not found. You can still run the system with other LLM providers.")
-    
-    print("\n🎯 Setup Complete!")
-    print("\nTo start training:")
-    print("  python c2a_elegant_main.py")
-    print("\nOptional (in extras/):")
-    print("  python extras/c2a_cortex_integrated.py  # Legacy Cortex-style flow")
-    print("\n🧠 Ready to turn constraints into advantages!")
+        print("\n[WARN] Ollama unavailable. You can still use cloud providers.")
+
+    print("\n[OK] Setup complete")
+    print("Run: python C2A.py")
+
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,13 @@
+{
+  "name": "c2a-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "C2A Training Grounds desktop app (Tauri wrapper)",
+  "scripts": {
+    "tauri:dev": "set PATH=%USERPROFILE%\\.cargo\\bin;%PATH% && tauri dev",
+    "tauri:build": "set PATH=%USERPROFILE%\\.cargo\\bin;%PATH% && tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^1.6.3"
+  }
+}

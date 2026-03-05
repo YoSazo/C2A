@@ -1,93 +1,94 @@
-#!/usr/bin/env python3
-"""
-Test script for C2A Elegant components
-
-Run this to verify everything works before starting training.
-"""
+﻿#!/usr/bin/env python3
+"""Smoke tests for core C2A Elegant components."""
 
 import sys
+import traceback
 from pathlib import Path
 
-print("=" * 60)
-print("C2A ELEGANT - SYSTEM TEST")
-print("=" * 60)
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-# Test 1: Dependencies
-print("\n[1/7] Testing dependencies...")
-try:
-    import chromadb
-    print("  ✓ chromadb")
-except ImportError as e:
-    print(f"  ✗ chromadb: {e}")
-    sys.exit(1)
+RUNTIME = ROOT / "c2a_runtime"
+if str(RUNTIME) not in sys.path:
+    sys.path.insert(0, str(RUNTIME))
 
-try:
-    from sentence_transformers import SentenceTransformer
-    print("  ✓ sentence-transformers")
-except ImportError as e:
-    print(f"  ✗ sentence-transformers: {e}")
-    sys.exit(1)
+PASS = "[OK]"
+FAIL = "[FAIL]"
+WARN = "[WARN]"
 
-try:
-    import ollama
-    print("  ✓ ollama")
-except ImportError as e:
-    print(f"  ✗ ollama: {e}")
-    sys.exit(1)
 
-# Test 2: Archetypes
-print("\n[2/7] Testing constraint archetypes...")
-try:
+def run_test(index, total, name, fn, required=True):
+    print(f"\n[{index}/{total}] {name}...")
+    try:
+        fn()
+        print(f"  {PASS} {name}")
+        return True
+    except Exception as exc:
+        marker = FAIL if required else WARN
+        print(f"  {marker} {name}: {exc}")
+        traceback.print_exc()
+        return False
+
+
+def test_dependencies():
+    import chromadb  # noqa: F401
+    from sentence_transformers import SentenceTransformer  # noqa: F401
+    import ollama  # noqa: F401
+
+
+def test_archetypes():
     from constraint_archetypes import ARCHETYPES, get_archetype
-    
-    assert len(ARCHETYPES) == 5, "Should have 5 archetypes"
-    assert 'scarcity' in ARCHETYPES
-    assert 'velocity' in ARCHETYPES
-    assert 'asymmetry' in ARCHETYPES
-    assert 'friction' in ARCHETYPES
-    assert 'paradox' in ARCHETYPES
-    
-    scarcity = get_archetype('scarcity')
-    assert scarcity.symbol == '⧗'
-    
-    print(f"  ✓ All 5 archetypes loaded")
-    print(f"  ✓ Symbols: {' '.join(a.symbol for a in ARCHETYPES.values())}")
-    
-except Exception as e:
-    print(f"  ✗ Archetypes error: {e}")
-    sys.exit(1)
 
-# Test 3: Scenario Engine
-print("\n[3/7] Testing LLM scenario engine...")
-try:
-    from llm_scenario_engine import LLMScenarioEngine, ScenarioValidator
-    
-    engine = LLMScenarioEngine(model="qwen2.5:32b")
-    
-    # Test with mock generation (won't actually call LLM)
-    test_profile = {
-        'domain': 'test',
-        'total_sessions': 1,
-        'archetype_performance': {}
-    }
-    
-    print(f"  ✓ Engine initialized")
-    print(f"  ✓ Ready to generate scenarios")
-    
-except Exception as e:
-    print(f"  ✗ Scenario engine error: {e}")
-    import traceback
-    traceback.print_exc()
+    expected = {"scarcity", "velocity", "asymmetry", "friction", "paradox"}
+    assert set(ARCHETYPES.keys()) == expected, "Unexpected archetype set"
+    scarcity = get_archetype("scarcity")
+    assert scarcity is not None, "Could not load scarcity archetype"
+    assert isinstance(scarcity.symbol, str) and scarcity.symbol, "Archetype symbol must be non-empty"
 
-# Test 4: Judge System
-print("\n[4/7] Testing LLM judge system...")
-try:
-    from llm_transmutation_judge import TransmutationJudge, TransmutationScore
-    
-    judge = TransmutationJudge(model="qwen2.5:32b")
-    
-    # Test score object
-    test_score = TransmutationScore(
+
+def test_scheduler_rules():
+    from scaffolding_scheduler import scheduler
+
+    level_15 = scheduler.get_feature_state(15)
+    level_16 = scheduler.get_feature_state(16)
+    level_41 = scheduler.get_feature_state(41)
+
+    assert not level_15.speed_track_active, "Speed Track should be inactive before level 16"
+    assert level_16.speed_track_active, "Speed Track should activate at level 16"
+    assert level_16.real_world_log_available, "Real-world log should be available at level 16"
+    assert level_41.real_world_log_mandatory, "Real-world log should be mandatory at level 41"
+
+
+def test_progression_logic():
+    from progression import calculate_level
+
+    class DummyScheduler:
+        @staticmethod
+        def apply_speed_gate(level, speed_stats):
+            return level
+
+    level = calculate_level(total_sessions=20, avg_score=80.0, scheduler=DummyScheduler(), speed_stats={})
+    assert level == 18, f"Expected level 18, got {level}"
+
+    clamped_low = calculate_level(total_sessions=0, avg_score=0.0, scheduler=DummyScheduler(), speed_stats={})
+    assert clamped_low == 1, f"Expected minimum level 1, got {clamped_low}"
+
+    clamped_high = calculate_level(total_sessions=1000, avg_score=100.0, scheduler=DummyScheduler(), speed_stats={})
+    assert clamped_high == 100, f"Expected maximum level 100, got {clamped_high}"
+
+
+def test_scenario_engine_init():
+    from llm_scenario_engine import LLMScenarioEngine
+
+    engine = LLMScenarioEngine(model="qwen2.5:14b")
+    assert hasattr(engine, "generate_scenario"), "Engine missing generate_scenario"
+
+
+def test_judge_score_shape():
+    from llm_transmutation_judge import TransmutationScore
+
+    score = TransmutationScore(
         overall_score=85,
         reframing_score=27,
         novelty_score=22,
@@ -96,106 +97,95 @@ try:
         what_worked="Good reframing",
         what_missed="Could be more novel",
         growth_edge="Practice meta-cognition",
-        pattern_identified="Constraint as Design Parameter",
+        pattern_identified="Constraint as design parameter",
         vs_user_history="Better than average",
-        breakthrough_moment=False
+        breakthrough_moment=False,
+        lesson_applied=False,
     )
-    
-    print(f"  ✓ Judge initialized")
-    print(f"  ✓ Score object: {test_score.overall_score}/100")
-    
-except Exception as e:
-    print(f"  ✗ Judge system error: {e}")
-    import traceback
-    traceback.print_exc()
+    assert score.overall_score <= 100
 
-# Test 5: UI System
-print("\n[5/7] Testing elegant UI...")
-try:
-    from elegant_ui import ElegantUI, Colors, Symbols
-    
+
+def test_ui_init():
+    from elegant_ui import ElegantUI
+
     ui = ElegantUI()
-    
-    # Test terminal size detection
-    width = ui.get_terminal_width()
-    height = ui.get_terminal_height()
-    
-    print(f"  ✓ UI initialized")
-    print(f"  ✓ Terminal: {width}x{height}")
-    print(f"  ✓ Colors: {Colors.CYAN}Cyan{Colors.RESET} {Colors.GOLD}Gold{Colors.RESET}")
-    print(f"  ✓ Symbols: {Symbols.CONSTRAINT} {Symbols.TRANSMUTE} {Symbols.INSIGHT}")
-    
-except Exception as e:
-    print(f"  ✗ UI error: {e}")
-    import traceback
-    traceback.print_exc()
+    assert ui.get_terminal_width() > 0
+    assert ui.get_terminal_height() > 0
 
-# Test 6: RLM Engine
-print("\n[6/7] Testing RLM engine...")
-try:
-    from rlm_engine import RLMEngine, SafeREPL, RLMConstraintAnalyzer
-    
-    # Can't fully test without memory, but verify imports
-    print(f"  ✓ RLM components loaded")
-    print(f"  ✓ SafeREPL available")
-    print(f"  ✓ Analyzer available")
-    
-except Exception as e:
-    print(f"  ✗ RLM error: {e}")
-    import traceback
-    traceback.print_exc()
 
-# Test 7: Memory System
-print("\n[7/7] Testing memory system...")
-try:
+def test_rlm_imports():
+    from rlm_engine import RLMEngine, SafeREPL, RLMConstraintAnalyzer  # noqa: F401
+
+
+def test_memory_system():
     from c2a_elegant_main import MemorySystem
-    
-    # Initialize memory (creates directory)
+
     memory = MemorySystem(collection_name="c2a_test")
-    
-    print(f"  ✓ Memory initialized")
-    print(f"  ✓ Collection: {memory.collection_name}")
-    
-    # Test stats retrieval
-    stats = memory.get_user_stats()
-    print(f"  ✓ Stats: {stats['total_sessions']} sessions, Level {stats['current_level']}")
-    
-    # Cleanup test collection
     try:
-        memory.client.delete_collection("c2a_test")
-        print(f"  ✓ Test collection cleaned up")
-    except:
-        pass
-    
-except Exception as e:
-    print(f"  ✗ Memory error: {e}")
-    import traceback
-    traceback.print_exc()
+        stats = memory.get_user_stats()
+        for key in ("total_sessions", "current_level", "average_score"):
+            assert key in stats, f"Missing key in stats: {key}"
+    finally:
+        try:
+            memory.client.delete_collection("c2a_test")
+        except Exception:
+            pass
 
-# Test 8: Ollama Connection
-print("\n[8/7] Testing Ollama connection (optional)...")
-try:
+
+def test_ollama_connection_optional():
+    import ollama
+
     response = ollama.chat(
-        model="qwen2.5:32b",
-        messages=[{"role": "user", "content": "Say 'ready' if you can hear me."}]
+        model="qwen2.5:14b",
+        messages=[{"role": "user", "content": "Say ready."}],
     )
-    
-    print(f"  ✓ Ollama connected")
-    print(f"  ✓ Model: qwen2.5:32b")
-    print(f"  ✓ Response: {response['message']['content'][:50]}...")
-    
-except Exception as e:
-    print(f"  ⚠ Ollama not connected: {e}")
-    print(f"  Note: Start Ollama with: ollama serve")
-    print(f"  Then pull model: ollama pull qwen2.5:32b")
+    assert "message" in response, "Unexpected Ollama response shape"
 
-# Summary
-print("\n" + "=" * 60)
-print("SYSTEM TEST COMPLETE")
-print("=" * 60)
-print("\n✨ C2A Elegant is ready!")
-print("\nTo begin training:")
-print("  python c2a_elegant_main.py")
-print("\nTo view archetypes:")
-print("  python constraint_archetypes.py")
-print("\n" + "=" * 60)
+
+def main():
+    tests = [
+        ("Dependencies", test_dependencies, True),
+        ("Constraint archetypes", test_archetypes, True),
+        ("Scheduler rules", test_scheduler_rules, True),
+        ("Progression logic", test_progression_logic, True),
+        ("Scenario engine init", test_scenario_engine_init, True),
+        ("Judge score structure", test_judge_score_shape, True),
+        ("UI init", test_ui_init, True),
+        ("RLM imports", test_rlm_imports, True),
+        ("Memory system", test_memory_system, True),
+        ("Ollama connection (optional)", test_ollama_connection_optional, False),
+    ]
+
+    print("=" * 60)
+    print("C2A ELEGANT - SMOKE TEST")
+    print("=" * 60)
+
+    required_failures = 0
+    optional_failures = 0
+
+    total = len(tests)
+    for idx, (name, fn, required) in enumerate(tests, start=1):
+        ok = run_test(idx, total, name, fn, required=required)
+        if not ok:
+            if required:
+                required_failures += 1
+            else:
+                optional_failures += 1
+
+    print("\n" + "=" * 60)
+    print("SMOKE TEST COMPLETE")
+    print("=" * 60)
+    print(f"Required failures: {required_failures}")
+    print(f"Optional failures: {optional_failures}")
+
+    if required_failures:
+        print("\nOne or more required checks failed.")
+        sys.exit(1)
+
+    print("\nSystem is ready.")
+    print("Run: python c2a_runtime/c2a_elegant_main.py")
+
+
+if __name__ == "__main__":
+    main()
+
