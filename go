@@ -21,4 +21,4 @@ export C2A_LLM_PROVIDER="nvidia"
 export C2A_LLM_MODEL="moonshotai/kimi-k2.5"
 
 # Run app
-python c2a_elegant_main.py
+python C2A.py

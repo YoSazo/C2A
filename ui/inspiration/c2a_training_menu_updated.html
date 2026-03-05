@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C2A — Training</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #0a0a0a;
+  --white: #f5f5f2;
+  --mid: #6a6a68;
+  --dim: rgba(245,245,242,0.1);
+  --line: rgba(245,245,242,0.1);
+  --serif: 'DM Serif Display', Georgia, serif;
+  --mono: 'DM Mono', 'Courier New', monospace;
+}
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--mono);
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.6;
+  cursor: none;
+  user-select: none;
+}
+
+/* ── Cursor ── */
+#cur { width:5px; height:5px; background:var(--white); border-radius:50%; position:fixed; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:width .15s,height .15s,background .15s; }
+#cur-r { width:24px; height:24px; border:1px solid rgba(245,245,242,.35); border-radius:50%; position:fixed; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:left .08s,top .08s; }
+
+/* ── Layout ── */
+#app { display:grid; grid-template-columns:260px 1fr; grid-template-rows:56px 1fr; height:100vh; }
+
+/* ── Topbar ── */
+#topbar {
+  grid-column:1/-1;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 28px;
+  border-bottom:1px solid var(--line);
+  z-index:10;
+}
+.logo { font-family:var(--serif); font-size:18px; letter-spacing:-.03em; display:flex; align-items:baseline; gap:10px; }
+.logo span { font-family:var(--mono); font-size:9px; color:var(--mid); letter-spacing:.12em; text-transform:uppercase; }
+.topbar-center { display:flex; align-items:center; gap:24px; }
+.level-pill { font-size:10px; letter-spacing:.1em; text-transform:uppercase; border:1px solid var(--line); padding:4px 12px; color:var(--mid); }
+.phase-label { font-size:10px; color:var(--mid); letter-spacing:.08em; }
+.topbar-right { display:flex; align-items:center; gap:16px; }
+#session-count { font-size:10px; color:var(--mid); }
+
+/* ── Sidebar ── */
+#sidebar {
+  border-right:1px solid var(--line);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  padding:28px 0;
+}
+.sidebar-section { padding:0 24px; margin-bottom:32px; }
+.sidebar-label { font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--mid); margin-bottom:14px; }
+
+.archetype-btn {
+  width:100%; display:flex; align-items:center; gap:10px;
+  padding:10px 12px; background:none; border:1px solid transparent;
+  color:var(--mid); font-family:var(--mono); font-size:11px; cursor:pointer;
+  transition:all .2s; text-align:left; margin-bottom:2px;
+  letter-spacing:.04em;
+}
+.archetype-btn:hover { color:var(--white); border-color:var(--line); }
+.archetype-btn.active { color:var(--white); border-color:rgba(245,245,242,.3); background:rgba(245,245,242,.04); }
+.arch-sym { font-size:14px; flex-shrink:0; }
+
+/* Active lesson */
+.lesson-card {
+  background:rgba(245,245,242,.04);
+  border:1px solid rgba(245,245,242,.12);
+  padding:16px;
+  margin-top:4px;
+}
+.lesson-card-title { font-family:var(--serif); font-size:15px; letter-spacing:-.02em; margin-bottom:6px; }
+.lesson-card-q { font-size:11px; color:var(--mid); line-height:1.5; font-style:italic; margin-bottom:10px; }
+.lesson-attempts { font-size:9px; color:var(--mid); letter-spacing:.08em; }
+.mini-bar { height:1px; background:rgba(245,245,242,.08); margin-top:6px; position:relative; }
+.mini-bar-fill { position:absolute; top:0; left:0; height:100%; background:var(--white); transition:width 1s ease; }
+
+/* Sidebar stats */
+.stat-mini { display:flex; justify-content:space-between; align-items:baseline; padding:6px 0; border-bottom:1px solid var(--line); }
+.stat-mini:last-child { border-bottom:none; }
+.stat-mini-label { font-size:10px; color:var(--mid); }
+.stat-mini-val { font-family:var(--serif); font-size:18px; letter-spacing:-.03em; }
+
+/* ── Main area ── */
+#main { display:flex; flex-direction:column; overflow:hidden; }
+
+/* ── Screens ── */
+.screen { display:none; flex:1; overflow-y:auto; flex-direction:column; }
+.screen.active { display:flex; }
+
+/* scrollbar */
+.screen::-webkit-scrollbar { width:3px; }
+.screen::-webkit-scrollbar-thumb { background:rgba(245,245,242,.1); }
+
+/* ── HOME ── */
+#screen-home { align-items:center; justify-content:center; text-align:center; padding:48px; }
+.home-eyebrow { font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--mid); margin-bottom:24px; }
+.home-title { font-family:var(--serif); font-size:clamp(48px,6vw,80px); letter-spacing:-.04em; line-height:.95; margin-bottom:28px; }
+.home-title em { font-style:italic; color:var(--mid); }
+.home-body { color:var(--mid); font-size:13px; max-width:400px; line-height:1.7; margin-bottom:40px; }
+.btn-start { background:var(--white); color:var(--black); border:none; padding:14px 36px; font-family:var(--mono); font-size:11px; font-weight:500; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; transition:opacity .2s,transform .2s; }
+.btn-start:hover { opacity:.85; transform:translateY(-1px); }
+.btn-start:disabled { opacity:.3; cursor:not-allowed; transform:none; }
+
+/* ── ARCHETYPE REVEAL ── */
+#screen-archetype { align-items:center; justify-content:center; }
+.arch-reveal-symbol { font-size:80px; margin-bottom:24px; animation:pulseIn .6s ease both; }
+.arch-reveal-name { font-family:var(--serif); font-size:64px; letter-spacing:-.04em; margin-bottom:16px; animation:fadeUp .5s .2s ease both; }
+.arch-reveal-essence { color:var(--mid); font-size:13px; max-width:380px; line-height:1.7; text-align:center; animation:fadeUp .5s .35s ease both; }
+.arch-reveal-keys { display:flex; flex-direction:column; gap:4px; margin-top:28px; animation:fadeUp .5s .5s ease both; }
+.arch-key-item { font-size:10px; color:rgba(245,245,242,.3); letter-spacing:.1em; text-transform:uppercase; }
+@keyframes pulseIn { 0%{transform:scale(.6);opacity:0} 60%{transform:scale(1.1)} 100%{transform:scale(1);opacity:1} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── SCENARIO ── */
+#screen-scenario { padding:48px 56px; }
+.scenario-meta { display:flex; align-items:center; gap:16px; margin-bottom:32px; }
+.scenario-arch-tag { font-size:10px; letter-spacing:.12em; text-transform:uppercase; border:1px solid var(--line); padding:5px 12px; color:var(--mid); }
+.scenario-phase { font-size:10px; color:var(--mid); }
+.scenario-title { font-family:var(--serif); font-size:clamp(28px,3.5vw,44px); letter-spacing:-.03em; line-height:1.1; margin-bottom:24px; }
+.scenario-hook { font-size:13px; color:rgba(245,245,242,.5); margin-bottom:28px; font-style:italic; border-left:1px solid var(--line); padding-left:16px; }
+.scenario-body { font-size:14px; line-height:1.8; color:var(--white); max-width:700px; margin-bottom:40px; }
+
+.lesson-reminder {
+  background:rgba(245,245,242,.03); border:1px solid rgba(245,245,242,.1);
+  padding:16px 20px; margin-bottom:32px; display:flex; align-items:flex-start; gap:14px;
+  max-width:700px;
+}
+.lesson-reminder-icon { font-size:14px; flex-shrink:0; margin-top:1px; }
+.lesson-reminder-title { font-size:11px; color:var(--white); margin-bottom:3px; letter-spacing:.04em; }
+.lesson-reminder-q { font-size:11px; color:var(--mid); font-style:italic; }
+
+.btn-continue { background:none; border:1px solid rgba(245,245,242,.3); color:var(--white); padding:12px 28px; font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s; display:flex; align-items:center; gap:10px; }
+.btn-continue:hover { background:var(--white); color:var(--black); }
+.btn-continue::after { content:'→'; transition:transform .2s; }
+.btn-continue:hover::after { transform:translateX(4px); }
+
+/* ── TRANSMUTE ── */
+#screen-transmute { padding:48px 56px; }
+.trans-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:40px; }
+.trans-progress { font-size:10px; color:var(--mid); letter-spacing:.1em; }
+.trans-progress-num { font-family:var(--serif); font-size:32px; letter-spacing:-.03em; color:var(--white); line-height:1; }
+
+.timer-block { text-align:right; }
+.timer-display { font-family:var(--serif); font-size:48px; letter-spacing:-.04em; line-height:1; transition:color .3s; }
+.timer-display.urgent { color:#c0392b; }
+.timer-display.warning { color:#baa028; }
+.timer-sub { font-size:9px; color:var(--mid); letter-spacing:.12em; text-transform:uppercase; margin-top:2px; }
+
+.scenario-mini { margin-bottom:32px; padding:20px 24px; border-left:2px solid rgba(245,245,242,.15); }
+.scenario-mini-title { font-size:10px; color:var(--mid); letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px; }
+.scenario-mini-text { font-size:13px; color:rgba(245,245,242,.6); line-height:1.6; max-width:600px; }
+
+.trans-input-wrap { position:relative; margin-bottom:12px; }
+.trans-label { font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--mid); margin-bottom:12px; }
+textarea#trans-in {
+  width:100%; background:transparent; border:none;
+  border-bottom:1px solid rgba(245,245,242,.2);
+  color:var(--white); font-family:var(--serif); font-size:22px;
+  line-height:1.4; padding:12px 0; outline:none; resize:none;
+  letter-spacing:-.02em; transition:border-color .2s;
+  user-select:text;
+}
+textarea#trans-in:focus { border-bottom-color:var(--white); }
+textarea#trans-in::placeholder { color:rgba(245,245,242,.12); }
+
+.trans-meta-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; }
+.word-count-display { font-size:10px; color:var(--mid); }
+.word-count-display.over { color:#c0392b; }
+.velocity-hint { font-size:10px; color:var(--mid); }
+
+.trans-actions { display:flex; gap:12px; align-items:center; }
+.btn-transmute { background:var(--white); color:var(--black); border:none; padding:13px 32px; font-family:var(--mono); font-size:11px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:opacity .2s,transform .2s; }
+.btn-transmute:hover { opacity:.85; transform:translateY(-1px); }
+.btn-transmute:disabled { opacity:.25; cursor:not-allowed; transform:none; }
+.btn-skip { background:none; border:none; color:var(--mid); font-family:var(--mono); font-size:11px; cursor:pointer; letter-spacing:.08em; text-transform:uppercase; transition:color .2s; padding:13px 0; }
+.btn-skip:hover { color:var(--white); }
+
+/* ── EVALUATING ── */
+#screen-evaluating { align-items:center; justify-content:center; }
+.eval-spinner { width:1px; height:60px; background:var(--white); animation:scanLine 1.2s ease-in-out infinite; margin-bottom:32px; }
+@keyframes scanLine { 0%,100%{transform:scaleY(0);opacity:0} 50%{transform:scaleY(1);opacity:1} }
+.eval-text { font-size:11px; color:var(--mid); letter-spacing:.15em; text-transform:uppercase; }
+.eval-dots::after { content:''; animation:dots 1.2s steps(3,end) infinite; }
+@keyframes dots { 0%{content:''} 33%{content:'.'} 66%{content:'..'} 100%{content:'...'} }
+
+/* ── RESULT ── */
+#screen-result { padding:48px 56px; }
+.result-score-row { display:grid; grid-template-columns:1fr auto; gap:40px; align-items:start; margin-bottom:2px; }
+.result-overall { }
+.result-num { font-family:var(--serif); font-size:96px; letter-spacing:-.05em; line-height:1; }
+.result-num.excellent { color:var(--white); }
+.result-num.good { color:var(--white); }
+.result-num.fair { color:rgba(245,245,242,.6); }
+.result-num.poor { color:rgba(245,245,242,.35); }
+.result-label { font-size:10px; color:var(--mid); letter-spacing:.15em; text-transform:uppercase; margin-top:4px; }
+.result-pattern { font-family:var(--serif); font-size:22px; letter-spacing:-.02em; margin-top:12px; }
+.result-pattern-sub { font-size:10px; color:var(--mid); letter-spacing:.08em; margin-top:4px; }
+.velocity-badge { font-size:11px; border:1px solid var(--line); padding:5px 12px; color:var(--mid); margin-top:8px; display:inline-block; }
+
+.score-bars { display:flex; flex-direction:column; gap:14px; min-width:240px; padding-top:8px; }
+.score-bar-row { }
+.score-bar-label { display:flex; justify-content:space-between; margin-bottom:4px; }
+.score-bar-name { font-size:10px; color:var(--mid); letter-spacing:.08em; text-transform:uppercase; }
+.score-bar-val { font-size:10px; color:var(--white); }
+.score-bar-track { height:1px; background:rgba(245,245,242,.08); position:relative; }
+.score-bar-fill { position:absolute; top:0; left:0; height:100%; background:var(--white); width:0; transition:width 1s cubic-bezier(.4,0,.2,1); }
+
+.feedback-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-bottom:2px; }
+.feedback-box { background:rgba(245,245,242,.03); padding:24px 28px; border:1px solid var(--line); }
+.feedback-box-label { font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--mid); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.feedback-box-label::before { content:''; width:12px; height:1px; background:var(--mid); }
+.feedback-box-text { font-size:13px; line-height:1.7; color:var(--white); }
+
+.lesson-update { border:1px solid rgba(245,245,242,.15); padding:20px 24px; margin-bottom:2px; display:flex; justify-content:space-between; align-items:center; }
+.lesson-update-left { }
+.lesson-update-status { font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--mid); margin-bottom:4px; }
+.lesson-update-title { font-family:var(--serif); font-size:18px; letter-spacing:-.02em; }
+.lesson-applied-badge { font-size:10px; padding:4px 12px; border:1px solid; }
+.lesson-applied-badge.yes { border-color:rgba(245,245,242,.4); color:var(--white); }
+.lesson-applied-badge.no { border-color:var(--line); color:var(--mid); }
+
+.result-actions { display:flex; gap:12px; margin-top:28px; }
+
+/* ── CORRECTION ── */
+#screen-correction { padding:48px 56px; }
+.correction-header { margin-bottom:32px; }
+.correction-tag { font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--mid); margin-bottom:8px; }
+.correction-title { font-family:var(--serif); font-size:32px; letter-spacing:-.03em; }
+.correction-score { font-size:13px; color:var(--mid); margin-top:6px; }
+
+.what-missed-box { border-left:2px solid rgba(245,245,242,.15); padding:16px 20px; margin-bottom:24px; }
+.what-missed-label { font-size:9px; color:var(--mid); letter-spacing:.12em; text-transform:uppercase; margin-bottom:8px; }
+.what-missed-text { font-size:13px; line-height:1.7; color:rgba(245,245,242,.7); }
+
+.growth-edge-box { background:rgba(245,245,242,.04); border:1px solid rgba(245,245,242,.12); padding:20px 24px; margin-bottom:32px; }
+.growth-edge-label { font-size:9px; color:var(--mid); letter-spacing:.12em; text-transform:uppercase; margin-bottom:8px; }
+.growth-edge-text { font-size:14px; line-height:1.7; color:var(--white); }
+
+/* ── Notification toast ── */
+#toast {
+  position:fixed; bottom:32px; right:32px;
+  background:rgba(245,245,242,.06); border:1px solid rgba(245,245,242,.15);
+  backdrop-filter:blur(12px);
+  padding:16px 20px; font-size:12px; color:var(--white);
+  max-width:320px; line-height:1.5;
+  opacity:0; transform:translateY(8px);
+  transition:opacity .3s,transform .3s;
+  pointer-events:none; z-index:100;
+}
+#toast.show { opacity:1; transform:translateY(0); }
+
+/* ── Loading overlay ── */
+#loading-overlay {
+  position:fixed; inset:0; background:var(--black);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
+  z-index:200; transition:opacity .5s;
+}
+#loading-overlay.hidden { opacity:0; pointer-events:none; }
+.loading-logo { font-family:var(--serif); font-size:48px; letter-spacing:-.04em; }
+.loading-bar-wrap { width:200px; height:1px; background:rgba(245,245,242,.08); }
+.loading-bar-fill { height:100%; background:var(--white); width:0; transition:width .5s ease; }
+.loading-text { font-size:10px; color:var(--mid); letter-spacing:.15em; text-transform:uppercase; }
+
+/* ── HOME MENU ── */
+#screen-home { justify-content:center; padding:0; }
+.menu-wrap { padding:48px 56px; width:100%; max-width:700px; }
+
+.menu-status {
+  display:flex; align-items:center; gap:16px;
+  font-size:13px; color:var(--white); margin-bottom:36px; font-weight:400;
+}
+.menu-status-sep { color:var(--mid); }
+
+.menu-list { display:flex; flex-direction:column; gap:2px; margin-bottom:32px; }
+
+.menu-item {
+  display:flex; align-items:center; gap:10px;
+  padding:6px 0; font-size:14px;
+  cursor:pointer; transition:color .15s; line-height:1.4;
+}
+.menu-item.available { color:var(--white); }
+.menu-item.available:hover .menu-key { color:var(--white); }
+.menu-item.available:hover { color:rgba(245,245,242,.7); }
+.menu-item.locked { color:rgba(245,245,242,.28); cursor:default; }
+.menu-item.locked .menu-key { color:rgba(245,245,242,.18); }
+
+.menu-key { font-size:13px; min-width:32px; color:rgba(245,245,242,.45); }
+.menu-icon { font-size:13px; min-width:20px; }
+.menu-label { flex:1; }
+.menu-sub { font-size:12px; color:rgba(245,245,242,.35); }
+.menu-lock { font-size:12px; margin-left:4px; }
+
+.menu-next {
+  display:flex; align-items:center; gap:10px;
+  font-size:13px; color:var(--mid); margin-bottom:20px;
+  padding-top:16px; border-top:1px solid var(--line);
+}
+
+.menu-input-row { display:flex; align-items:center; gap:4px; font-size:14px; color:var(--white); margin-top:8px; }
+.menu-blink { animation:blink .9s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ── STUB SCREENS ── */
+.stub-screen { padding:48px 56px; }
+.stub-title { font-family:var(--serif); font-size:40px; letter-spacing:-.03em; margin-bottom:8px; }
+.stub-sub { font-size:12px; color:var(--mid); letter-spacing:.1em; text-transform:uppercase; margin-bottom:32px; }
+.stub-body { font-size:13px; color:var(--mid); line-height:1.7; max-width:480px; margin-bottom:32px; }
+.stub-coming { display:inline-block; font-size:10px; letter-spacing:.18em; text-transform:uppercase; border:1px solid var(--line); padding:5px 14px; color:var(--mid); margin-bottom:32px; }
+
+/* ── Misc ── */
+.hidden { display:none !important; }
+select.arch-select {
+  background:none; border:1px solid var(--line); color:var(--mid);
+  font-family:var(--mono); font-size:10px; letter-spacing:.08em;
+  padding:5px 10px; cursor:pointer; outline:none;
+  appearance:none; -webkit-appearance:none;
+  text-transform:uppercase;
+}
+select.arch-select option { background:var(--black); }
+
+/* grain overlay */
+body::after {
+  content:''; position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:50; opacity:.4;
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-r"></div>
+
+<!-- Loading -->
+<div id="loading-overlay">
+  <div class="loading-logo">C2A</div>
+  <div class="loading-bar-wrap"><div class="loading-bar-fill" id="load-bar"></div></div>
+  <div class="loading-text">Initializing session</div>
+</div>
+
+<!-- App shell -->
+<div id="app">
+
+  <!-- Topbar -->
+  <div id="topbar">
+    <div class="logo">C2A <span>Constraint → Advantage</span></div>
+    <div class="topbar-center">
+      <div class="level-pill" id="level-pill">Level 1</div>
+      <div class="phase-label" id="phase-label">Phase 1 · Install</div>
+    </div>
+    <div class="topbar-right">
+      <div id="session-count">0 sessions</div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Archetype</div>
+      <button class="archetype-btn" data-arch="scarcity" onclick="selectArchetype('scarcity')">
+        <span class="arch-sym">⧗</span> Scarcity
+      </button>
+      <button class="archetype-btn active" data-arch="velocity" onclick="selectArchetype('velocity')">
+        <span class="arch-sym">⚡</span> Velocity
+      </button>
+      <button class="archetype-btn" data-arch="asymmetry" onclick="selectArchetype('asymmetry')">
+        <span class="arch-sym">⚖</span> Asymmetry
+      </button>
+      <button class="archetype-btn" data-arch="friction" onclick="selectArchetype('friction')">
+        <span class="arch-sym">⚙</span> Friction
+      </button>
+      <button class="archetype-btn" data-arch="paradox" onclick="selectArchetype('paradox')">
+        <span class="arch-sym">∞</span> Paradox
+      </button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Active Lesson</div>
+      <div id="lesson-card-wrap">
+        <div class="lesson-card" id="lesson-card">
+          <div class="lesson-card-title" id="lesson-title">—</div>
+          <div class="lesson-card-q" id="lesson-q">Complete a session to receive your first lesson.</div>
+          <div class="lesson-attempts" id="lesson-attempts"></div>
+          <div class="mini-bar"><div class="mini-bar-fill" id="lesson-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section" style="margin-top:auto">
+      <div class="sidebar-label">Stats</div>
+      <div class="stat-mini"><span class="stat-mini-label">Sessions</span><span class="stat-mini-val" id="s-sessions">0</span></div>
+      <div class="stat-mini"><span class="stat-mini-label">Avg Score</span><span class="stat-mini-val" id="s-avg">—</span></div>
+      <div class="stat-mini"><span class="stat-mini-label">Best Score</span><span class="stat-mini-val" id="s-best">—</span></div>
+      <div class="stat-mini"><span class="stat-mini-label">Mastered</span><span class="stat-mini-val" id="s-mastered">0</span></div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div id="main">
+
+    <!-- HOME / MENU -->
+    <div class="screen active" id="screen-home">
+      <div class="menu-wrap">
+        <div class="menu-status" id="menu-status-line">
+          <span class="menu-status-item">Level <span id="ms-level">1</span>/100</span>
+          <span class="menu-status-sep">|</span>
+          <span class="menu-status-item"><span id="ms-sessions">0</span> Sessions</span>
+          <span class="menu-status-sep">|</span>
+          <span class="menu-status-item" id="ms-phase">Phase 1: Install</span>
+        </div>
+
+        <div class="menu-list" id="menu-list">
+          <div class="menu-item available" onclick="startSession()" data-key="1">
+            <span class="menu-key">[1]</span>
+            <span class="menu-icon">▸</span>
+            <span class="menu-label">Begin Training Session</span>
+          </div>
+          <div class="menu-item locked" id="mi-speedtrack" data-key="2" data-unlock="16">
+            <span class="menu-key">[2]</span>
+            <span class="menu-icon">⚡</span>
+            <span class="menu-label">Speed Track <span class="menu-sub">(Automaticity Drill)</span></span>
+            <span class="menu-lock" id="lock-speedtrack">🔒</span>
+          </div>
+          <div class="menu-item locked" id="mi-flashdrill" data-key="3" data-unlock="16">
+            <span class="menu-key">[3]</span>
+            <span class="menu-icon">⚡</span>
+            <span class="menu-label">Flash Drill <span class="menu-sub">(Legacy 10s Reflex)</span></span>
+            <span class="menu-lock" id="lock-flashdrill">🔒</span>
+          </div>
+          <div class="menu-item available" onclick="showScreen('realworld')" data-key="4">
+            <span class="menu-key">[4]</span>
+            <span class="menu-icon">📓</span>
+            <span class="menu-label">Real-World Log</span>
+          </div>
+          <div class="menu-item locked" id="mi-deepanalysis" data-key="5" data-unlock="10">
+            <span class="menu-key">[5]</span>
+            <span class="menu-icon"> </span>
+            <span class="menu-label">Deep Analysis <span class="menu-sub">(RLM)</span></span>
+            <span class="menu-lock" id="lock-deepanalysis">🔒</span>
+          </div>
+          <div class="menu-item available" onclick="showScreen('progress')" data-key="6">
+            <span class="menu-key">[6]</span>
+            <span class="menu-icon"> </span>
+            <span class="menu-label">View Progress</span>
+          </div>
+          <div class="menu-item locked" id="mi-research" data-key="7" data-unlock="5">
+            <span class="menu-key">[7]</span>
+            <span class="menu-icon"> </span>
+            <span class="menu-label">Research Dashboard <span class="menu-sub">(AI Insights)</span></span>
+            <span class="menu-lock" id="lock-research">🔒</span>
+          </div>
+          <div class="menu-item available" onclick="showScreen('gallery')" data-key="8">
+            <span class="menu-key">[8]</span>
+            <span class="menu-icon"> </span>
+            <span class="menu-label">Archetype Gallery</span>
+          </div>
+          <div class="menu-item available" onclick="showScreen('domain')" data-key="9">
+            <span class="menu-key">[9]</span>
+            <span class="menu-icon"> </span>
+            <span class="menu-label">Set Your Domain</span>
+          </div>
+          <div class="menu-item locked" id="mi-physics" data-key="0" data-unlock="100">
+            <span class="menu-key">[0]</span>
+            <span class="menu-icon"> </span>
+            <span class="menu-label">Physics Arena <span class="menu-sub">(Level 100 Unlock)</span></span>
+            <span class="menu-lock">🔒</span>
+          </div>
+        </div>
+
+        <div class="menu-next" id="menu-next">
+          <span class="menu-next-arrow">›</span>
+          <span id="menu-next-text">Next: Level 16 — Correction loop retired</span>
+        </div>
+
+        <div class="menu-input-row">
+          <span class="menu-prompt">›</span>
+          <span class="menu-cursor-blink" id="menu-typed"></span><span class="menu-blink">█</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARCHETYPE REVEAL -->
+    <div class="screen" id="screen-archetype" style="text-align:center;padding:48px;">
+      <div class="arch-reveal-symbol" id="reveal-sym">⚡</div>
+      <div class="arch-reveal-name" id="reveal-name">Velocity</div>
+      <div class="arch-reveal-essence" id="reveal-essence">The compression of time against the expansion of aspiration.</div>
+      <div class="arch-reveal-keys" id="reveal-keys"></div>
+    </div>
+
+    <!-- SCENARIO -->
+    <div class="screen" id="screen-scenario">
+      <div class="scenario-meta">
+        <div class="scenario-arch-tag" id="sc-arch-tag">⚡ Velocity</div>
+        <div class="scenario-phase" id="sc-phase">Phase 1 · Level 1</div>
+      </div>
+      <h2 class="scenario-title" id="sc-title">Loading scenario...</h2>
+      <div class="scenario-hook" id="sc-hook"></div>
+      <div class="scenario-body" id="sc-body"></div>
+
+      <div class="lesson-reminder hidden" id="sc-lesson-reminder">
+        <div class="lesson-reminder-icon">🎯</div>
+        <div>
+          <div class="lesson-reminder-title" id="sc-lesson-title"></div>
+          <div class="lesson-reminder-q" id="sc-lesson-q"></div>
+        </div>
+      </div>
+
+      <button class="btn-continue" onclick="goToTransmute()">Transmute</button>
+    </div>
+
+    <!-- TRANSMUTE -->
+    <div class="screen" id="screen-transmute">
+      <div class="trans-header">
+        <div>
+          <div class="trans-progress">Transmutation</div>
+          <div class="trans-progress-num" id="trans-num">1 / 1</div>
+        </div>
+        <div class="timer-block">
+          <div class="timer-display" id="timer">01:30</div>
+          <div class="timer-sub">seconds remaining</div>
+        </div>
+      </div>
+
+      <div class="scenario-mini">
+        <div class="scenario-mini-title" id="sm-title">Scenario</div>
+        <div class="scenario-mini-text" id="sm-body"></div>
+      </div>
+
+      <div class="trans-label">Your Transmutation</div>
+      <div class="trans-input-wrap">
+        <textarea id="trans-in" rows="4" placeholder="The constraint becomes an advantage because..." oninput="onTransInput()"></textarea>
+      </div>
+      <div class="trans-meta-row">
+        <div class="word-count-display" id="wc">0 / 30 words</div>
+        <div class="velocity-hint">Sub-30s = ⚡ bonus · 60-90s = -10% · 90s+ = -30%</div>
+      </div>
+      <div class="trans-actions">
+        <button class="btn-transmute" id="trans-btn" onclick="submitTransmutation()" disabled>Submit</button>
+        <button class="btn-skip" onclick="goHome()">Abandon session</button>
+      </div>
+    </div>
+
+    <!-- EVALUATING -->
+    <div class="screen" id="screen-evaluating">
+      <div class="eval-spinner"></div>
+      <div class="eval-text">Analysing transmutation<span class="eval-dots"></span></div>
+    </div>
+
+    <!-- CORRECTION (shown when score < threshold, level < 16) -->
+    <div class="screen" id="screen-correction">
+      <div class="correction-header">
+        <div class="correction-tag">Correction Opportunity · Round 2 of 2</div>
+        <h2 class="correction-title">Not quite there.</h2>
+        <div class="correction-score" id="corr-score-line"></div>
+      </div>
+      <div class="what-missed-box">
+        <div class="what-missed-label">What you missed</div>
+        <div class="what-missed-text" id="corr-missed"></div>
+      </div>
+      <div class="growth-edge-box">
+        <div class="growth-edge-label">Try this instead</div>
+        <div class="growth-edge-text" id="corr-edge"></div>
+      </div>
+      <div class="trans-label">Retry (60s)</div>
+      <textarea id="retry-in" rows="4" style="width:100%;background:transparent;border:none;border-bottom:1px solid rgba(245,245,242,.2);color:var(--white);font-family:var(--serif);font-size:22px;line-height:1.4;padding:12px 0;outline:none;resize:none;letter-spacing:-.02em;transition:border-color .2s;user-select:text;" placeholder="Apply the correction..." oninput="onRetryInput()"></textarea>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin:8px 0 24px;">
+        <div class="word-count-display" id="rwc">0 / 30 words</div>
+        <div class="timer-display" id="retry-timer" style="font-size:32px;">01:00</div>
+      </div>
+      <div class="trans-actions">
+        <button class="btn-transmute" id="retry-btn" onclick="submitRetry()" disabled>Submit Correction</button>
+        <button class="btn-skip" onclick="skipCorrection()">Keep original</button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="screen" id="screen-result">
+      <div class="result-score-row">
+        <div class="result-overall">
+          <div class="result-num" id="r-score">—</div>
+          <div class="result-label" id="r-score-label">Overall Score</div>
+          <div class="result-pattern" id="r-pattern">—</div>
+          <div class="result-pattern-sub" id="r-arch-label"></div>
+          <div class="velocity-badge" id="r-velocity"></div>
+        </div>
+        <div class="score-bars" id="score-bars"></div>
+      </div>
+
+      <div class="feedback-grid" style="margin-top:2px;">
+        <div class="feedback-box">
+          <div class="feedback-box-label">What worked</div>
+          <div class="feedback-box-text" id="r-worked"></div>
+        </div>
+        <div class="feedback-box">
+          <div class="feedback-box-label">Growth edge</div>
+          <div class="feedback-box-text" id="r-edge"></div>
+        </div>
+      </div>
+
+      <div class="lesson-update" id="r-lesson-update" style="margin-top:2px;">
+        <div class="lesson-update-left">
+          <div class="lesson-update-status" id="r-lesson-status">Active Lesson</div>
+          <div class="lesson-update-title" id="r-lesson-title">—</div>
+        </div>
+        <div class="lesson-applied-badge no" id="r-lesson-badge">Not applied</div>
+      </div>
+
+      <div class="result-actions">
+        <button class="btn-transmute" onclick="startSession()">Next Session</button>
+        <button class="btn-skip" onclick="goHome()">Back to Home</button>
+      </div>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="screen" id="screen-progress">
+      <div class="stub-screen">
+        <div class="stub-title">Progress</div>
+        <div class="stub-sub">Session History · Level Trajectory</div>
+        <div id="progress-content"></div>
+        <button class="btn-skip" onclick="goHome()" style="margin-top:32px;">← Back to Menu</button>
+      </div>
+    </div>
+
+    <!-- GALLERY -->
+    <div class="screen" id="screen-gallery">
+      <div class="stub-screen">
+        <div class="stub-title">Archetype Gallery</div>
+        <div class="stub-sub">The Five Constraints</div>
+        <div id="gallery-grid" style="display:grid;grid-template-columns:repeat(5,1fr);gap:1px;margin-bottom:32px;border:1px solid var(--line);"></div>
+        <button class="btn-skip" onclick="goHome()">← Back to Menu</button>
+      </div>
+    </div>
+
+    <!-- DOMAIN -->
+    <div class="screen" id="screen-domain">
+      <div class="stub-screen">
+        <div class="stub-title">Your Domain</div>
+        <div class="stub-sub">Context for Scenario Generation</div>
+        <p class="stub-body">Set your professional domain so scenarios feel real.</p>
+        <div style="margin-bottom:24px;">
+          <div class="trans-label" style="margin-bottom:12px;">Domain / Field</div>
+          <input id="domain-input" type="text" placeholder="e.g. Product design, Sales, Software engineering..."
+            style="width:100%;max-width:480px;background:transparent;border:none;border-bottom:1px solid rgba(245,245,242,.2);color:var(--white);font-family:var(--serif);font-size:18px;padding:8px 0;outline:none;letter-spacing:-.02em;user-select:text;" />
+        </div>
+        <div style="margin-bottom:32px;">
+          <div class="trans-label" style="margin-bottom:12px;">Context <span style="color:var(--mid);font-size:10px;">(optional)</span></div>
+          <input id="context-input" type="text" placeholder="e.g. B2B SaaS, early-stage startup..."
+            style="width:100%;max-width:480px;background:transparent;border:none;border-bottom:1px solid rgba(245,245,242,.2);color:var(--white);font-family:var(--mono);font-size:13px;padding:8px 0;outline:none;user-select:text;" />
+        </div>
+        <div style="display:flex;gap:12px;">
+          <button class="btn-transmute" onclick="saveDomain()">Save Domain</button>
+          <button class="btn-skip" onclick="goHome()">← Back</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- REAL-WORLD LOG -->
+    <div class="screen" id="screen-realworld">
+      <div class="stub-screen">
+        <div class="stub-title">Real-World Log</div>
+        <div class="stub-sub">Constraints From Your Life</div>
+        <p class="stub-body">Log a real constraint you encountered. The system identifies the archetype and whether you transmuted it or just coped.</p>
+        <div style="margin-bottom:24px;">
+          <div class="trans-label" style="margin-bottom:12px;">What was the constraint?</div>
+          <textarea id="rw-constraint" rows="3" placeholder="Describe the constraint..."
+            style="width:100%;max-width:600px;background:transparent;border:none;border-bottom:1px solid rgba(245,245,242,.2);color:var(--white);font-family:var(--mono);font-size:13px;padding:8px 0;outline:none;resize:none;line-height:1.6;user-select:text;"></textarea>
+        </div>
+        <div style="margin-bottom:32px;">
+          <div class="trans-label" style="margin-bottom:12px;">What did you do?</div>
+          <textarea id="rw-response" rows="3" placeholder="Your actual response or action..."
+            style="width:100%;max-width:600px;background:transparent;border:none;border-bottom:1px solid rgba(245,245,242,.2);color:var(--white);font-family:var(--mono);font-size:13px;padding:8px 0;outline:none;resize:none;line-height:1.6;user-select:text;"></textarea>
+        </div>
+        <div style="display:flex;gap:12px;">
+          <button class="btn-transmute" id="rw-btn" onclick="analyseRealWorld()">Analyse</button>
+          <button class="btn-skip" onclick="goHome()">← Back</button>
+        </div>
+        <div id="rw-result" style="margin-top:28px;"></div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+const STATE = {
+  sessions: JSON.parse(localStorage.getItem('c2a_sessions') || '[]'),
+  activeLesson: JSON.parse(localStorage.getItem('c2a_lesson') || 'null'),
+  domain: JSON.parse(localStorage.getItem('c2a_domain') || 'null'),
+  selectedArch: 'velocity',
+  currentScenario: null,
+  currentScore: null,
+  firstAttemptScore: null,
+  transStartTime: null,
+  timerInterval: null,
+  retryTimerInterval: null,
+  level: 1,
+};
+
+const ARCHETYPES = {
+  scarcity:  { sym:'⧗', essence:'Resources less than wants. The gap becomes a forcing function.', keys:['Focus through elimination','Value through rarity','Efficiency as artform'] },
+  velocity:  { sym:'⚡', essence:'Time compresses against aspiration. Urgency strips the non-essential.', keys:['Clarity through urgency','Intuition over analysis','Speed as filter for truth'] },
+  asymmetry: { sym:'⚖', essence:'Incomplete information creates space for interpretation and leaps.', keys:['Hypothesis as action','Assumptions as experiments','Unknown as opportunity'] },
+  friction:  { sym:'⚙', essence:'Resistance between intention and execution. Opposition shapes form.', keys:['Resistance as teacher','Indirection over force','Friction reveals structure'] },
+  paradox:   { sym:'∞', essence:'Contradictory truths held simultaneously. The both/and transcends either/or.', keys:['Synthesis over choice','Tension as creative force','Third way emergence'] },
+};
+
+// ═══════════════════════════════════════════════════════════════
+// CURSOR
+// ═══════════════════════════════════════════════════════════════
+const cur = document.getElementById('cur');
+const curR = document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+setInterval(()=>{rx+=(mx-rx)*.2;ry+=(my-ry)*.2;curR.style.left=rx+'px';curR.style.top=ry+'px';},16);
+
+// ═══════════════════════════════════════════════════════════════
+// SCREEN MANAGEMENT
+// ═══════════════════════════════════════════════════════════════
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+}
+
+function goHome() { clearTimers(); show('home'); updateMenu(); }
+
+function showScreen(id) { show(id); populateScreen(id); }
+
+function populateScreen(id) {
+  if (id === 'gallery') {
+    const g = document.getElementById('gallery-grid');
+    g.innerHTML = Object.entries(ARCHETYPES).map(([k,v]) => `
+      <div style="padding:28px 20px;border-right:1px solid var(--line);cursor:pointer;" onclick="selectArchetype('${k}');goHome();">
+        <div style="font-size:28px;margin-bottom:12px;">${v.sym}</div>
+        <div style="font-family:var(--serif);font-size:16px;letter-spacing:-.02em;margin-bottom:8px;">${k.charAt(0).toUpperCase()+k.slice(1)}</div>
+        <div style="font-size:11px;color:var(--mid);line-height:1.5;">${v.essence}</div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:3px;">
+          ${v.keys.map(kk=>`<div style="font-size:10px;color:rgba(245,245,242,.3);padding:3px 0;border-top:1px solid var(--line);">${kk}</div>`).join('')}
+        </div>
+      </div>`).join('');
+  }
+  if (id === 'domain') {
+    const d = STATE.domain;
+    if (d) {
+      document.getElementById('domain-input').value = d.field || '';
+      document.getElementById('context-input').value = d.context || '';
+    }
+  }
+  if (id === 'progress') {
+    const pc = document.getElementById('progress-content');
+    const sessions = STATE.sessions;
+    if (!sessions.length) {
+      pc.innerHTML = '<p style="color:var(--mid);font-size:13px;">No sessions yet. Begin training to build your history.</p>';
+    } else {
+      const rows = sessions.slice(-20).reverse().map((s,i)=>`
+        <div style="display:grid;grid-template-columns:32px 1fr 60px 80px;gap:16px;padding:12px 0;border-bottom:1px solid var(--line);font-size:12px;align-items:center;">
+          <span style="color:var(--mid);">${sessions.length-i}</span>
+          <span>${ARCHETYPES[s.arch]?.sym || ''} ${s.arch} · ${s.pattern || '—'}</span>
+          <span style="font-family:var(--serif);font-size:20px;letter-spacing:-.03em;">${s.score}</span>
+          <span style="color:var(--mid);font-size:10px;">${new Date(s.ts).toLocaleDateString()}</span>
+        </div>`).join('');
+      pc.innerHTML = `<div style="margin-bottom:24px;">${rows}</div>`;
+    }
+  }
+}
+
+function updateMenu() {
+  const lv = STATE.level;
+  document.getElementById('ms-level').textContent = lv;
+  document.getElementById('ms-sessions').textContent = STATE.sessions.length;
+  const phase = lv < 16 ? 'Phase 1: Install' : lv < 41 ? 'Phase 2: Groove' : lv < 71 ? 'Phase 3: Pressure' : 'Phase 4: Complete';
+  document.getElementById('ms-phase').textContent = phase;
+
+  // unlock items
+  const unlocks = {speedtrack:16, flashdrill:16, deepanalysis:10, research:5};
+  for (const [id, needed] of Object.entries(unlocks)) {
+    const el = document.getElementById('mi-'+id);
+    const lock = document.getElementById('lock-'+id);
+    if (el) {
+      if (lv >= needed) { el.classList.remove('locked'); el.classList.add('available'); if(lock) lock.style.display='none'; }
+      else { el.classList.add('locked'); el.classList.remove('available'); }
+    }
+  }
+  if (lv >= 100) {
+    const el = document.getElementById('mi-physics');
+    if (el) { el.classList.remove('locked'); el.classList.add('available'); }
+  }
+
+  // next milestone
+  const milestones = [[5,'Research Dashboard unlocks'],[10,'Deep Analysis unlocks'],[16,'Correction loop retired · Speed Track unlocks'],[20,'Meta-reflection retired'],[25,'Active lesson display retired'],[41,'LLM scenario generation retired'],[71,'Archetype labels removed from Speed Track'],[100,'Physics Arena unlocks · Training complete']];
+  const next = milestones.find(([l])=>l>lv);
+  document.getElementById('menu-next-text').textContent = next ? `Next: Level ${next[0]} — ${next[1]}` : 'Level 100 reached.';
+}
+
+function saveDomain() {
+  const field = document.getElementById('domain-input').value.trim();
+  const context = document.getElementById('context-input').value.trim();
+  STATE.domain = { field, context };
+  localStorage.setItem('c2a_domain', JSON.stringify(STATE.domain));
+  toast('Domain saved: ' + (field || 'cleared'));
+  goHome();
+}
+
+async function analyseRealWorld() {
+  const constraint = document.getElementById('rw-constraint').value.trim();
+  const response = document.getElementById('rw-response').value.trim();
+  if (!constraint) return toast('Describe the constraint first.');
+  const btn = document.getElementById('rw-btn');
+  btn.disabled = true; btn.textContent = 'Analysing...';
+  const result = document.getElementById('rw-result');
+  result.innerHTML = '';
+  try {
+    const raw = await callClaude([{role:'user',content:`Analyse this real-world constraint log.
+
+CONSTRAINT: "${constraint}"
+RESPONSE: "${response || '(not provided)'}"
+
+Identify:
+1. Which C2A archetype (scarcity/velocity/asymmetry/friction/paradox) this maps to
+2. Whether the response was: true transmutation, coping, avoidance, or no response
+3. What a transmutation would have looked like
+
+Return ONLY JSON:
+{"archetype":"...", "verdict":"transmutation|coping|avoidance|no_response", "verdict_reason":"1 sentence", "transmutation_example":"1-2 sentences showing what transmutation looks like"}`}],
+      `You are a C2A coach. Respond only with valid JSON, no markdown.`);
+    const j = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}')+1));
+    const arch = ARCHETYPES[j.archetype] || {};
+    result.innerHTML = `
+      <div style="border:1px solid var(--line);padding:24px;max-width:600px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+          <span style="font-size:24px;">${arch.sym||'?'}</span>
+          <div>
+            <div style="font-family:var(--serif);font-size:18px;letter-spacing:-.02em;">${j.archetype.charAt(0).toUpperCase()+j.archetype.slice(1)} Constraint</div>
+            <div style="font-size:10px;color:var(--mid);text-transform:uppercase;letter-spacing:.1em;">${j.verdict.replace('_',' ')}</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:rgba(245,245,242,.7);line-height:1.7;margin-bottom:16px;">${j.verdict_reason}</p>
+        <div style="background:rgba(245,245,242,.04);padding:16px;border-left:2px solid rgba(245,245,242,.2);">
+          <div style="font-size:10px;color:var(--mid);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;">What transmutation looks like</div>
+          <p style="font-size:13px;line-height:1.7;">${j.transmutation_example}</p>
+        </div>
+      </div>`;
+  } catch(e) {
+    result.innerHTML = '<p style="color:var(--mid);">Analysis failed. Check connection.</p>';
+  }
+  btn.disabled = false; btn.textContent = 'Analyse';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STATS & LEVEL
+// ═══════════════════════════════════════════════════════════════
+function calcLevel() {
+  const n = STATE.sessions.length;
+  const avg = n ? STATE.sessions.reduce((a,s)=>a+s.score,0)/n : 0;
+  return Math.max(1, Math.min(100, Math.floor(n*0.5 + avg/10)));
+}
+
+function updateSidebar() {
+  STATE.level = calcLevel();
+  document.getElementById('level-pill').textContent = 'Level '+STATE.level;
+  document.getElementById('session-count').textContent = STATE.sessions.length+' sessions';
+  document.getElementById('s-sessions').textContent = STATE.sessions.length;
+  const scores = STATE.sessions.map(s=>s.score);
+  if (scores.length) {
+    document.getElementById('s-avg').textContent = Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+    document.getElementById('s-best').textContent = Math.max(...scores);
+  }
+  const mastered = STATE.sessions.filter(s=>s.lessonMastered).length;
+  document.getElementById('s-mastered').textContent = mastered;
+
+  updateMenu();
+
+  // Phase
+  const lv = STATE.level;
+  const phase = lv < 16 ? 'Phase 1 · Install' : lv < 41 ? 'Phase 2 · Groove' : lv < 71 ? 'Phase 3 · Pressure' : 'Phase 4 · Complete';
+  document.getElementById('phase-label').textContent = phase;
+
+  // Lesson card
+  if (STATE.activeLesson) {
+    document.getElementById('lesson-title').textContent = STATE.activeLesson.title;
+    document.getElementById('lesson-q').textContent = STATE.activeLesson.question;
+    const att = STATE.activeLesson.attempts || 0;
+    const best = STATE.activeLesson.bestScore || 0;
+    document.getElementById('lesson-attempts').textContent = `Attempts: ${att} · Best: ${best} · Need: 70+ applied`;
+    document.getElementById('lesson-bar').style.width = Math.min(100, (best/70)*100)+'%';
+  }
+}
+
+function saveState() {
+  localStorage.setItem('c2a_sessions', JSON.stringify(STATE.sessions));
+  localStorage.setItem('c2a_lesson', JSON.stringify(STATE.activeLesson));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ARCHETYPE SELECTION
+// ═══════════════════════════════════════════════════════════════
+function selectArchetype(arch) {
+  STATE.selectedArch = arch;
+  document.querySelectorAll('.archetype-btn').forEach(b=>b.classList.toggle('active', b.dataset.arch===arch));
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LLM CALLS
+// ═══════════════════════════════════════════════════════════════
+async function callClaude(messages, system, maxTokens=1024) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens: maxTokens,
+      system,
+      messages,
+    })
+  });
+  const data = await res.json();
+  return data.content.map(c=>c.type==='text'?c.text:'').join('');
+}
+
+async function generateScenario(arch) {
+  const archInfo = ARCHETYPES[arch];
+  const sessCount = STATE.sessions.length;
+  const domainLine = STATE.domain?.field ? `User's domain: ${STATE.domain.field}${STATE.domain.context ? ' (' + STATE.domain.context + ')' : ''}. Make the scenario relevant to this domain.` : '';
+  const system = `You are a C2A scenario designer. Generate constraint scenarios that are SHORT (under 75 words), direct, and visceral. No poetry. Pure structural pressure. Respond ONLY with valid JSON.`;
+  const prompt = `Generate a C2A training scenario for the ${arch.toUpperCase()} archetype.
+${domainLine}
+
+Archetype essence: "${archInfo.essence}"
+User level: ${calcLevel()} (${sessCount} sessions completed)
+${STATE.activeLesson ? `Active lesson the user is working on: "${STATE.activeLesson.title}" — ${STATE.activeLesson.question}` : ''}
+
+Return ONLY this JSON (no markdown, no explanation):
+{
+  "title": "3-5 word concrete title",
+  "situation": "Under 75 words. 2-4 sentences. Mechanical facts: actors, goal, constraint pressure, stakes. No metaphors.",
+  "hook": "One sentence: why this matters right now",
+  "hint": "One sentence pointing toward a lever without giving it away"
+}`;
+
+  const raw = await callClaude([{role:'user',content:prompt}], system);
+  const j = raw.slice(raw.indexOf('{'), raw.lastIndexOf('}')+1);
+  return JSON.parse(j);
+}
+
+async function evaluateTransmutation(transmutation, scenario, arch, duration) {
+  const archInfo = ARCHETYPES[arch];
+  const level = calcLevel();
+  const velocityInfo = duration <= 30 ? '+10% bonus (reflexive)' : duration <= 60 ? 'on pace' : duration <= 90 ? '-10% hesitation' : '-30% overthinking';
+  const system = `You are a C2A transmutation judge. Evaluate quality of constraint-thinking. Be direct and conversational — talk to the user like a coach. Respond ONLY with valid JSON.`;
+  const prompt = `Evaluate this C2A transmutation for the ${arch.toUpperCase()} archetype.
+
+SCENARIO: ${scenario.title}
+${scenario.situation}
+
+TRANSMUTATION: "${transmutation}"
+
+USER LEVEL: ${level}
+TIME TAKEN: ${duration.toFixed(1)}s (${velocityInfo})
+${STATE.activeLesson ? `ACTIVE LESSON: "${STATE.activeLesson.title}" — check if they applied it.` : ''}
+
+KEY DISTINCTION:
+- COPING: finding workarounds, the constraint is not the source of advantage
+- TRUE TRANSMUTATION: the constraint ITSELF becomes the source of advantage; removing it would remove the advantage
+
+Score calibration for Level ${level}:
+- Below 50: Coping or avoidance disguised as transmutation
+- 50-65: Constraint acknowledged but barely leveraged
+- 65-75: Constraint genuinely becomes advantage
+- 75-85: Strong transmutation, novel angle
+- 85+: Exceptional — would impress at any level
+
+Return ONLY this JSON:
+{
+  "reframing": <0-30>,
+  "novelty": <0-25>,
+  "practicality": <0-25>,
+  "sophistication": <0-20>,
+  "what_worked": "Direct coach voice. 'You did X, that works because...' 1-2 sentences.",
+  "what_missed": "Direct. 'But here's what you missed...' 1 sentence.",
+  "growth_edge": "Specific actionable: 'Next time, ask yourself...' 1 sentence.",
+  "pattern": "Short pattern name e.g. 'The Removal Test' or 'Surface-Level Swap'",
+  "breakthrough": <true/false>,
+  "lesson_applied": <true/false — was the active lesson applied? false if no lesson>,
+  "new_lesson_title": "Short memorable title for their growth edge e.g. 'What The Constraint Creates'",
+  "new_lesson_question": "A practice question derived from the growth edge e.g. 'If I removed this constraint, would my advantage disappear?'"
+}`;
+
+  const raw = await callClaude([{role:'user',content:prompt}], system, 800);
+  const j = raw.slice(raw.indexOf('{'), raw.lastIndexOf('}')+1);
+  return JSON.parse(j);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VELOCITY MULTIPLIER
+// ═══════════════════════════════════════════════════════════════
+function velocityMultiplier(sec) {
+  if (sec <= 30)  return [1.10, '⚡ Reflexive +10%'];
+  if (sec <= 60)  return [1.00, '✓ On Pace'];
+  if (sec <= 90)  return [0.90, '⚠ Hesitation -10%'];
+  if (sec <= 120) return [0.70, '⚠ Overthinking -30%'];
+  return [0.50, '✖ Paralysis -50%'];
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SESSION FLOW
+// ═══════════════════════════════════════════════════════════════
+async function startSession() {
+  const arch = STATE.selectedArch;
+  const info = ARCHETYPES[arch];
+
+  // Archetype reveal
+  show('archetype');
+  document.getElementById('reveal-sym').textContent = info.sym;
+  document.getElementById('reveal-name').textContent = arch.charAt(0).toUpperCase()+arch.slice(1);
+  document.getElementById('reveal-essence').textContent = info.essence;
+  document.getElementById('reveal-keys').innerHTML = info.keys.map(k=>`<div class="arch-key-item">— ${k}</div>`).join('');
+
+  // Generate scenario in background
+  let scenario;
+  try {
+    scenario = await generateScenario(arch);
+  } catch(e) {
+    toast('⚠ Could not generate scenario. Check your connection.');
+    show('home');
+    return;
+  }
+  STATE.currentScenario = { ...scenario, arch };
+
+  // Brief pause on archetype reveal then show scenario
+  await delay(1800);
+  fillScenario(scenario, arch);
+  show('scenario');
+}
+
+
+function fillScenario(sc, arch) {
+  const info = ARCHETYPES[arch];
+  document.getElementById('sc-arch-tag').textContent = `${info.sym} ${arch.charAt(0).toUpperCase()+arch.slice(1)}`;
+  document.getElementById('sc-phase').textContent = `Phase ${STATE.level < 16 ? '1' : STATE.level < 41 ? '2' : '3'} · Level ${STATE.level}`;
+  document.getElementById('sc-title').textContent = sc.title;
+  document.getElementById('sc-hook').textContent = sc.hook;
+  document.getElementById('sc-body').textContent = sc.situation;
+
+  const reminder = document.getElementById('sc-lesson-reminder');
+  if (STATE.activeLesson) {
+    reminder.classList.remove('hidden');
+    document.getElementById('sc-lesson-title').textContent = '🎯 ' + STATE.activeLesson.title;
+    document.getElementById('sc-lesson-q').textContent = STATE.activeLesson.question;
+  } else {
+    reminder.classList.add('hidden');
+  }
+}
+
+function goToTransmute() {
+  const sc = STATE.currentScenario;
+  document.getElementById('sm-title').textContent = sc.title;
+  document.getElementById('sm-body').textContent = sc.situation;
+  document.getElementById('trans-num').textContent = '1 / 1';
+  document.getElementById('trans-in').value = '';
+  document.getElementById('trans-btn').disabled = true;
+  onTransInput();
+  show('transmute');
+  startTransTimer(90);
+  STATE.transStartTime = Date.now();
+}
+
+// ── Timer ──
+function clearTimers() {
+  clearInterval(STATE.timerInterval);
+  clearInterval(STATE.retryTimerInterval);
+}
+
+function startTransTimer(seconds) {
+  clearTimers();
+  let t = seconds;
+  const el = document.getElementById('timer');
+  const updateDisplay = () => {
+    const m = Math.floor(t/60), s = t%60;
+    el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    el.className = 'timer-display' + (t<=15?' urgent':t<=30?' warning':'');
+  };
+  updateDisplay();
+  STATE.timerInterval = setInterval(()=>{
+    t--;
+    updateDisplay();
+    if (t<=0) { clearInterval(STATE.timerInterval); submitTransmutation(true); }
+  },1000);
+}
+
+function startRetryTimer() {
+  let t = 60;
+  const el = document.getElementById('retry-timer');
+  const upd = () => {
+    const m=Math.floor(t/60),s=t%60;
+    el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    el.style.color=t<=15?'#c0392b':t<=30?'#baa028':'var(--white)';
+  };
+  upd();
+  STATE.retryTimerInterval = setInterval(()=>{
+    t--;upd();
+    if(t<=0){clearInterval(STATE.retryTimerInterval);skipCorrection();}
+  },1000);
+}
+
+// ── Word count ──
+function onTransInput() {
+  const v = document.getElementById('trans-in').value;
+  const wc = v.trim().split(/\s+/).filter(w=>w).length;
+  const el = document.getElementById('wc');
+  el.textContent = `${wc} / 30 words`;
+  el.className = 'word-count-display' + (wc>30?' over':'');
+  document.getElementById('trans-btn').disabled = wc < 3;
+}
+
+function onRetryInput() {
+  const v = document.getElementById('retry-in').value;
+  const wc = v.trim().split(/\s+/).filter(w=>w).length;
+  const el = document.getElementById('rwc');
+  el.textContent = `${wc} / 30 words`;
+  el.className = 'word-count-display' + (wc>30?' over':'');
+  document.getElementById('retry-btn').disabled = wc < 3;
+}
+
+// ── Submit ──
+async function submitTransmutation(timedOut=false) {
+  clearTimers();
+  const text = document.getElementById('trans-in').value.trim();
+  if (!text && !timedOut) return;
+  const duration = (Date.now() - STATE.transStartTime) / 1000;
+  show('evaluating');
+
+  let evaluation;
+  try {
+    evaluation = await evaluateTransmutation(text || '(no response — timed out)', STATE.currentScenario, STATE.currentScenario.arch, duration);
+  } catch(e) {
+    toast('⚠ Evaluation failed. Using fallback score.');
+    evaluation = { reframing:15, novelty:12, practicality:12, sophistication:10, what_worked:'Could not evaluate.', what_missed:'Connection issue.', growth_edge:'Try again.', pattern:'Timeout', breakthrough:false, lesson_applied:false, new_lesson_title:'Keep Transmuting', new_lesson_question:'Am I truly transmuting, or just coping?' };
+  }
+
+  const rawScore = evaluation.reframing + evaluation.novelty + evaluation.practicality + evaluation.sophistication;
+  const [mult, velMsg] = velocityMultiplier(duration);
+  const finalScore = Math.min(100, Math.round(rawScore * mult));
+  evaluation.finalScore = finalScore;
+  evaluation.rawScore = rawScore;
+  evaluation.velMsg = velMsg;
+  evaluation.duration = duration;
+
+  STATE.firstAttemptScore = evaluation;
+  STATE.currentScore = evaluation;
+
+  // Correction loop only for level < 16 and score < 70
+  if (STATE.level < 16 && finalScore < 70 && !timedOut) {
+    showCorrection(evaluation, finalScore);
+  } else {
+    showResult(evaluation, finalScore);
+  }
+}
+
+async function submitRetry() {
+  clearTimers();
+  const text = document.getElementById('retry-in').value.trim();
+  if (!text) return skipCorrection();
+  const duration = (Date.now() - (STATE.retryStart || Date.now())) / 1000;
+  show('evaluating');
+
+  let evaluation;
+  try {
+    evaluation = await evaluateTransmutation(text, STATE.currentScenario, STATE.currentScenario.arch, duration);
+  } catch(e) {
+    return skipCorrection();
+  }
+
+  const rawScore = evaluation.reframing + evaluation.novelty + evaluation.practicality + evaluation.sophistication;
+  const [mult, velMsg] = velocityMultiplier(duration);
+  const finalScore = Math.min(100, Math.round(rawScore * mult));
+  evaluation.finalScore = finalScore;
+  evaluation.rawScore = rawScore;
+  evaluation.velMsg = velMsg;
+  evaluation.duration = duration;
+
+  // Use better of two
+  if (finalScore > STATE.firstAttemptScore.finalScore) {
+    STATE.currentScore = evaluation;
+    toast('↑ Improved: ' + STATE.firstAttemptScore.finalScore + ' → ' + finalScore);
+  } else {
+    STATE.currentScore = STATE.firstAttemptScore;
+    toast('Original score kept: ' + STATE.firstAttemptScore.finalScore);
+  }
+  showResult(STATE.currentScore, STATE.currentScore.finalScore);
+}
+
+function skipCorrection() {
+  clearTimers();
+  showResult(STATE.firstAttemptScore, STATE.firstAttemptScore.finalScore);
+}
+
+function showCorrection(ev, score) {
+  document.getElementById('corr-score-line').textContent = `Score: ${score}/100 · Threshold: 70`;
+  document.getElementById('corr-missed').textContent = ev.what_missed;
+  document.getElementById('corr-edge').textContent = ev.growth_edge;
+  document.getElementById('retry-in').value = '';
+  onRetryInput();
+  show('correction');
+  STATE.retryStart = Date.now();
+  startRetryTimer();
+}
+
+function showResult(ev, score) {
+  clearTimers();
+
+  // Score num
+  const rScore = document.getElementById('r-score');
+  rScore.textContent = score;
+  rScore.className = 'result-num ' + (score>=85?'excellent':score>=70?'good':score>=50?'fair':'poor');
+  document.getElementById('r-score-label').textContent = `Score · ${STATE.currentScenario.arch.charAt(0).toUpperCase()+STATE.currentScenario.arch.slice(1)} · ${ev.duration?.toFixed(1)}s`;
+  document.getElementById('r-pattern').textContent = ev.pattern;
+  document.getElementById('r-arch-label').textContent = ev.breakthrough ? '🌟 Breakthrough moment' : '';
+  document.getElementById('r-velocity').textContent = ev.velMsg;
+
+  // Bars
+  const bars = [
+    ['Reframing', ev.reframing, 30],
+    ['Novelty', ev.novelty, 25],
+    ['Practicality', ev.practicality, 25],
+    ['Sophistication', ev.sophistication, 20],
+  ];
+  document.getElementById('score-bars').innerHTML = bars.map(([name,val,max])=>`
+    <div class="score-bar-row">
+      <div class="score-bar-label"><span class="score-bar-name">${name}</span><span class="score-bar-val">${val}/${max}</span></div>
+      <div class="score-bar-track"><div class="score-bar-fill" style="width:${(val/max*100)}%"></div></div>
+    </div>`).join('');
+
+  document.getElementById('r-worked').textContent = ev.what_worked;
+  document.getElementById('r-edge').textContent = ev.growth_edge;
+
+  // Update lesson
+  updateLesson(ev, score);
+
+  // Lesson display
+  const badge = document.getElementById('r-lesson-badge');
+  badge.textContent = ev.lesson_applied ? 'Applied ✓' : 'Not applied';
+  badge.className = 'lesson-applied-badge ' + (ev.lesson_applied ? 'yes' : 'no');
+  if (STATE.activeLesson) {
+    document.getElementById('r-lesson-status').textContent = STATE.activeLesson.demonstrated ? '🎓 Lesson Mastered!' : 'Active Lesson';
+    document.getElementById('r-lesson-title').textContent = STATE.activeLesson.title;
+  } else {
+    document.getElementById('r-lesson-status').textContent = 'New Lesson Assigned';
+    document.getElementById('r-lesson-title').textContent = ev.new_lesson_title;
+  }
+
+  // Record session
+  STATE.sessions.push({ score, arch: STATE.currentScenario.arch, pattern: ev.pattern, lessonMastered: false, ts: Date.now() });
+  saveState();
+  updateSidebar();
+
+  show('result');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LESSON MANAGEMENT
+// ═══════════════════════════════════════════════════════════════
+function updateLesson(ev, score) {
+  if (!STATE.activeLesson) {
+    STATE.activeLesson = { title: ev.new_lesson_title, question: ev.new_lesson_question, attempts: 1, bestScore: score, demonstrated: false };
+  } else {
+    STATE.activeLesson.attempts = (STATE.activeLesson.attempts||0) + 1;
+    STATE.activeLesson.bestScore = Math.max(STATE.activeLesson.bestScore||0, score);
+    if (score >= 70 && ev.lesson_applied) {
+      STATE.activeLesson.demonstrated = true;
+      STATE.sessions[STATE.sessions.length-1].lessonMastered = true;
+      toast('🎓 Lesson mastered: ' + STATE.activeLesson.title);
+      // Assign new lesson from this session's growth edge
+      STATE.activeLesson = { title: ev.new_lesson_title, question: ev.new_lesson_question, attempts: 0, bestScore: 0, demonstrated: false };
+    }
+  }
+  saveState();
+  updateSidebar();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 3500);
+}
+
+function delay(ms) { return new Promise(r=>setTimeout(r,ms)); }
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+(async () => {
+  const bar = document.getElementById('load-bar');
+  const overlay = document.getElementById('loading-overlay');
+  bar.style.width = '60%';
+  await delay(400);
+  bar.style.width = '100%';
+  await delay(600);
+  overlay.classList.add('hidden');
+  updateSidebar();
+})();
+</script>
+</body>
+</html>
