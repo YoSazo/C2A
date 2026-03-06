@@ -51,27 +51,60 @@ fn normalize(path: &Path) -> PathBuf {
 fn resolve_backend_script(app: &tauri::AppHandle) -> Result<PathBuf, String> {
     let mut candidates: Vec<PathBuf> = Vec::new();
 
+    if let Some(path) = app.path_resolver().resolve_resource("c2a_runtime/C2A.py") {
+        push_candidate(&mut candidates, path);
+    }
     if let Some(path) = app.path_resolver().resolve_resource("C2A.py") {
         push_candidate(&mut candidates, path);
     }
 
     if let Some(dir) = app.path_resolver().resource_dir() {
+        push_candidate(&mut candidates, dir.join("c2a_runtime").join("C2A.py"));
+        push_candidate(&mut candidates, dir.join("resources").join("c2a_runtime").join("C2A.py"));
+        push_candidate(&mut candidates, dir.join("_up_").join("c2a_runtime").join("C2A.py"));
         push_candidate(&mut candidates, dir.join("C2A.py"));
         push_candidate(&mut candidates, dir.join("resources").join("C2A.py"));
+        push_candidate(&mut candidates, dir.join("_up_").join("C2A.py"));
     }
 
     if let Ok(cwd) = std::env::current_dir() {
+        push_candidate(&mut candidates, cwd.join("c2a_runtime").join("C2A.py"));
+        push_candidate(&mut candidates, cwd.join("_up_").join("c2a_runtime").join("C2A.py"));
         push_candidate(&mut candidates, cwd.join("C2A.py"));
+        push_candidate(&mut candidates, cwd.join("_up_").join("C2A.py"));
+        push_candidate(
+            &mut candidates,
+            cwd.join("..").join("..").join("..").join("c2a_runtime").join("C2A.py"),
+        );
         push_candidate(&mut candidates, cwd.join("..").join("..").join("..").join("C2A.py"));
     }
 
     if let Ok(exe) = std::env::current_exe() {
         if let Some(dir) = exe.parent() {
+            push_candidate(&mut candidates, dir.join("c2a_runtime").join("C2A.py"));
+            push_candidate(&mut candidates, dir.join("_up_").join("c2a_runtime").join("C2A.py"));
             push_candidate(&mut candidates, dir.join("C2A.py"));
+            push_candidate(&mut candidates, dir.join("_up_").join("C2A.py"));
+            push_candidate(
+                &mut candidates,
+                dir.join("..").join("..").join("..").join("c2a_runtime").join("C2A.py"),
+            );
             push_candidate(&mut candidates, dir.join("..").join("..").join("..").join("C2A.py"));
             push_candidate(
                 &mut candidates,
+                dir.join("..").join("Resources").join("c2a_runtime").join("C2A.py"),
+            );
+            push_candidate(
+                &mut candidates,
+                dir.join("..").join("Resources").join("_up_").join("c2a_runtime").join("C2A.py"),
+            );
+            push_candidate(
+                &mut candidates,
                 dir.join("..").join("Resources").join("C2A.py"),
+            );
+            push_candidate(
+                &mut candidates,
+                dir.join("..").join("Resources").join("_up_").join("C2A.py"),
             );
         }
     }
