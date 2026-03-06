@@ -1,0 +1,93 @@
+[
+  {
+    "entry_id": "rwl_web_1772809194319",
+    "logged_at": "2026-03-06T08:59:54.319239",
+    "date_str": "2026-03-06",
+    "constraint": "No budget",
+    "transmutation": "Narrowed scope",
+    "new_constraint": "Lower growth ceiling",
+    "archetype_guess": null,
+    "domain": null,
+    "reviewed": false,
+    "review_notes": null,
+    "loop_continuing": null
+  },
+  {
+    "entry_id": "rwl_web_1772809211418",
+    "logged_at": "2026-03-06T09:00:11.418701",
+    "date_str": "2026-03-06",
+    "constraint": "No budget",
+    "transmutation": "Narrowed scope",
+    "new_constraint": "Lower growth ceiling",
+    "archetype_guess": null,
+    "domain": null,
+    "reviewed": false,
+    "review_notes": null,
+    "loop_continuing": null
+  },
+  {
+    "entry_id": "rwl_web_1772809294992",
+    "logged_at": "2026-03-06T09:01:34.992666",
+    "date_str": "2026-03-06",
+    "constraint": "No budget",
+    "transmutation": "Narrowed scope",
+    "new_constraint": "Lower growth ceiling",
+    "archetype_guess": null,
+    "domain": null,
+    "reviewed": false,
+    "review_notes": null,
+    "loop_continuing": null
+  },
+  {
+    "entry_id": "rwl_web_1772809311289",
+    "logged_at": "2026-03-06T09:01:51.289490",
+    "date_str": "2026-03-06",
+    "constraint": "No budget",
+    "transmutation": "Narrowed scope",
+    "new_constraint": "Lower growth ceiling",
+    "archetype_guess": null,
+    "domain": null,
+    "reviewed": false,
+    "review_notes": null,
+    "loop_continuing": null
+  },
+  {
+    "entry_id": "rwl_web_1772809404084",
+    "logged_at": "2026-03-06T09:03:24.084857",
+    "date_str": "2026-03-06",
+    "constraint": "No budget",
+    "transmutation": "Narrowed scope",
+    "new_constraint": "Lower growth ceiling",
+    "archetype_guess": null,
+    "domain": null,
+    "reviewed": false,
+    "review_notes": null,
+    "loop_continuing": null
+  },
+  {
+    "entry_id": "rwl_web_1772809422617",
+    "logged_at": "2026-03-06T09:03:42.617356",
+    "date_str": "2026-03-06",
+    "constraint": "No budget",
+    "transmutation": "Narrowed scope",
+    "new_constraint": "Lower growth ceiling",
+    "archetype_guess": null,
+    "domain": null,
+    "reviewed": false,
+    "review_notes": null,
+    "loop_continuing": null
+  },
+  {
+    "entry_id": "rwl_web_1772809491154",
+    "logged_at": "2026-03-06T09:04:51.154881",
+    "date_str": "2026-03-06",
+    "constraint": "No budget",
+    "transmutation": "Narrowed scope",
+    "new_constraint": "Lower growth ceiling",
+    "archetype_guess": null,
+    "domain": null,
+    "reviewed": false,
+    "review_notes": null,
+    "loop_continuing": null
+  }
+]

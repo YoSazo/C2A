@@ -1,0 +1,52 @@
+{
+  "build": {
+    "beforeDevCommand": "",
+    "beforeBuildCommand": "",
+    "devPath": "http://127.0.0.1:8765",
+    "distDir": "../tauri-static"
+  },
+  "package": {
+    "productName": "C2A Training Grounds",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "shell": {
+        "open": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "category": "Education",
+      "identifier": "com.c2a.traininggrounds",
+      "icon": [
+        "icons/icon.ico"
+      ],
+      "resources": [
+        "../C2A.py",
+        "../c2a_runtime/**/*.py",
+        "../ui/**/*.html",
+        "../memory_data/**/*",
+        "../memory_data_recovery/**/*",
+        "../research_notes/**/*"
+      ],
+      "targets": [
+        "msi",
+        "nsis"
+      ],
+      "windows": {
+        "wix": {
+          "language": "en-US"
+        }
+      }
+    },
+    "security": {
+      "csp": null
+    },
+    "updater": {
+      "active": false
+    },
+    "windows": []
+  }
+}
