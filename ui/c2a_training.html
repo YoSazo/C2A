@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1015,76 +1015,43 @@ async function callClaude(messages, system, maxTokens=1024) {
 }
 
 async function generateScenario(arch) {
-  const archInfo = ARCHETYPES[arch];
-  const sessCount = STATE.sessions.length;
-  const domainLine = STATE.domain?.field ? `User's domain: ${STATE.domain.field}${STATE.domain.context ? ' (' + STATE.domain.context + ')' : ''}. Make the scenario relevant to this domain.` : '';
-  const system = `You are a C2A scenario designer. Generate constraint scenarios that are SHORT (under 75 words), direct, and visceral. No poetry. Pure structural pressure. Respond ONLY with valid JSON.`;
-  const prompt = `Generate a C2A training scenario for the ${arch.toUpperCase()} archetype.
-${domainLine}
-
-Archetype essence: "${archInfo.essence}"
-User level: ${calcLevel()} (${sessCount} sessions completed)
-${STATE.activeLesson ? `Active lesson the user is working on: "${STATE.activeLesson.title}"  ${STATE.activeLesson.question}` : ''}
-
-Return ONLY this JSON (no markdown, no explanation):
-{
-  "title": "3-5 word concrete title",
-  "situation": "Under 75 words. 2-4 sentences. Mechanical facts: actors, goal, constraint pressure, stakes. No metaphors.",
-  "hook": "One sentence: why this matters right now",
-  "hint": "One sentence pointing toward a lever without giving it away"
-}`;
-
-  const raw = await callClaude([{role:'user',content:prompt}], system);
-  const j = raw.slice(raw.indexOf('{'), raw.lastIndexOf('}')+1);
-  return JSON.parse(j);
+  const payload = {
+    archetype: arch,
+    domain: STATE.domain?.field || null,
+    llm_model: STATE.llmModel || 'qwen3.5:9b',
+  };
+  const data = await withTimeout(api('POST', '/api/scenario', payload), 12000, 'scenario');
+  return {
+    title: data.title || 'Constraint Drill',
+    situation: data.situation || 'No scenario generated.',
+    hook: data.hook || '',
+    hint: data.hint || '',
+    arch: data.arch || arch,
+  };
 }
 
 async function evaluateTransmutation(transmutation, scenario, arch, duration) {
-  const archInfo = ARCHETYPES[arch];
-  const level = calcLevel();
-  const velocityInfo = duration <= 30 ? '+10% bonus (reflexive)' : duration <= 60 ? 'on pace' : duration <= 90 ? '-10% hesitation' : '-30% overthinking';
-  const system = `You are a C2A transmutation judge. Evaluate quality of constraint-thinking. Be direct and conversational  talk to the user like a coach. Respond ONLY with valid JSON.`;
-  const prompt = `Evaluate this C2A transmutation for the ${arch.toUpperCase()} archetype.
-
-SCENARIO: ${scenario.title}
-${scenario.situation}
-
-TRANSMUTATION: "${transmutation}"
-
-USER LEVEL: ${level}
-TIME TAKEN: ${duration.toFixed(1)}s (${velocityInfo})
-${STATE.activeLesson ? `ACTIVE LESSON: "${STATE.activeLesson.title}"  check if they applied it.` : ''}
-
-KEY DISTINCTION:
-- COPING: finding workarounds, the constraint is not the source of advantage
-- TRUE TRANSMUTATION: the constraint ITSELF becomes the source of advantage; removing it would remove the advantage
-
-Score calibration for Level ${level}:
-- Below 50: Coping or avoidance disguised as transmutation
-- 50-65: Constraint acknowledged but barely leveraged
-- 65-75: Constraint genuinely becomes advantage
-- 75-85: Strong transmutation, novel angle
-- 85+: Exceptional  would impress at any level
-
-Return ONLY this JSON:
-{
-  "reframing": <0-30>,
-  "novelty": <0-25>,
-  "practicality": <0-25>,
-  "sophistication": <0-20>,
-  "what_worked": "Direct coach voice. 'You did X, that works because...' 1-2 sentences.",
-  "what_missed": "Direct. 'But here's what you missed...' 1 sentence.",
-  "growth_edge": "Specific actionable: 'Next time, ask yourself...' 1 sentence.",
-  "pattern": "Short pattern name e.g. 'The Removal Test' or 'Surface-Level Swap'",
-  "breakthrough": <true/false>,
-  "lesson_applied": <true/false  was the active lesson applied? false if no lesson>,
-  "new_lesson_title": "Short memorable title for their growth edge e.g. 'What The Constraint Creates'",
-  "new_lesson_question": "A practice question derived from the growth edge e.g. 'If I removed this constraint, would my advantage disappear?'"
-}`;
-
-  const raw = await callClaude([{role:'user',content:prompt}], system, 800);
-  const j = raw.slice(raw.indexOf('{'), raw.lastIndexOf('}')+1);
-  return JSON.parse(j);
+  const payload = {
+    transmutation,
+    scenario,
+    archetype: arch,
+    llm_model: STATE.llmModel || 'qwen3.5:9b',
+  };
+  const data = await withTimeout(api('POST', '/api/evaluate', payload), 20000, 'evaluate');
+  return {
+    reframing: Number(data.reframing || 0),
+    novelty: Number(data.novelty || 0),
+    practicality: Number(data.practicality || 0),
+    sophistication: Number(data.sophistication || 0),
+    what_worked: data.what_worked || '',
+    what_missed: data.what_missed || '',
+    growth_edge: data.growth_edge || '',
+    pattern: data.pattern || 'Constraint Shift',
+    breakthrough: !!data.breakthrough,
+    lesson_applied: !!data.lesson_applied,
+    new_lesson_title: data.new_lesson_title || 'Sharpen The Constraint',
+    new_lesson_question: data.new_lesson_question || 'What advantage disappears if the constraint is removed?',
+  };
 }
 
 // 
@@ -1117,9 +1084,14 @@ async function startSession() {
   try {
     scenario = await generateScenario(arch);
   } catch(e) {
-    toast(' Could not generate scenario. Check your connection.');
-    show('home');
-    return;
+    toast(' Could not generate scenario. Using fallback.');
+    scenario = {
+      title: 'Constraint Drill',
+      situation: 'You have one week and half the resources. Deliver an outcome stakeholders can trust.',
+      hook: 'Pressure reveals structure.',
+      hint: 'Use the constraint as leverage, not obstacle.',
+      arch,
+    };
   }
   STATE.currentScenario = { ...scenario, arch };
 
@@ -1387,6 +1359,11 @@ function toast(msg) {
 }
 
 function delay(ms) { return new Promise(r=>setTimeout(r,ms)); }
+
+function withTimeout(promise, ms, label='request') {
+  const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timeout after ' + ms + 'ms')), ms));
+  return Promise.race([promise, timeout]);
+}
 
 
 //
@@ -2232,26 +2209,45 @@ startSession = async function() {
 
   if (level >= 51) {
     ensureRealLifeScreen();
+    toast('Level 51+ uses real-world mode. Log your live constraint here.');
     showScreen('reallife');
     return;
   }
 
   const arch = selectTrainingArchetype(level);
+  const info = ARCHETYPES[arch] || ARCHETYPES.velocity;
   syncArchetypeHighlight(arch);
   api('POST', '/api/state/select-archetype', { archetype: arch }).catch(() => {});
 
   if (level <= 10) STATE.detectionState = { required: false, passed: true };
   else STATE.detectionState = { required: true, passed: false };
 
+  // Restore CLI-like archetype reveal while scenario is generated.
+  show('archetype');
+  const rs = document.getElementById('reveal-sym');
+  const rn = document.getElementById('reveal-name');
+  const re = document.getElementById('reveal-essence');
+  const rk = document.getElementById('reveal-keys');
+  if (rs) rs.textContent = info.sym || '';
+  if (rn) rn.textContent = arch.charAt(0).toUpperCase() + arch.slice(1);
+  if (re) re.textContent = info.essence || '';
+  if (rk) rk.innerHTML = (info.keys || []).map(k => `<div class="arch-key-item"> ${k}</div>`).join('');
+
   let scenario;
   try {
     scenario = await generateScenario(arch);
   } catch (e) {
-    toast('Could not generate scenario. Check your model/backend.');
-    show('home');
-    return;
+    toast('Could not generate scenario. Using fallback.');
+    scenario = {
+      title: 'Constraint Drill',
+      situation: 'You have one week and half the resources. Deliver an outcome stakeholders can trust.',
+      hook: 'Pressure reveals structure.',
+      hint: 'Use the constraint as leverage, not obstacle.',
+      arch,
+    };
   }
 
+  await delay(1200);
   STATE.currentScenario = { ...scenario, arch };
   fillScenario(scenario, arch);
   show('scenario');
@@ -2412,3 +2408,5 @@ goHome = function() {
 </script>
 </body>
 </html>
+
+
