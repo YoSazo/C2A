@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """C2A default app: serves web UI and backend training APIs."""
 
 import argparse
@@ -9,6 +9,7 @@ import threading
 import time
 import traceback
 import webbrowser
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 from dataclasses import asdict
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -26,6 +27,31 @@ ROOT = Path(__file__).parent
 HTML_PATH = ROOT.parent / "ui" / "c2a_training.html"
 MEMORY_DIR = ROOT.parent / "memory_data"
 WEB_STATE_PATH = MEMORY_DIR / "web_state.json"
+
+def _env_float(name: str, default: float) -> float:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    try:
+        return max(1.0, float(raw))
+    except ValueError:
+        return default
+
+
+def _env_int(name: str, default: int) -> int:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    try:
+        return max(1, int(raw))
+    except ValueError:
+        return default
+
+
+SCENARIO_TIMEOUT_SEC = _env_float("C2A_SCENARIO_TIMEOUT_SEC", 12.0)
+EVALUATE_TIMEOUT_SEC = _env_float("C2A_EVALUATE_TIMEOUT_SEC", 20.0)
+CHAT_TIMEOUT_SEC = _env_float("C2A_CHAT_TIMEOUT_SEC", 20.0)
+TIMEBOX_POOL = ThreadPoolExecutor(max_workers=_env_int("C2A_TIMEBOX_WORKERS", 8))
 
 
 class WebStateStore:
@@ -298,6 +324,11 @@ REAL_WORLD = RealWorldLog(data_dir=str(MEMORY_DIR))
 ACTIVE_SPEED_SESSIONS: Dict[str, Dict[str, Any]] = {}
 
 
+def run_with_timeout(fn, timeout_sec: float):
+    future = TIMEBOX_POOL.submit(fn)
+    return future.result(timeout=timeout_sec)
+
+
 def get_service() -> Optional[C2AService]:
     global SERVICE, SERVICE_INIT_ERROR
     if SERVICE is not None:
@@ -562,8 +593,12 @@ class C2ARequestHandler(BaseHTTPRequestHandler):
                 self._send_json(fallback_scenario(payload))
                 return
             try:
-                data = service.generate_scenario(payload)
-            except Exception:
+                data = run_with_timeout(lambda: service.generate_scenario(payload), SCENARIO_TIMEOUT_SEC)
+            except FutureTimeoutError:
+                print(f"[WARN] /api/scenario timeout after {SCENARIO_TIMEOUT_SEC:.1f}s; using fallback")
+                data = fallback_scenario(payload)
+            except Exception as exc:
+                print(f"[WARN] /api/scenario failed ({type(exc).__name__}); using fallback")
                 data = fallback_scenario(payload)
             self._send_json(data)
             return
@@ -579,8 +614,12 @@ class C2ARequestHandler(BaseHTTPRequestHandler):
                 self._send_json(fallback_evaluation())
                 return
             try:
-                data = service.evaluate_transmutation(payload)
-            except Exception:
+                data = run_with_timeout(lambda: service.evaluate_transmutation(payload), EVALUATE_TIMEOUT_SEC)
+            except FutureTimeoutError:
+                print(f"[WARN] /api/evaluate timeout after {EVALUATE_TIMEOUT_SEC:.1f}s; using fallback")
+                data = fallback_evaluation()
+            except Exception as exc:
+                print(f"[WARN] /api/evaluate failed ({type(exc).__name__}); using fallback")
                 data = fallback_evaluation()
             self._send_json(data)
             return
@@ -593,8 +632,12 @@ class C2ARequestHandler(BaseHTTPRequestHandler):
             state = backend_state_payload()
             payload.setdefault("llm_model", state.get("llm_model", "qwen3.5:9b"))
             try:
-                text = service.chat_raw(payload)
-            except Exception:
+                text = run_with_timeout(lambda: service.chat_raw(payload), CHAT_TIMEOUT_SEC)
+            except FutureTimeoutError:
+                print(f"[WARN] /api/llm timeout after {CHAT_TIMEOUT_SEC:.1f}s")
+                text = ""
+            except Exception as exc:
+                print(f"[WARN] /api/llm failed ({type(exc).__name__})")
                 text = ""
             self._send_json({"text": text})
             return
@@ -657,5 +700,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
