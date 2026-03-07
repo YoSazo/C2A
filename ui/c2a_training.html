@@ -74,6 +74,29 @@ body {
 .archetype-btn:hover { color:var(--white); border-color:var(--line); }
 .archetype-btn.active { color:var(--white); border-color:rgba(245,245,242,.3); background:rgba(245,245,242,.04); }
 .arch-sym { font-size:14px; flex-shrink:0; }
+.archetype-readonly {
+  border:1px solid var(--line);
+  background:rgba(245,245,242,.03);
+  padding:12px;
+}
+.archetype-ro-label {
+  font-size:9px;
+  color:var(--mid);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.archetype-ro-name {
+  font-family:var(--serif);
+  font-size:22px;
+  letter-spacing:-.02em;
+  margin-bottom:6px;
+}
+.archetype-ro-meta {
+  font-size:10px;
+  color:var(--mid);
+  line-height:1.5;
+}
 
 /* Active lesson */
 .lesson-card {
@@ -371,21 +394,11 @@ body::after {
   <div id="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">Archetype</div>
-      <button class="archetype-btn" data-arch="scarcity" onclick="selectArchetype('scarcity')">
-        <span class="arch-sym"></span> Scarcity
-      </button>
-      <button class="archetype-btn active" data-arch="velocity" onclick="selectArchetype('velocity')">
-        <span class="arch-sym"></span> Velocity
-      </button>
-      <button class="archetype-btn" data-arch="asymmetry" onclick="selectArchetype('asymmetry')">
-        <span class="arch-sym"></span> Asymmetry
-      </button>
-      <button class="archetype-btn" data-arch="friction" onclick="selectArchetype('friction')">
-        <span class="arch-sym"></span> Friction
-      </button>
-      <button class="archetype-btn" data-arch="paradox" onclick="selectArchetype('paradox')">
-        <span class="arch-sym"></span> Paradox
-      </button>
+      <div class="archetype-readonly" id="archetype-readonly">
+        <div class="archetype-ro-label">System Selected</div>
+        <div class="archetype-ro-name" id="auto-arch-name">Awaiting session...</div>
+        <div class="archetype-ro-meta" id="auto-arch-meta">Chosen automatically when you begin training.</div>
+      </div>
     </div>
 
     <div class="sidebar-section">
@@ -775,7 +788,7 @@ function populateScreen(id) {
   if (id === 'gallery') {
     const g = document.getElementById('gallery-grid');
     g.innerHTML = Object.entries(ARCHETYPES).map(([k,v]) => `
-      <div style="padding:28px 20px;border-right:1px solid var(--line);cursor:pointer;" onclick="selectArchetype('${k}');goHome();">
+      <div style="padding:28px 20px;border-right:1px solid var(--line);">
         <div style="font-size:28px;margin-bottom:12px;">${v.sym}</div>
         <div style="font-family:var(--serif);font-size:16px;letter-spacing:-.02em;margin-bottom:8px;">${k.charAt(0).toUpperCase()+k.slice(1)}</div>
         <div style="font-size:11px;color:var(--mid);line-height:1.5;">${v.essence}</div>
@@ -1333,7 +1346,9 @@ function showResult(ev, score) {
   }
 
   // Record session
-  STATE.sessions.push({ score, arch: STATE.currentScenario.arch, pattern: ev.pattern, lessonMastered: false, ts: Date.now() });
+  const extraSessionMeta = STATE._pendingSessionMeta || {};
+  STATE.sessions.push({ score, arch: STATE.currentScenario.arch, pattern: ev.pattern, lessonMastered: false, ts: Date.now(), ...extraSessionMeta });
+  STATE._pendingSessionMeta = null;
   saveState();
   updateSidebar();
 
@@ -1407,7 +1422,7 @@ async function refreshBackendState() {
   STATE.speedStats = data.speed_stats || {};
   STATE.realworldToday = data.realworld_today || null;
   STATE.llmModel = data.llm_model || STATE.llmModel || 'qwen3.5:9b';
-  document.querySelectorAll('.archetype-btn').forEach(b=>b.classList.toggle('active', b.dataset.arch===STATE.selectedArch));
+  syncArchetypeHighlight(STATE.selectedArch);
 }
 
 const _origUpdateMenu = updateMenu;
@@ -1463,12 +1478,22 @@ selectArchetype = function(arch) {
 const _origShowResult = showResult;
 showResult = function(ev, score) {
   _origShowResult(ev, score);
+  const lastSession = (STATE.sessions && STATE.sessions.length) ? STATE.sessions[STATE.sessions.length - 1] : {};
   api('POST', '/api/session', {
     score,
     arch: (STATE.currentScenario && STATE.currentScenario.arch) || STATE.selectedArch || 'velocity',
     pattern: ev && ev.pattern ? ev.pattern : '',
     lessonMastered: !!(STATE.activeLesson && STATE.activeLesson.demonstrated),
     active_lesson: STATE.activeLesson || null,
+    detection_required: !!lastSession.detection_required,
+    detection_success: !!lastSession.detection_success,
+    detection_user_arch: lastSession.detection_user_arch || '',
+    detection_user_constraint: lastSession.detection_user_constraint || '',
+    target_transmutations: Number(lastSession.target_transmutations || 1),
+    completed_transmutations: Number(lastSession.completed_transmutations || 1),
+    time_taken_total: Number(lastSession.time_taken_total || 0),
+    real_life_mode: !!lastSession.real_life_mode,
+    transmutations: Array.isArray(lastSession.transmutations) ? lastSession.transmutations : [],
   }).then(refreshBackendState).then(updateSidebar).catch(()=>{});
 };
 
@@ -1680,19 +1705,101 @@ document.addEventListener('keydown', async (e) => {
 
 
 // 
-// CLI PARITY LAYER (multi-transmutation + fixed 90s + detection gate)
+// CLI PARITY LAYER (1:1 intent: auto archetype, phase gating, fixed 90s session)
 // 
 STATE.cliFlow = STATE.cliFlow || null;
 STATE.detectionState = STATE.detectionState || { required: false, passed: true };
+STATE._pendingSessionMeta = STATE._pendingSessionMeta || null;
 
 function cliTargetTransmutations(level) {
   return Math.max(1, Math.min(10, Math.floor((level || 1) / 10) + 1));
 }
 
-function pickTrainingArchetype(level) {
-  if ((level || 1) <= 10) return STATE.selectedArch || 'velocity';
-  const keys = Object.keys(ARCHETYPES);
-  return keys[Math.floor(Math.random() * keys.length)] || 'velocity';
+function archetypeNames() {
+  return Object.keys(ARCHETYPES);
+}
+
+function weakestTransmutationArchetype(sessions) {
+  const rows = {};
+  for (const s of (sessions || [])) {
+    const arch = (s.arch || '').toLowerCase();
+    if (!ARCHETYPES[arch]) continue;
+    rows[arch] = rows[arch] || { total: 0, score: 0 };
+    rows[arch].total += 1;
+    rows[arch].score += Number(s.score || 0);
+  }
+  let weakest = null;
+  let weakestAvg = Infinity;
+  for (const [arch, row] of Object.entries(rows)) {
+    const avg = row.total ? (row.score / row.total) : 0;
+    if (avg < weakestAvg) {
+      weakestAvg = avg;
+      weakest = arch;
+    }
+  }
+  return weakest;
+}
+
+function weakestDetectionArchetype(sessions) {
+  const rows = {};
+  for (const s of (sessions || [])) {
+    if (!s.detection_required) continue;
+    const arch = (s.arch || '').toLowerCase();
+    if (!ARCHETYPES[arch]) continue;
+    rows[arch] = rows[arch] || { total: 0, ok: 0 };
+    rows[arch].total += 1;
+    if (s.detection_success) rows[arch].ok += 1;
+  }
+
+  let weakest = null;
+  let weakestAcc = Infinity;
+  for (const [arch, row] of Object.entries(rows)) {
+    if (row.total < 3) continue;
+    const acc = row.ok / row.total;
+    if (acc < weakestAcc) {
+      weakestAcc = acc;
+      weakest = arch;
+    }
+  }
+  return weakest;
+}
+
+function selectTrainingArchetype(level) {
+  const sessions = STATE.sessions || [];
+  const names = archetypeNames();
+
+  if ((level || 1) <= 5) {
+    const idx = sessions.length % names.length;
+    return names[idx] || 'velocity';
+  }
+
+  if ((level || 1) >= 11) {
+    const weakDetect = weakestDetectionArchetype(sessions);
+    if (weakDetect && Math.random() < 0.7) return weakDetect;
+
+    const weakTrans = weakestTransmutationArchetype(sessions);
+    if (weakTrans) return weakTrans;
+
+    return names[Math.floor(Math.random() * names.length)] || 'velocity';
+  }
+
+  const weakTrans = weakestTransmutationArchetype(sessions);
+  if (weakTrans) return weakTrans;
+  return names[Math.floor(Math.random() * names.length)] || 'velocity';
+}
+
+function syncArchetypeHighlight(arch) {
+  STATE.selectedArch = arch;
+  const nameEl = document.getElementById('auto-arch-name');
+  const metaEl = document.getElementById('auto-arch-meta');
+  if (nameEl) {
+    nameEl.textContent = arch ? (arch.charAt(0).toUpperCase() + arch.slice(1)) : 'Awaiting session...';
+  }
+  if (metaEl) {
+    metaEl.textContent = arch
+      ? 'Chosen by C2A training logic for this session.'
+      : 'Chosen automatically when you begin training.';
+  }
 }
 
 function formatClock(secondsFloat) {
@@ -1723,8 +1830,8 @@ function ensureDetectionPanel() {
   panel.style.marginBottom = '24px';
   panel.style.background = 'rgba(245,245,242,.03)';
   panel.innerHTML = `
-    <div class="trans-label" style="margin-bottom:10px;">Constraint Identification (CLI parity)</div>
-    <div style="font-size:11px;color:var(--mid);margin-bottom:12px;">For level 11+, identify the primary archetype and name the specific constraint before transmuting.</div>
+    <div class="trans-label" style="margin-bottom:10px;">Constraint Identification</div>
+    <div style="font-size:11px;color:var(--mid);margin-bottom:12px;">Level 11+: identify primary archetype and specific constraint before transmuting.</div>
     <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px;">
       <select id="detect-arch-select" style="background:transparent;border:1px solid var(--line);color:var(--white);padding:8px 10px;min-width:220px;">
         <option value="">Select archetype...</option>
@@ -1742,9 +1849,8 @@ function ensureDetectionPanel() {
   `;
 
   const lesson = document.getElementById('sc-lesson-reminder');
-  if (lesson && lesson.parentNode === host) {
-    host.insertBefore(panel, lesson);
-  } else {
+  if (lesson && lesson.parentNode === host) host.insertBefore(panel, lesson);
+  else {
     const btn = host.querySelector('.btn-continue');
     if (btn) host.insertBefore(panel, btn);
     else host.appendChild(panel);
@@ -1768,9 +1874,7 @@ function updateDetectionUI() {
   panel.style.display = '';
   select.value = '';
   txt.value = '';
-  status.textContent = STATE.detectionState.passed
-    ? 'Constraint identified. You can transmute.'
-    : 'Detection required to continue.';
+  status.textContent = STATE.detectionState.passed ? 'Constraint identified. You can transmute.' : 'Detection required to continue.';
   status.style.color = STATE.detectionState.passed ? 'var(--white)' : 'var(--mid)';
   setScenarioContinueEnabled(!!STATE.detectionState.passed);
 }
@@ -1800,6 +1904,12 @@ function confirmConstraintDetection() {
     status.textContent = `Incorrect detection (${chosen}). Session ends.`;
     status.style.color = '#c0392b';
     setScenarioContinueEnabled(false);
+    STATE._pendingSessionMeta = {
+      detection_required: true,
+      detection_success: false,
+      detection_user_arch: chosen,
+      detection_user_constraint: desc,
+    };
     setTimeout(() => {
       toast('Constraint not identified correctly. Session ended.');
       goHome();
@@ -1808,9 +1918,94 @@ function confirmConstraintDetection() {
   }
 
   STATE.detectionState.passed = true;
+  STATE._pendingSessionMeta = {
+    detection_required: true,
+    detection_success: true,
+    detection_user_arch: chosen,
+    detection_user_constraint: desc,
+  };
   status.textContent = 'Detection passed. Continue to transmutation.';
   status.style.color = 'var(--white)';
   setScenarioContinueEnabled(true);
+}
+
+function ensureRealLifeScreen() {
+  if (document.getElementById('screen-reallife')) return;
+  const main = document.getElementById('main');
+  if (!main) return;
+  const screen = document.createElement('div');
+  screen.className = 'screen';
+  screen.id = 'screen-reallife';
+  screen.innerHTML = `
+    <div class="stub-screen">
+      <div class="stub-title">Real Life Mode</div>
+      <div class="stub-sub">Level 51+ CLI parity</div>
+      <p class="stub-body">Describe your real situation, identify the primary archetype, and name the constraint. Then transmute under fixed 90s total.</p>
+      <div style="margin-bottom:16px;">
+        <div class="trans-label" style="margin-bottom:10px;">Situation</div>
+        <textarea id="rl-situation" rows="4" style="width:100%;max-width:760px;background:transparent;border:none;border-bottom:1px solid rgba(245,245,242,.2);color:var(--white);font-family:var(--mono);font-size:12px;padding:8px 0;outline:none;resize:vertical;line-height:1.6;user-select:text;" placeholder="What situation are you facing?"></textarea>
+      </div>
+      <div style="margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <select id="rl-arch" style="background:transparent;border:1px solid var(--line);color:var(--white);padding:8px 10px;min-width:220px;">
+          <option value="">Primary archetype...</option>
+          <option value="scarcity">Scarcity</option>
+          <option value="velocity">Velocity</option>
+          <option value="asymmetry">Asymmetry</option>
+          <option value="friction">Friction</option>
+          <option value="paradox">Paradox</option>
+        </select>
+      </div>
+      <div style="margin-bottom:22px;">
+        <div class="trans-label" style="margin-bottom:10px;">Named Constraint</div>
+        <textarea id="rl-constraint" rows="2" style="width:100%;max-width:760px;background:transparent;border:none;border-bottom:1px solid rgba(245,245,242,.2);color:var(--white);font-family:var(--mono);font-size:12px;padding:8px 0;outline:none;resize:vertical;line-height:1.6;user-select:text;" placeholder="What is the actual constraint?"></textarea>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <button class="btn-transmute" onclick="beginRealLifeSession()">Begin Real-Life Session</button>
+        <button class="btn-skip" onclick="goHome()">Back</button>
+      </div>
+      <div id="rl-status" style="font-size:11px;color:var(--mid);margin-top:12px;"></div>
+    </div>
+  `;
+  main.appendChild(screen);
+}
+
+function beginRealLifeSession() {
+  const situation = (document.getElementById('rl-situation')?.value || '').trim();
+  const arch = (document.getElementById('rl-arch')?.value || '').trim().toLowerCase();
+  const constraint = (document.getElementById('rl-constraint')?.value || '').trim();
+  const status = document.getElementById('rl-status');
+
+  if (!situation || situation.length < 20) {
+    if (status) status.textContent = 'Add more detail to situation.';
+    return;
+  }
+  if (!arch || !ARCHETYPES[arch]) {
+    if (status) status.textContent = 'Choose an archetype.';
+    return;
+  }
+  if (!constraint || constraint.length < 8) {
+    if (status) status.textContent = 'Name the core constraint.';
+    return;
+  }
+
+  STATE.detectionState = { required: false, passed: true };
+  STATE.currentScenario = {
+    title: 'Real Life Constraint',
+    situation,
+    hook: 'This is your actual life context.',
+    hint: 'Use the constraint itself as the source of leverage.',
+    arch,
+  };
+  syncArchetypeHighlight(arch);
+  STATE._pendingSessionMeta = {
+    detection_required: true,
+    detection_success: true,
+    detection_user_arch: arch,
+    detection_user_constraint: constraint,
+    real_life_mode: true,
+  };
+
+  startTransmutationBlock();
 }
 
 function isTooSimilarToExisting(newInput, existing, threshold = 0.6) {
@@ -1938,36 +2133,115 @@ function finalizeCliFlow(reason) {
   flow.finalized = true;
 
   clearTimers();
-  const ev = flow.evaluations.length
-    ? aggregateCliSessionEvaluation(flow, reason)
-    : buildFallbackSessionEvaluation(reason, flow);
+  const ev = flow.evaluations.length ? aggregateCliSessionEvaluation(flow, reason) : buildFallbackSessionEvaluation(reason, flow);
+  STATE._pendingSessionMeta = {
+    ...(STATE._pendingSessionMeta || {}),
+    detection_required: !!flow.detectionRequired,
+    detection_success: !!flow.detectionPassed,
+    target_transmutations: flow.target,
+    completed_transmutations: flow.transmutations.length,
+    time_taken_total: Number(((Date.now() - flow.startedAtMs) / 1000).toFixed(2)),
+    transmutations: flow.transmutations,
+  };
 
   showResult(ev, ev.finalScore || 1);
   STATE.cliFlow = null;
+}
+
+function startTransmutationBlock() {
+  const sc = STATE.currentScenario;
+  if (!sc) {
+    toast('No active scenario.');
+    goHome();
+    return;
+  }
+
+  const target = cliTargetTransmutations(STATE.level || 1);
+  STATE.cliFlow = {
+    target,
+    transmutations: [],
+    evaluations: [],
+    durations: [],
+    startedAtMs: Date.now(),
+    currentTurnStartMs: Date.now(),
+    endsAtMs: 0,
+    finalized: false,
+    evaluating: false,
+    detectionRequired: !!STATE.detectionState.required,
+    detectionPassed: !!STATE.detectionState.passed,
+    pendingFirstAttempt: null,
+  };
+
+  document.getElementById('sm-title').textContent = sc.title;
+  document.getElementById('sm-body').textContent = sc.situation;
+  document.getElementById('trans-num').textContent = `1 / ${target}`;
+  document.getElementById('trans-in').value = '';
+  document.getElementById('trans-btn').disabled = true;
+  onTransInput();
+
+  show('transmute');
+  startTotalSessionTimer(90);
+}
+
+function acceptAttemptIntoFlow(text, evaluation, duration) {
+  const flow = STATE.cliFlow;
+  if (!flow || flow.finalized) return;
+
+  flow.transmutations.push(text);
+  flow.evaluations.push(evaluation);
+  flow.durations.push(duration);
+  flow.currentTurnStartMs = Date.now();
+
+  if (flow.transmutations.length >= flow.target) {
+    finalizeCliFlow('target_complete');
+    return;
+  }
+
+  if (remainingSessionSeconds() <= 0) {
+    finalizeCliFlow('time_expired');
+    return;
+  }
+
+  document.getElementById('trans-num').textContent = `${flow.transmutations.length + 1} / ${flow.target}`;
+  document.getElementById('trans-in').value = '';
+  onTransInput();
+  show('transmute');
+  toast(`Accepted ${flow.transmutations.length}/${flow.target}`);
 }
 
 const _baseFillScenario = fillScenario;
 fillScenario = function(sc, arch) {
   _baseFillScenario(sc, arch);
   ensureDetectionPanel();
+  ensureRealLifeScreen();
 
   const archTag = document.getElementById('sc-arch-tag');
-  if (archTag && STATE.detectionState.required) {
-    archTag.textContent = 'Constraint hidden';
-  }
+  if (archTag && STATE.detectionState.required) archTag.textContent = 'Constraint hidden';
   updateDetectionUI();
+};
+
+const _manualSelectArchetypeLegacy = selectArchetype;
+selectArchetype = function(_arch) {
+  // CLI parity: archetype is system-selected.
+  toast('Archetype is auto-selected by training logic.');
 };
 
 const _legacyStartSession = startSession;
 startSession = async function() {
   const level = STATE.level || calcLevel() || 1;
-  if (level <= 10) {
-    STATE.detectionState = { required: false, passed: true };
-    return _legacyStartSession();
+
+  if (level >= 51) {
+    ensureRealLifeScreen();
+    showScreen('reallife');
+    return;
   }
 
-  const arch = pickTrainingArchetype(level);
-  STATE.detectionState = { required: true, passed: false };
+  const arch = selectTrainingArchetype(level);
+  syncArchetypeHighlight(arch);
+  api('POST', '/api/state/select-archetype', { archetype: arch }).catch(() => {});
+
+  if (level <= 10) STATE.detectionState = { required: false, passed: true };
+  else STATE.detectionState = { required: true, passed: false };
 
   let scenario;
   try {
@@ -1988,37 +2262,7 @@ goToTransmute = function() {
     toast('Identify the constraint archetype first.');
     return;
   }
-
-  const sc = STATE.currentScenario;
-  if (!sc) {
-    toast('No active scenario.');
-    goHome();
-    return;
-  }
-
-  const target = cliTargetTransmutations(STATE.level || 1);
-  STATE.cliFlow = {
-    target,
-    transmutations: [],
-    evaluations: [],
-    durations: [],
-    startedAtMs: Date.now(),
-    currentTurnStartMs: Date.now(),
-    endsAtMs: 0,
-    finalized: false,
-    evaluating: false,
-  };
-
-  document.getElementById('sm-title').textContent = sc.title;
-  document.getElementById('sm-body').textContent = sc.situation;
-  document.getElementById('trans-num').textContent = `1 / ${target}`;
-  document.getElementById('trans-in').value = '';
-  document.getElementById('trans-btn').disabled = true;
-  onTransInput();
-
-  show('transmute');
-  startTotalSessionTimer(90);
-  STATE.transStartTime = Date.now();
+  startTransmutationBlock();
 };
 
 submitTransmutation = async function(timedOut = false) {
@@ -2069,30 +2313,79 @@ submitTransmutation = async function(timedOut = false) {
   evaluation.velMsg = velMsg;
   evaluation.duration = duration;
 
-  if (flow.finalized) return;
+  if (flow.finalized) {
+    flow.evaluating = false;
+    return;
+  }
 
-  flow.transmutations.push(text);
-  flow.evaluations.push(evaluation);
-  flow.durations.push(duration);
-  flow.currentTurnStartMs = Date.now();
+  // CLI parity: low levels allow correction loop when below threshold.
+  if ((STATE.level || 1) < 16 && finalScore < 70) {
+    flow.pendingFirstAttempt = { text, evaluation, duration };
+    STATE.firstAttemptScore = evaluation;
+    flow.evaluating = false;
+    showCorrection(evaluation, finalScore);
+    return;
+  }
+
   flow.evaluating = false;
-
-  if (flow.transmutations.length >= flow.target) {
-    finalizeCliFlow('target_complete');
-    return;
-  }
-
-  if (remainingSessionSeconds() <= 0) {
-    finalizeCliFlow('time_expired');
-    return;
-  }
-
-  document.getElementById('trans-num').textContent = `${flow.transmutations.length + 1} / ${flow.target}`;
-  document.getElementById('trans-in').value = '';
-  onTransInput();
-  show('transmute');
-  toast(`Accepted ${flow.transmutations.length}/${flow.target}`);
+  acceptAttemptIntoFlow(text, evaluation, duration);
 };
+
+submitRetry = async function() {
+  clearTimers();
+  const flow = STATE.cliFlow;
+  if (!flow || !flow.pendingFirstAttempt) return;
+
+  const retryText = (document.getElementById('retry-in').value || '').trim();
+  if (!retryText) {
+    const p = flow.pendingFirstAttempt;
+    flow.pendingFirstAttempt = null;
+    acceptAttemptIntoFlow(p.text, p.evaluation, p.duration);
+    return;
+  }
+
+  if (isTooSimilarToExisting(retryText, flow.transmutations, 0.6)) {
+    toast('Retry rejected: too similar to existing routes.');
+    return;
+  }
+
+  show('evaluating');
+  const duration = (Date.now() - (STATE.retryStart || Date.now())) / 1000;
+  let eval2;
+  try {
+    eval2 = await evaluateTransmutation(retryText, STATE.currentScenario, STATE.currentScenario.arch, duration);
+  } catch (_e) {
+    const p = flow.pendingFirstAttempt;
+    flow.pendingFirstAttempt = null;
+    acceptAttemptIntoFlow(p.text, p.evaluation, p.duration);
+    return;
+  }
+
+  const raw2 = (eval2.reframing || 0) + (eval2.novelty || 0) + (eval2.practicality || 0) + (eval2.sophistication || 0);
+  const [mult2, vel2] = velocityMultiplier(duration);
+  eval2.rawScore = raw2;
+  eval2.finalScore = Math.min(100, Math.round(raw2 * mult2));
+  eval2.velMsg = vel2;
+  eval2.duration = duration;
+
+  const first = flow.pendingFirstAttempt;
+  flow.pendingFirstAttempt = null;
+  if (eval2.finalScore > first.evaluation.finalScore) {
+    acceptAttemptIntoFlow(retryText, eval2, duration);
+  } else {
+    acceptAttemptIntoFlow(first.text, first.evaluation, first.duration);
+  }
+};
+
+skipCorrection = function() {
+  clearTimers();
+  const flow = STATE.cliFlow;
+  if (!flow || !flow.pendingFirstAttempt) return;
+  const p = flow.pendingFirstAttempt;
+  flow.pendingFirstAttempt = null;
+  acceptAttemptIntoFlow(p.text, p.evaluation, p.duration);
+};
+
 const _baseGoHomeForCli = goHome;
 goHome = function() {
   STATE.cliFlow = null;
