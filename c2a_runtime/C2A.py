@@ -101,6 +101,9 @@ class WebStateStore:
     def record_session(self, payload: Dict[str, Any]) -> None:
         with self.lock:
             sessions = self.data.setdefault("sessions", [])
+            transmutations = payload.get("transmutations") or []
+            if not isinstance(transmutations, list):
+                transmutations = []
             sessions.append(
                 {
                     "score": int(payload.get("score", 0)),
@@ -108,6 +111,15 @@ class WebStateStore:
                     "pattern": payload.get("pattern", ""),
                     "lessonMastered": bool(payload.get("lessonMastered", False)),
                     "ts": int(payload.get("ts", int(time.time() * 1000))),
+                    "detection_required": bool(payload.get("detection_required", False)),
+                    "detection_success": bool(payload.get("detection_success", False)),
+                    "detection_user_arch": str(payload.get("detection_user_arch", "")),
+                    "detection_user_constraint": str(payload.get("detection_user_constraint", "")),
+                    "target_transmutations": int(payload.get("target_transmutations", 1)),
+                    "completed_transmutations": int(payload.get("completed_transmutations", 1)),
+                    "time_taken_total": float(payload.get("time_taken_total", 0.0)),
+                    "real_life_mode": bool(payload.get("real_life_mode", False)),
+                    "transmutations": transmutations,
                 }
             )
             if "active_lesson" in payload:
