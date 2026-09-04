@@ -57,7 +57,11 @@ def test_scheduler_rules():
     assert not level_15.speed_track_active, "Speed Track should be inactive before level 16"
     assert level_16.speed_track_active, "Speed Track should activate at level 16"
     assert level_16.real_world_log_available, "Real-world log should be available at level 16"
-    assert level_41.real_world_log_mandatory, "Real-world log should be mandatory at level 41"
+    assert not level_41.real_world_log_mandatory, "Real-world log should stay optional"
+    level_70 = scheduler.get_feature_state(70)
+    assert level_70.historical_arena_available, "Historical Arena should unlock at level 70"
+    level_100 = scheduler.get_feature_state(100)
+    assert level_100.historical_beat_history, "Beat-history should unlock at level 100"
 
 
 def test_progression_logic():
@@ -75,7 +79,7 @@ def test_progression_logic():
     assert clamped_low == 1, f"Expected minimum level 1, got {clamped_low}"
 
     clamped_high = calculate_level(total_sessions=1000, avg_score=100.0, scheduler=DummyScheduler(), speed_stats={})
-    assert clamped_high == 100, f"Expected maximum level 100, got {clamped_high}"
+    assert clamped_high == 510, f"Expected uncapped level 510, got {clamped_high}"
 
 
 def test_scenario_engine_init():

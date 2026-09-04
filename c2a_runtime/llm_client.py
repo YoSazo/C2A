@@ -39,7 +39,7 @@ class LLMConfig:
     local_model: str = "qwen2.5:14b"
     
     # Anthropic settings
-    anthropic_model: str = "claude-3-5-sonnet-20241022"  # Default to Sonnet (best value)
+    anthropic_model: str = "claude-sonnet-4-20250514"  # Default to Sonnet 4
     anthropic_api_key: Optional[str] = None
 
     # NVIDIA NIM (OpenAI-compatible) settings
@@ -441,7 +441,12 @@ class LLMClient:
         messages = []
         
         if history:
-            messages.extend(history)
+            for msg in history:
+                role = msg.get("role")
+                if role not in ("user", "assistant"):
+                    # Anthropic messages API only supports user/assistant in messages.
+                    continue
+                messages.append({"role": role, "content": msg.get("content", "")})
         
         messages.append({"role": "user", "content": prompt})
         
@@ -486,6 +491,7 @@ class LLMClient:
 
         # Anthropic pricing (as of Jan 2025)
         pricing = {
+            "claude-sonnet-4-20250514": {"input": 3.0, "output": 15.0},
             "claude-3-5-sonnet-20241022": {"input": 3.0, "output": 15.0},
             "claude-3-opus-20240229": {"input": 15.0, "output": 75.0},
             "claude-3-sonnet-20240229": {"input": 3.0, "output": 15.0},

@@ -19,6 +19,31 @@ from llm_client import LLMClient, create_client_from_env
 
 from constraint_archetypes import ARCHETYPES, ConstraintArchetype
 
+# When user has no domain set, rotate across these each session (not startup-default).
+GENERAL_DOMAIN_ROTATION = [
+    "athletics and competition",
+    "visual art and craft",
+    "scientific research",
+    "medicine and caregiving",
+    "education and teaching",
+    "logistics and field operations",
+    "music and performance",
+    "community and civic life",
+    "wilderness and survival",
+    "architecture and building",
+    "cooking and hospitality",
+    "law and negotiation",
+    "parenting and family",
+    "space and engineering",
+    "journalism and investigation",
+]
+
+
+def general_domain_for_session(session_count: int) -> str:
+    if not GENERAL_DOMAIN_ROTATION:
+        return "general life"
+    return GENERAL_DOMAIN_ROTATION[session_count % len(GENERAL_DOMAIN_ROTATION)]
+
 
 @dataclass
 class ConstraintScenario:
@@ -139,12 +164,19 @@ class LLMScenarioEngine:
         
         # Extract user context
         user_domain = user_profile.get('domain', 'general life')
+        session_count = int(user_profile.get('total_sessions', 0))
+        is_general = not user_domain or user_domain.strip().lower() in {
+            'general life', 'general', 'none', 'n/a', '',
+        }
+        scenario_domain = general_domain_for_session(session_count) if is_general else user_domain
         past_constraints = user_profile.get('recent_constraints', [])
+        recent_titles = user_profile.get('recent_scenario_titles', [])
         strengths = user_profile.get('strengths', [])
         weaknesses = user_profile.get('weaknesses', [])
         
         # Build avoidance list (don't repeat recent scenarios)
-        avoid_list = "\n".join([f"- {title}" for title in self.generation_history[-10:]])
+        avoid_titles = list(recent_titles[-8:]) + self.generation_history[-10:]
+        avoid_list = "\n".join([f"- {title}" for title in avoid_titles if title])
         
         prompt = f"""You are a master constraint designer for C2A (Constraint-to-Advantage) training.
 
@@ -157,36 +189,43 @@ Core Pattern: {archetype.essence}
 
 USER CONTEXT:
 - Level: {level}/100
-- Domain: {user_domain}
+- Domain: {scenario_domain}
+- User-set domain: {user_domain if not is_general else 'none (rotate general domains each session)'}
 - Demonstrated Strengths: {', '.join(strengths) if strengths else 'Unknown (new user)'}
 - Growth Edges: {', '.join(weaknesses) if weaknesses else 'Exploring'}
 - Recent Constraints Faced: {', '.join(past_constraints[-3:]) if past_constraints else 'None yet'}
 
 GENERATION REQUIREMENTS:
 
-1. EMOTIONAL RESONANCE (Critical):
+1. DOMAIN DIVERSITY (Critical):
+   - Set the scenario in: {scenario_domain}
+   - The constraint must be recognizable WITHOUT business/startup vocabulary unless the domain above is business
+   - FORBIDDEN defaults: startup, founder, Series A, investor demo, product launch, MVP, pitch deck
+   - Use concrete actors and settings from the assigned domain (coach, surgeon, chef, ranger, etc.)
+
+2. EMOTIONAL RESONANCE:
    - This should feel REAL, not academic
-   - {"Deeply personal to their domain: " + user_domain if force_personal else "Universally relatable but specific"}
+   - {"Deeply personal to their domain: " + user_domain if force_personal else "Specific to the assigned domain above — not generic office drama"}
    - Create genuine stakes (even if small-scale)
    - The user should CARE about solving this
 
-2. ARCHETYPE ALIGNMENT:
+3. ARCHETYPE ALIGNMENT:
    - Must embody the {archetype.name} archetype authentically
    - The constraint should feel inevitable, not arbitrary
    - Multiple valid transmutation paths exist
 
-3. DIFFICULTY CALIBRATION (Level {level}):
+4. DIFFICULTY CALIBRATION (Level {level}):
    {"- BEGINNER: Constraint is obvious and stated clearly" if level <= 5 else ""}
    {"- INTERMEDIATE: Constraint requires minor insight to identify" if 6 <= level <= 10 else ""}
    {"- ADVANCED: Constraint is hidden in the situation, user must discover it" if level >= 11 else ""}
    - Complexity should match skill level
    - Should stretch but not overwhelm
 
-4. AVOID REPETITION:
+5. AVOID REPETITION:
    Do NOT create scenarios similar to:
 {avoid_list if avoid_list else "   (No prior scenarios - full creative freedom)"}
 
-5. BREVITY + CLARITY (CRITICAL):
+6. BREVITY + CLARITY (CRITICAL):
    - Scenarios must be under 75 words total.
    - 2-4 short sentences max.
    - No metaphors, no scenery, no vibe.
@@ -197,13 +236,14 @@ OUTPUT FORMAT (JSON):
 {{
     "title": "3-5 word title (concrete, not poetic)",
     "situation": "Under 75 words. 2-4 sentences max. Mechanical facts only.",
+    "domain_tag": "one-word domain e.g. athletics, medicine, art",
     "emotional_hook": "One short sentence: why this matters",
     {'hidden_constraint": "The constraint they must identify",' if hide_constraint else 'explicit_constraint": "The constraint stated clearly",'}
     "hint": "One short hint (not cryptic). Point toward a lever.",
     "target_transmutations": {max(1, min(10, level // 10 + 1))}
 }}
 
-Generate a scenario that makes the user think: "Oh, this is MY constraint."
+Generate a scenario that makes the user think: "Oh, this is a real constraint in {scenario_domain}."
 """
         
         return prompt
@@ -217,7 +257,9 @@ Generate a scenario that makes the user think: "Oh, this is MY constraint."
                     "You are a world-class C2A constraint designer running short, brutal drills. "
                     "Stop being a poet. Be a drill sergeant. "
                     "CRITICAL: Scenarios must be under 75 words, direct, punchy, and visceral. "
-                    "No metaphors. No scenery. No vibe. Only mechanical pressure + stakes."
+                    "No metaphors. No scenery. No vibe. Only mechanical pressure + stakes. "
+                    "Do NOT default to startups, founders, or business pitches unless explicitly asked. "
+                    "Rotate across all domains of human activity."
                 )
             )
         except Exception as e:
