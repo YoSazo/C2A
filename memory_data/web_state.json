@@ -1,0 +1,63 @@
+{
+  "sessions": [
+    {
+      "score": 45,
+      "arch": "velocity",
+      "pattern": "1 distinct routes",
+      "lessonMastered": false,
+      "ts": 1781293188394,
+      "scenario_title": "Server Crash During Demo",
+      "scenario_situation": "Your startup's main server crashes 15 minutes before a critical investor demo that determines Series A funding. The backup system is corrupted. You have three incomplete solutions: restart with 60% functionality, switch to a competitor's platform, or delay and risk losing the meeting slot. Your team is panicking and looking to you for direction.",
+      "scenario_hint": "Consider what the investors actually need to see versus what you planned to show them.",
+      "session_duration": 80.147,
+      "timed_out": false,
+      "transmutations": [
+        "We'll switch to a competitors platform to outline its friction and why we're better, in the background will get the main server working"
+      ],
+      "detection_required": false,
+      "detection_success": true,
+      "detection_user_archetype": "",
+      "detection_user_answer": "",
+      "detection_correct_archetype": "velocity",
+      "detection_correct_answer": "",
+      "detection_confusion_type": "",
+      "meta_reflection": "Next time, ask yourself: 'What would I lose if this constraint disappeared right now?'",
+      "breakthrough": false
+    },
+    {
+      "score": 53,
+      "arch": "velocity",
+      "pattern": "Beneficial Limitation",
+      "lessonMastered": false,
+      "ts": 1781358378560,
+      "scenario_title": "Launch Window Closing",
+      "scenario_situation": "Your startup has 72 hours before a competitor launches an identical product. Your team wants to add three more features before going live. The marketing budget expires in 96 hours. Early user feedback shows the core product works but lacks polish. Investors are watching both launches closely.",
+      "scenario_hint": "Consider what happens if you strip away everything except what users actually need right now.",
+      "session_duration": 78.63,
+      "timed_out": false,
+      "transmutations": [
+        "The time constraint is the advantage as it allows us to focus solely on polish instead of feature addition"
+      ],
+      "detection_required": false,
+      "detection_success": true,
+      "detection_user_archetype": "",
+      "detection_user_answer": "",
+      "detection_correct_archetype": "velocity",
+      "detection_correct_answer": "",
+      "detection_confusion_type": "",
+      "meta_reflection": "Next time, ask yourself: 'What unique advantage does having LESS time create that having MORE time would destroy?'",
+      "breakthrough": false
+    }
+  ],
+  "historical_sessions": [],
+  "active_lesson": {
+    "title": "The Removal Test",
+    "question": "If this constraint vanished instantly, would my competitive advantage disappear too?",
+    "attempts": 2,
+    "bestScore": 53,
+    "demonstrated": false
+  },
+  "domain": null,
+  "selected_arch": "friction",
+  "llm_model": ""
+}

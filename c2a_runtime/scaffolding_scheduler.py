@@ -25,15 +25,15 @@ What retires and when:
     Level 20:  Meta-reflection disabled. The 'I' stops being invited back in.
     Level 20:  AI Researcher drops to every 10 sessions (was every session).
     Level 25:  Active lesson display during drill retired.
-    Level 41:  LLM scenario generation retired. Real-world log becomes primary.
+    Level 41:  LLM scenario generation retired. Historical Arena becomes primary path.
     Level 41:  Active lessons auto-retire after 5 attempts (not just mastery).
     Level 41:  AI Researcher drops to every 20 sessions.
+    Level 70:  Historical Arena unlocked (blind predict on real constraints).
     Level 71:  Archetype labels removed from Speed Track. Cold recognition only.
-    Level 100: Full training interface retired. Logbook only.
+    Level 100: Beat-history phase unlocks in Historical Arena.
 
-The system is designed to make itself unnecessary.
-Level 100 is not the top of the scaffolding. It's the point where the
-scaffolding falls away entirely.
+Progression is limitless. Level 100 is not an end state — it opens beat-history
+and deeper historical bands. Real-world personal log remains optional side channel.
 """
 
 from dataclasses import dataclass, field
@@ -48,11 +48,13 @@ META_REFLECTION_RETIRES_AT         = 20
 RESEARCHER_FREQUENCY_DROPS_AT      = 20   # every 10 sessions
 ACTIVE_LESSON_DISPLAY_RETIRES_AT   = 25
 LLM_SCENARIOS_RETIRE_AT            = 41
-REAL_WORLD_LOG_MANDATORY_AT        = 41
+REAL_WORLD_LOG_MANDATORY_AT        = 9999  # personal log never mandatory for progression
 ACTIVE_LESSON_ATTEMPT_EXPIRY_AT    = 41   # lessons expire after 5 attempts
 RESEARCHER_FREQUENCY_DROPS_AGAIN   = 41   # every 20 sessions
 ARCHETYPE_LABELS_RETIRE_AT         = 71   # Speed Track goes cold
-FULL_INTERFACE_RETIRES_AT          = 100  # logbook only
+HISTORICAL_ARENA_UNLOCK_AT         = 70
+BEAT_HISTORY_UNLOCK_AT             = 100
+FULL_INTERFACE_RETIRES_AT          = 9999  # training stays available (limitless ascension)
 
 # Researcher frequency schedule
 RESEARCHER_EVERY_N_SESSIONS = {
@@ -105,18 +107,21 @@ class FeatureState:
     llm_scenarios_active:         bool = True   # retires at 41
 
     # ── Graduated features (start False, activate then retire) ─────────────
-    real_world_log_available:     bool = False  # available at 16
-    real_world_log_mandatory:     bool = False  # mandatory at 41
+    real_world_log_available:     bool = False  # optional side channel at 16
+    real_world_log_mandatory:     bool = False  # never mandatory for progression
     speed_track_active:           bool = False  # activates at 16
     archetype_labels_in_speed:    bool = True   # retires at 71
+    historical_arena_available:   bool = False  # activates at 70
+    historical_beat_history:      bool = False  # activates at 100
 
     # ── Terminal state ──────────────────────────────────────────────────────
-    full_interface_active:        bool = True   # retires at 100
+    full_interface_active:        bool = True   # stays active (limitless)
 
     # ── Computed values ─────────────────────────────────────────────────────
     researcher_every_n_sessions:  int  = 1
     speed_track_reps:             int  = 0
     active_lesson_max_attempts:   Optional[int] = None
+    speed_transmutation_target:   int  = 1
 
 
 @dataclass
@@ -171,9 +176,11 @@ class ScaffoldingScheduler:
 
         # ── Feature activation ──────────────────────────────────────────────
         state.real_world_log_available     = level >= REAL_WORLD_LOG_AVAILABLE_AT
-        state.real_world_log_mandatory     = level >= REAL_WORLD_LOG_MANDATORY_AT
+        state.real_world_log_mandatory     = False
         state.speed_track_active           = level >= CORRECTION_LOOP_RETIRES_AT  # same gate
         state.archetype_labels_in_speed    = level < ARCHETYPE_LABELS_RETIRE_AT
+        state.historical_arena_available   = level >= HISTORICAL_ARENA_UNLOCK_AT
+        state.historical_beat_history      = level >= BEAT_HISTORY_UNLOCK_AT
 
         # ── Computed: researcher frequency ──────────────────────────────────
         state.researcher_every_n_sessions = self._get_researcher_frequency(level)
@@ -183,6 +190,10 @@ class ScaffoldingScheduler:
 
         # ── Computed: active lesson max attempts ────────────────────────────
         state.active_lesson_max_attempts = self._get_lesson_max_attempts(level)
+
+        from progression import speed_transmutation_target
+
+        state.speed_transmutation_target = speed_transmutation_target(level)
 
         return state
 
@@ -316,14 +327,14 @@ class ScaffoldingScheduler:
             {
                 'level': LLM_SCENARIOS_RETIRE_AT,
                 'event': 'LLM scenario generation retired',
-                'detail': 'Real-world log becomes primary training mode.',
+                'detail': 'Historical Arena becomes the primary ascension path.',
                 'type': 'retirement',
             },
             {
-                'level': REAL_WORLD_LOG_MANDATORY_AT,
-                'event': 'Real-world log mandatory',
-                'detail': 'Log 3 real constraints daily. LLM reviews weekly.',
-                'type': 'change',
+                'level': HISTORICAL_ARENA_UNLOCK_AT,
+                'event': 'Historical Arena unlocked',
+                'detail': 'Blind transmutation on real historical constraints.',
+                'type': 'activation',
             },
             {
                 'level': ACTIVE_LESSON_ATTEMPT_EXPIRY_AT,
@@ -344,10 +355,10 @@ class ScaffoldingScheduler:
                 'type': 'retirement',
             },
             {
-                'level': FULL_INTERFACE_RETIRES_AT,
-                'event': 'Full training interface retired',
-                'detail': 'Logbook only. The scaffolding is gone.',
-                'type': 'retirement',
+                'level': BEAT_HISTORY_UNLOCK_AT,
+                'event': 'Beat-history phase unlocked',
+                'detail': 'Surpass what history did — after blind predict.',
+                'type': 'activation',
             },
         ]
 
@@ -384,26 +395,40 @@ class ScaffoldingScheduler:
                 'description': 'Minimal scaffolding. Speed is the primary metric.',
                 'next_event': f'LLM scenarios retire at Level {LLM_SCENARIOS_RETIRE_AT}.',
             }
-        elif level < ARCHETYPE_LABELS_RETIRE_AT:
+        elif level < HISTORICAL_ARENA_UNLOCK_AT:
             return {
                 'phase': 3,
                 'name': 'Pressure',
-                'description': 'Real-world log is primary. 50 reps per session.',
-                'next_event': f'Archetype labels removed at Level {ARCHETYPE_LABELS_RETIRE_AT}.',
+                'description': 'Speed gates tight. Prepare for Historical Arena.',
+                'next_event': f'Historical Arena unlocks at Level {HISTORICAL_ARENA_UNLOCK_AT}.',
             }
-        elif level < FULL_INTERFACE_RETIRES_AT:
+        elif level < BEAT_HISTORY_UNLOCK_AT:
             return {
-                'phase': 3,
-                'name': 'Pressure (Cold)',
-                'description': 'No labels. No priming. Cold recognition only.',
-                'next_event': f'Full interface retires at Level {FULL_INTERFACE_RETIRES_AT}.',
+                'phase': 4,
+                'name': 'Historical Arena',
+                'description': 'Blind transmutation on real constraints. Predict outcomes.',
+                'next_event': f'Beat-history unlocks at Level {BEAT_HISTORY_UNLOCK_AT}.',
+            }
+        elif level < 200:
+            return {
+                'phase': 5,
+                'name': 'Historical Mastery',
+                'description': 'Predict, reveal, beat history, extract patterns.',
+                'next_event': 'Pattern depth band at Level 200.',
+            }
+        elif level < 350:
+            return {
+                'phase': 6,
+                'name': 'Pattern Depth',
+                'description': 'Cross-domain constraint logic transfer.',
+                'next_event': 'Reverse C2A band at Level 350.',
             }
         else:
             return {
-                'phase': 4,
-                'name': 'Install Complete',
-                'description': 'The scaffolding is gone. The logbook is all that remains.',
-                'next_event': 'None. The operation runs on its own.',
+                'phase': 7,
+                'name': 'Reverse C2A',
+                'description': 'Design constraint landscapes. Multiply historical seeds.',
+                'next_event': 'No cap — continuous ascension.',
             }
 
     def get_next_retirement(self, level: int) -> Optional[dict]:

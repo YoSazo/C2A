@@ -1,4 +1,4 @@
-﻿# C2A - Constraint-to-Advantage Training
+# C2A - Constraint-to-Advantage Training
 
 Cognitive training system that turns constraints into advantages, with memory-enhanced coaching and a desktop app.
 
@@ -41,13 +41,26 @@ If you want one folder to point another LLM at, use: `c2a_runtime/`.
 ## Desktop app (Tauri)
 
 Prerequisites:
-- Python 3.10+ (with `py` launcher)
+- Python 3.10+ (with `py` launcher on Windows)
 - Node.js 18+
 - Rust toolchain (`rustup`, `cargo`, `rustc`)
-- Microsoft C++ Build Tools (for Rust on Windows)
+- Windows: Microsoft C++ Build Tools
+- Linux: `webkit2gtk`, `gtk3`, `libsoup` (Arch: `sudo pacman -S webkit2gtk gtk3 libsoup base-devel`)
 
-Installer output:
-- `src-tauri/target/release/bundle/msi/*.msi`
-- `src-tauri/target/release/bundle/nsis/*.exe`
+**Build (from repo root):**
+
+- Windows: `npm run tauri:build` (or `cd src-tauri && cargo build --release`)
+- Linux / macOS: `npx tauri build` or `cd src-tauri && cargo build --release`
+
+**Run the UI (no installer):**
+
+- Windows: run `src-tauri\target\release\c2a-desktop.exe` (or the “C2A Training Grounds” exe in that folder).
+- Linux: run `src-tauri/target/release/c2a-desktop` (same app, no `.exe`).
+- From repo root: `./src-tauri/target/release/c2a-desktop` or add that directory to your PATH.
+
+**Installers (Windows only):**
+
+- MSI: `src-tauri/target/release/bundle/msi/*.msi`
+- NSIS: `src-tauri/target/release/bundle/nsis/*.exe`
 
 "The essence of intelligence is turning constraints into advantages."

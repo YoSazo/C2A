@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "specs": [
+    {
+      "id": "orbital_velocity_leo",
+      "domain": "aerospace",
+      "keywords": ["orbit", "orbital", "leo", "space", "satellite", "payload"],
+      "claim": "Low Earth orbit requires ~7.8 km/s tangential velocity (≈7800 m/s) plus correct injection angle.",
+      "limit_value": 7800,
+      "limit_unit": "m/s",
+      "limit_type": "velocity_min",
+      "source": "standard astrodynamics — circular LEO at ~400 km"
+    },
+    {
+      "id": "speed_of_light",
+      "domain": "physics",
+      "keywords": ["light", "fiber", "latency", "signal", "radio"],
+      "claim": "Information cannot propagate faster than c ≈ 299,792,458 m/s in vacuum.",
+      "limit_value": 299792458,
+      "limit_unit": "m/s",
+      "limit_type": "velocity_max",
+      "source": "special relativity"
+    },
+    {
+      "id": "ram_bandwidth_typical",
+      "domain": "compute",
+      "keywords": ["ram", "memory", "ddr", "bandwidth", "pcie"],
+      "claim": "Consumer laptop DDR5 practical bandwidth is on the order of 50–100 GB/s, not TB/s.",
+      "limit_value": 100,
+      "limit_unit": "GB/s",
+      "limit_type": "bandwidth_max",
+      "source": "typical laptop memory subsystem"
+    },
+    {
+      "id": "lithium_energy_density",
+      "domain": "energy",
+      "keywords": ["battery", "lithium", "storage", "mah", "joule"],
+      "claim": "Li-ion packs store roughly 0.9–1 MJ/kg; they cannot discharge multi‑MJ in milliseconds without failure.",
+      "limit_value": 1.0,
+      "limit_unit": "MJ/kg",
+      "limit_type": "energy_density_max",
+      "source": "battery chemistry"
+    },
+    {
+      "id": "supercap_energy_density",
+      "domain": "energy",
+      "keywords": ["supercapacitor", "capacitor", "cap bank", "discharge"],
+      "claim": "Supercapacitors discharge fast but store ~0.01–0.05 MJ/kg — far below batteries per kg.",
+      "limit_value": 0.05,
+      "limit_unit": "MJ/kg",
+      "limit_type": "energy_density_max",
+      "source": "electrochemical capacitors"
+    },
+    {
+      "id": "commercial_jet_thrust_power",
+      "domain": "aerospace",
+      "keywords": ["turbine", "engine", "bleed", "aircraft", "jet", "747"],
+      "claim": "Large turbofan aircraft total shaft/electrical bleed is on the order of tens of MW, not hundreds of MW continuous.",
+      "limit_value": 70,
+      "limit_unit": "MW",
+      "limit_type": "power_max",
+      "source": "typical wide-body engine ratings"
+    },
+    {
+      "id": "railgun_lab_velocity",
+      "domain": "electromagnetic",
+      "keywords": ["railgun", "coilgun", "electromagnetic", "launcher", "slug"],
+      "claim": "Compact lab rail/coil guns have demonstrated ~2–3 km/s; 7+ km/s requires large, heavy infrastructure.",
+      "limit_value": 3000,
+      "limit_unit": "m/s",
+      "limit_type": "velocity_max",
+      "source": "published compact EM launcher benchmarks"
+    },
+    {
+      "id": "hypersonic_heating",
+      "domain": "aerospace",
+      "keywords": ["hypersonic", "reentry", "friction", "heat", "atmosphere"],
+      "claim": "Dense-air hypersonic flight generates severe thermal loads; sustained >Mach 5 in thick air melts conventional structures.",
+      "limit_value": 5,
+      "limit_unit": "Mach",
+      "limit_type": "mach_max_thick_air",
+      "source": "aerothermal engineering"
+    },
+    {
+      "id": "helium_permeation",
+      "domain": "materials",
+      "keywords": ["helium", "balloon", "blimp", "aerostat", "lift gas"],
+      "claim": "Helium permeates flexible membranes; it cannot be 'sealed' chemically — noble gas.",
+      "limit_value": null,
+      "limit_unit": null,
+      "limit_type": "chemical_invariant",
+      "source": "noble gas chemistry"
+    },
+    {
+      "id": "conservation_energy",
+      "domain": "physics",
+      "keywords": ["energy", "perpetual", "free energy", "harvest", "generate"],
+      "claim": "Useful work cannot exceed energy input minus losses (thermodynamic accounting).",
+      "limit_value": null,
+      "limit_unit": null,
+      "limit_type": "conservation",
+      "source": "first law of thermodynamics"
+    }
+  ]
+}
