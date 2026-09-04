@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """C2A default app: serves web UI and backend training APIs."""
 
 import argparse
@@ -10,6 +10,7 @@ import threading
 import time
 import traceback
 import webbrowser
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 from dataclasses import asdict
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -45,6 +46,31 @@ ROOT = Path(__file__).parent
 HTML_PATH = ROOT.parent / "ui" / "c2a_training.html"
 MEMORY_DIR = ROOT.parent / "memory_data"
 WEB_STATE_PATH = MEMORY_DIR / "web_state.json"
+
+def _env_float(name: str, default: float) -> float:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    try:
+        return max(1.0, float(raw))
+    except ValueError:
+        return default
+
+
+def _env_int(name: str, default: int) -> int:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    try:
+        return max(1, int(raw))
+    except ValueError:
+        return default
+
+
+SCENARIO_TIMEOUT_SEC = _env_float("C2A_SCENARIO_TIMEOUT_SEC", 12.0)
+EVALUATE_TIMEOUT_SEC = _env_float("C2A_EVALUATE_TIMEOUT_SEC", 20.0)
+CHAT_TIMEOUT_SEC = _env_float("C2A_CHAT_TIMEOUT_SEC", 20.0)
+TIMEBOX_POOL = ThreadPoolExecutor(max_workers=_env_int("C2A_TIMEBOX_WORKERS", 8))
 
 
 class WebStateStore:
@@ -132,6 +158,9 @@ class WebStateStore:
     def record_session(self, payload: Dict[str, Any]) -> None:
         with self.lock:
             sessions = self.data.setdefault("sessions", [])
+            transmutations = payload.get("transmutations") or []
+            if not isinstance(transmutations, list):
+                transmutations = []
             sessions.append(
                 {
                     "score": int(payload.get("score", 0)),
@@ -139,6 +168,7 @@ class WebStateStore:
                     "pattern": payload.get("pattern", ""),
                     "lessonMastered": bool(payload.get("lessonMastered", False)),
                     "ts": int(payload.get("ts", int(time.time() * 1000))),
+<<<<<<< HEAD
                     "scenario_title": payload.get("scenario_title", ""),
                     "scenario_situation": payload.get("scenario_situation", ""),
                     "scenario_hint": payload.get("scenario_hint", ""),
@@ -154,6 +184,17 @@ class WebStateStore:
                     "detection_confusion_type": payload.get("detection_confusion_type", ""),
                     "meta_reflection": payload.get("meta_reflection", ""),
                     "breakthrough": bool(payload.get("breakthrough", False)),
+=======
+                    "detection_required": bool(payload.get("detection_required", False)),
+                    "detection_success": bool(payload.get("detection_success", False)),
+                    "detection_user_arch": str(payload.get("detection_user_arch", "")),
+                    "detection_user_constraint": str(payload.get("detection_user_constraint", "")),
+                    "target_transmutations": int(payload.get("target_transmutations", 1)),
+                    "completed_transmutations": int(payload.get("completed_transmutations", 1)),
+                    "time_taken_total": float(payload.get("time_taken_total", 0.0)),
+                    "real_life_mode": bool(payload.get("real_life_mode", False)),
+                    "transmutations": transmutations,
+>>>>>>> refs/remotes/origin/main
                 }
             )
             if "active_lesson" in payload:
@@ -457,6 +498,11 @@ WEB_STATE = WebStateStore(WEB_STATE_PATH)
 SPEED_TRACK = SpeedTrack(data_dir=str(MEMORY_DIR))
 REAL_WORLD = RealWorldLog(data_dir=str(MEMORY_DIR))
 ACTIVE_SPEED_SESSIONS: Dict[str, Dict[str, Any]] = {}
+
+
+def run_with_timeout(fn, timeout_sec: float):
+    future = TIMEBOX_POOL.submit(fn)
+    return future.result(timeout=timeout_sec)
 
 
 def get_service() -> Optional[C2AService]:
@@ -1230,9 +1276,18 @@ class C2ARequestHandler(BaseHTTPRequestHandler):
                 self._send_json(fallback_scenario(payload))
                 return
             try:
+<<<<<<< HEAD
                 data = service.generate_scenario(payload)
             except Exception:
                 traceback.print_exc()
+=======
+                data = run_with_timeout(lambda: service.generate_scenario(payload), SCENARIO_TIMEOUT_SEC)
+            except FutureTimeoutError:
+                print(f"[WARN] /api/scenario timeout after {SCENARIO_TIMEOUT_SEC:.1f}s; using fallback")
+                data = fallback_scenario(payload)
+            except Exception as exc:
+                print(f"[WARN] /api/scenario failed ({type(exc).__name__}); using fallback")
+>>>>>>> refs/remotes/origin/main
                 data = fallback_scenario(payload)
             self._send_json(data)
             return
@@ -1248,9 +1303,18 @@ class C2ARequestHandler(BaseHTTPRequestHandler):
                 self._send_json(fallback_evaluation())
                 return
             try:
+<<<<<<< HEAD
                 data = service.evaluate_transmutation(payload)
             except Exception:
                 traceback.print_exc()
+=======
+                data = run_with_timeout(lambda: service.evaluate_transmutation(payload), EVALUATE_TIMEOUT_SEC)
+            except FutureTimeoutError:
+                print(f"[WARN] /api/evaluate timeout after {EVALUATE_TIMEOUT_SEC:.1f}s; using fallback")
+                data = fallback_evaluation()
+            except Exception as exc:
+                print(f"[WARN] /api/evaluate failed ({type(exc).__name__}); using fallback")
+>>>>>>> refs/remotes/origin/main
                 data = fallback_evaluation()
             self._send_json(data)
             return
@@ -1277,9 +1341,18 @@ class C2ARequestHandler(BaseHTTPRequestHandler):
                 return
             payload.setdefault("llm_model", effective_selected_model())
             try:
+<<<<<<< HEAD
                 text = service.chat_raw(payload)
             except Exception:
                 traceback.print_exc()
+=======
+                text = run_with_timeout(lambda: service.chat_raw(payload), CHAT_TIMEOUT_SEC)
+            except FutureTimeoutError:
+                print(f"[WARN] /api/llm timeout after {CHAT_TIMEOUT_SEC:.1f}s")
+                text = ""
+            except Exception as exc:
+                print(f"[WARN] /api/llm failed ({type(exc).__name__})")
+>>>>>>> refs/remotes/origin/main
                 text = ""
             self._send_json({"text": text})
             return
@@ -1354,5 +1427,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
