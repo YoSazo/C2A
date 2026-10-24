@@ -12,25 +12,26 @@ fi
 # Activate venv
 source .venv/bin/activate
 
-# Upgrade pip and install core web app requirements if missing
-if ! python3 -c "import numpy, anthropic, ollama" &>/dev/null; then
-  echo "Core packages not found. Checking/upgrading pip..."
+# Install core requirements if missing
+if ! python -c "import requests, numpy" &>/dev/null; then
+  echo "Core packages not found. Installing..."
   pip install -U pip
-  echo "Installing lightweight dependencies (numpy, anthropic, ollama)..."
-  pip install numpy anthropic ollama
-else
-  echo "Core packages already installed. Skipping dependency installation."
+  pip install -r requirements.txt
 fi
 
-# === ENV VARS ===
-# Require Anthropic key from shell/profile (do not hardcode secrets in repo)
-if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
-  echo "Error: ANTHROPIC_API_KEY is not set."
-  echo "Set it first, e.g.: export ANTHROPIC_API_KEY='sk-ant-api03-...'"
+# === LLM CONFIG ===
+# C2A is OpenAI-only. Provide the key via the environment, or via
+# config/api_keys.json ({"openai_api_key": "sk-..."}) which is gitignored.
+# Never hardcode a key in this file — it is tracked by git.
+if [ -z "${OPENAI_API_KEY:-}" ] && [ ! -s config/api_keys.json ]; then
+  echo "Error: no OpenAI key found."
+  echo "  export OPENAI_API_KEY='sk-...'"
+  echo "  or write config/api_keys.json with {\"openai_api_key\": \"sk-...\"}"
   exit 1
 fi
 
-export C2A_LLM_PROVIDER="anthropic"
+# Optional: pick a model (defaults to gpt-4o)
+# export C2A_LLM_MODEL="gpt-4o-mini"
 
 # Run app
 python C2A.py

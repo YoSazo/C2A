@@ -11,7 +11,7 @@ Philosophy: "Judge the dance, not the dancer's resemblance to a template."
 import json
 from typing import Dict, List, Optional, Tuple
 
-from llm_client import LLMClient, create_client_from_env
+from llm_client import DEFAULT_MODEL, LLMClient, create_client_from_env
 from dataclasses import dataclass, asdict
 from datetime import datetime
 
@@ -112,7 +112,7 @@ class SessionEvaluation:
 class TransmutationJudge:
     """LLM-powered judge that evaluates constraint transmutations"""
 
-    def __init__(self, model: str = "qwen2.5:32b", llm_client: Optional[LLMClient] = None):
+    def __init__(self, model: str = DEFAULT_MODEL, llm_client: Optional[LLMClient] = None):
         self.llm = llm_client or create_client_from_env()
         self.model = model  # retained for legacy/debug output
         self.evaluation_history = []
@@ -243,74 +243,85 @@ class TransmutationJudge:
         weak_patterns = user_profile.get('weaknesses', [])
         past_transmutations = user_profile.get('recent_transmutations', [])
         
-        # Calibrate harshness based on level
-        if level >= 80:
-            evaluation_stance = """
-CRITICAL EVALUATION MODE (Level 80+):
-You are evaluating an ADVANCED practitioner. Be intellectually rigorous.
-- If this transmutation echoes their past patterns, call it out directly
-- Expect novel angles and meta-cognitive sophistication
-- A "good" score at this level would be average at Level 30
-- Only give 85+ if genuinely impressed
-"""
-        elif level >= 50:
-            evaluation_stance = """
-INTERMEDIATE EVALUATION MODE (Level 50-79):
-You are evaluating a developing expert.
-- Look for evidence of pattern transfer across domains
-- Expect multiple conceptual angles per transmutation
-- Push them toward deeper synthesis
-- Be encouraging but maintain standards
-"""
-        elif level >= 11:
-            evaluation_stance = """
-DEVELOPING EVALUATION MODE (Level 11-49):
-You are evaluating someone building constraint-thinking skills.
-- Recognize genuine constraint reframing
-- Focus on teaching core principles through feedback
-- Be encouraging but maintain quality standards
-- Guide them toward more sophisticated thinking
-- Novelty expectations are moderate (compare to their recent history)
-"""
-        else:
-            evaluation_stance = """
-FOUNDATION BUILDING MODE (Level 1-10):
-The constraint is GIVEN to this user. Their only job is TRANSMUTATION.
-No excuses for weak transmutations - they don't have to find the constraint.
+        # The definition of the move. Shown at EVERY level.
+        #
+        # This used to live only in the level 1-10 branch, so the moment a user
+        # improved past 10 the judge stopped being told what C2A actually is and
+        # fell back to "recognize genuine constraint reframing" — which meant the
+        # target became unfindable exactly when the user was ready to hit it.
+        core_rubric = """
+WHAT C2A IS - this definition applies at every level:
 
-CRITICAL DISTINCTION - Enforce this strictly:
+The constraint is GIVEN. The user's only job is TRANSMUTATION.
 
-COPING (score < 50):
+COPING (score below 50) - reject these:
 - "Work around it" - NOT transmutation
-- "Deal with it" - NOT transmutation  
-- "Accept it" - NOT transmutation
+- "Deal with it" / "Accept it" - NOT transmutation
 - "Minimize the damage" - NOT transmutation
+- Doing less, narrowing scope, or lowering ambition - NOT transmutation
 - Finding a silver lining WITHOUT using the constraint - NOT transmutation
 
 REAL TRANSMUTATION (score 60+):
 - The constraint ITSELF becomes the source of advantage
-- The constraint is FUEL, not just something to tolerate
-- Removing the constraint would REMOVE the advantage
+- The constraint is FUEL, not something to tolerate
 - The limitation is actively GENERATIVE
 
+THE REMOVAL TEST - apply it to every response before scoring:
+    Delete the constraint. Does the claimed advantage survive?
+    If it survives, they COPED. Score below 50.
+    If it dies with the constraint, they TRANSMUTED. Score 60+.
+
 Example - Cold coffee:
-- COPING: "Use it as a reminder to stretch" (the coldness isn't the advantage)
-- TRANSMUTATION: "Coldness forces me to get up → movement generates energy → I'm MORE alert than if it was hot" (coldness IS the advantage)
+- COPING: "Use it as a reminder to stretch" (remove the coldness and stretching
+  still works, so the coldness was never the advantage)
+- TRANSMUTATION: "Coldness forces me to get up, movement generates energy, so I
+  am MORE alert than if it had been hot" (remove the coldness and the alertness
+  is gone - the coldness IS the advantage)
 
-Be encouraging in TONE but maintain STANDARDS.
-Quality of transmutation must be real from Day 1.
-What changes at higher levels is SPEED and NOVELTY, not basic quality.
-
-Score calibration:
+ABSOLUTE SCORE BANDS - these do not shift with level:
 - Below 50: Coping/avoidance disguised as transmutation - REJECT
-- 50-60: Weak transmutation (constraint acknowledged but barely leveraged)
-- 60-75: Solid transmutation (constraint genuinely becomes advantage)
-- 75-85: Strong transmutation (novel angle, clear insight)
-- 85+: Excellent (would impress at any level)
-"""
-        
-        prompt = f"""You are a world-class C2A (Constraint-to-Advantage) expert evaluating a transmutation.
+- 50-60:    Weak transmutation (constraint acknowledged but barely leveraged)
+- 60-75:    Solid transmutation (constraint genuinely becomes the advantage)
+- 75-85:    Strong transmutation (novel angle, clear insight)
+- 85+:      Excellent (would impress at any level)
 
+Quality of transmutation must be real from Day 1. What changes with level is
+SPEED and NOVELTY, never the basic definition of the move.
+"""
+
+        # Level adds expectations ON TOP of the core. It never replaces it,
+        # and it never moves the score bands.
+        if level >= 80:
+            evaluation_stance = """
+ADVANCED PRACTITIONER (Level 80+):
+- If this transmutation echoes their past patterns, call it out directly
+- Expect novel angles and meta-cognitive sophistication
+- Be sparing with 85+; reserve it for genuine insight
+"""
+        elif level >= 50:
+            evaluation_stance = """
+DEVELOPING EXPERT (Level 50-79):
+- Look for evidence of pattern transfer across domains
+- Expect multiple conceptual angles per transmutation
+- Push them toward deeper synthesis
+"""
+        elif level >= 11:
+            evaluation_stance = """
+BUILDING (Level 11-49):
+- Teach the core principle through the feedback, don't just grade
+- Novelty expectations are moderate; compare against their recent history
+- Be encouraging in TONE, strict on the removal test
+"""
+        else:
+            evaluation_stance = """
+FOUNDATION (Level 1-10):
+- They do not have to find the constraint, so there is no excuse for a weak
+  transmutation. Enforce the removal test strictly.
+- Be encouraging in TONE but do not inflate the score
+"""
+
+        prompt = f"""You are a world-class C2A (Constraint-to-Advantage) expert evaluating a transmutation.
+{core_rubric}
 {evaluation_stance}
 
 SCENARIO: {scenario_title}
@@ -353,11 +364,8 @@ EVALUATION CRITERIA:
    - Paradox navigation
    - Second/third order effects
 
-SCORING CALIBRATION FOR LEVEL {level}:
-- Below {max(50, level - 15)}: Poor - Missing core reframing
-- {max(50, level - 15)}-{max(65, level - 5)}: Average - Basic transmutation
-- {max(65, level - 5)}-{min(85, level + 5)}: Good - Solid constraint thinking
-- {min(85, level + 5)}+: Excellent - Breakthrough insight
+Score against the ABSOLUTE BANDS above. They are fixed. Do not rescale them to
+the user's level - a 70 means the same thing at Level 5 and at Level 90.
 
 {'ACTIVE LESSON CHECK:' + chr(10) + active_lesson + chr(10) + 'Evaluate if the user applied this lesson in their transmutation.' + chr(10) if active_lesson else ''}OUTPUT FORMAT (JSON):
 {{

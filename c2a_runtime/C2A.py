@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from constraint_archetypes import get_archetype
+from llm_client import DEFAULT_MODEL
 from historical_arena import (
     arena_unlocked,
     beat_history_unlocked,
@@ -38,7 +39,13 @@ from progression import (
 )
 from real_world_log import ConstraintEntry, RealWorldLog
 from scaffolding_scheduler import scheduler as scaffolding_scheduler
-from speed_track import CONSTRAINT_POOL, RepResult, SpeedTrack, SpeedTrackSession
+from speed_track import (
+    CONSTRAINT_POOL,
+    RepResult,
+    SpeedTrack,
+    SpeedTrackSession,
+    select_drill_constraints,
+)
 from amava_engine import IDEAL_LEVEL, compile_transmutations, default_siblings_per_level, load_specs
 
 
@@ -113,6 +120,61 @@ class WebStateStore:
         historical = self.data.get("historical_sessions", []) or []
         return list(training) + list(historical)
 
+    def derive_user_profile(self) -> Dict[str, Any]:
+        """
+        Build the judge's user profile from stored history.
+
+        The judge prompt asks "how fresh is this FOR THIS USER, compared against
+        their known patterns" — 25 of the 100 points. The UI never sent any of
+        this, so the profile was empty on every request and a quarter of the
+        score was scored against "Unknown (new user)" forever. Deriving it here
+        means it is always populated and always current, whatever the client
+        chooses to send.
+        """
+        with self.lock:
+            sessions = self._all_scored_sessions()
+
+        by_arch: Dict[str, list] = {}
+        for s in sessions:
+            arch = str(s.get("arch") or "").lower()
+            if arch:
+                by_arch.setdefault(arch, []).append(float(s.get("score") or 0))
+
+        strengths, weaknesses = [], []
+        for arch, scores in by_arch.items():
+            if len(scores) < 2:
+                continue
+            avg = sum(scores) / len(scores)
+            if avg >= 70:
+                strengths.append(f"{arch} ({avg:.0f})")
+            elif avg < 55:
+                weaknesses.append(f"{arch} ({avg:.0f})")
+
+        patterns: list = []
+        for s in reversed(sessions):
+            pat = (s.get("pattern") or "").strip()
+            if pat and pat not in patterns:
+                patterns.append(pat)
+            if len(patterns) >= 5:
+                break
+
+        recent_transmutations: list = []
+        for s in reversed(sessions):
+            for t in reversed(s.get("transmutations") or []):
+                text = str(t).strip()
+                if text:
+                    recent_transmutations.append(text[:400])
+            if len(recent_transmutations) >= 3:
+                break
+
+        return {
+            "total_sessions": len(sessions),
+            "recent_patterns": patterns,
+            "strengths": strengths,
+            "weaknesses": weaknesses,
+            "recent_transmutations": list(reversed(recent_transmutations[:3])),
+        }
+
     def _compute_level(self, speed_stats: Dict[str, float]) -> int:
         sessions = self._all_scored_sessions()
         total = len(sessions)
@@ -168,33 +230,27 @@ class WebStateStore:
                     "pattern": payload.get("pattern", ""),
                     "lessonMastered": bool(payload.get("lessonMastered", False)),
                     "ts": int(payload.get("ts", int(time.time() * 1000))),
-<<<<<<< HEAD
                     "scenario_title": payload.get("scenario_title", ""),
                     "scenario_situation": payload.get("scenario_situation", ""),
                     "scenario_hint": payload.get("scenario_hint", ""),
                     "session_duration": float(payload.get("session_duration", 0.0) or 0.0),
                     "timed_out": bool(payload.get("timed_out", False)),
-                    "transmutations": payload.get("transmutations", []) or [],
+                    "transmutations": transmutations,
                     "detection_required": bool(payload.get("detection_required", False)),
-                    "detection_success": payload.get("detection_success"),
+                    "detection_success": bool(payload.get("detection_success", False)),
                     "detection_user_archetype": payload.get("detection_user_archetype", ""),
                     "detection_user_answer": payload.get("detection_user_answer", ""),
                     "detection_correct_archetype": payload.get("detection_correct_archetype", ""),
                     "detection_correct_answer": payload.get("detection_correct_answer", ""),
                     "detection_confusion_type": payload.get("detection_confusion_type", ""),
-                    "meta_reflection": payload.get("meta_reflection", ""),
-                    "breakthrough": bool(payload.get("breakthrough", False)),
-=======
-                    "detection_required": bool(payload.get("detection_required", False)),
-                    "detection_success": bool(payload.get("detection_success", False)),
                     "detection_user_arch": str(payload.get("detection_user_arch", "")),
                     "detection_user_constraint": str(payload.get("detection_user_constraint", "")),
-                    "target_transmutations": int(payload.get("target_transmutations", 1)),
-                    "completed_transmutations": int(payload.get("completed_transmutations", 1)),
-                    "time_taken_total": float(payload.get("time_taken_total", 0.0)),
+                    "target_transmutations": int(payload.get("target_transmutations", 1) or 1),
+                    "completed_transmutations": int(payload.get("completed_transmutations", 1) or 1),
+                    "time_taken_total": float(payload.get("time_taken_total", 0.0) or 0.0),
                     "real_life_mode": bool(payload.get("real_life_mode", False)),
-                    "transmutations": transmutations,
->>>>>>> refs/remotes/origin/main
+                    "meta_reflection": payload.get("meta_reflection", ""),
+                    "breakthrough": bool(payload.get("breakthrough", False)),
                 }
             )
             if "active_lesson" in payload:
@@ -261,19 +317,12 @@ class C2AService:
         from llm_transmutation_judge import TransmutationJudge
 
         self.llm = create_client_from_env()
-        model = getattr(self.llm, "model", "qwen3.5:9b")
+        model = getattr(self.llm, "model", "")
         self.scenario_engine = LLMScenarioEngine(model=model, llm_client=self.llm)
         self.judge = TransmutationJudge(model=model, llm_client=self.llm)
 
     def apply_model_override(self, model_name: Optional[str]) -> None:
         if not model_name:
-            return
-        # Prevent invalid cross-provider overrides (e.g. qwen model while using Anthropic).
-        provider_obj = getattr(getattr(self.llm, "config", None), "provider", "")
-        provider = getattr(provider_obj, "value", str(provider_obj)).lower()
-        if provider == "anthropic" and not str(model_name).startswith("claude"):
-            return
-        if provider == "local" and str(model_name).startswith("claude"):
             return
         try:
             self.llm.model = model_name
@@ -361,13 +410,19 @@ class C2AService:
             "archetype": archetype_name,
         }
 
-        user_profile = {
-            "total_sessions": int(payload.get("session_count") or 0),
-            "recent_patterns": payload.get("recent_patterns") or [],
-            "strengths": payload.get("strengths") or [],
-            "weaknesses": payload.get("weaknesses") or [],
-            "recent_transmutations": payload.get("recent_transmutations") or [],
-        }
+        # Server-derived history, overridden only by anything the client
+        # explicitly supplies. Never empty.
+        user_profile = WEB_STATE.derive_user_profile()
+        for key, payload_key in (
+            ("total_sessions", "session_count"),
+            ("recent_patterns", "recent_patterns"),
+            ("strengths", "strengths"),
+            ("weaknesses", "weaknesses"),
+            ("recent_transmutations", "recent_transmutations"),
+        ):
+            supplied = payload.get(payload_key)
+            if supplied:
+                user_profile[key] = supplied
 
         active_lesson_prompt = ""
         if active_lesson:
@@ -461,6 +516,97 @@ Return ONLY JSON:
             "gap_from_user": data.get("gap_from_user", what_missed or growth_edge),
             "why_high_score": data.get("why_high_score", ""),
             "removal_test": data.get("removal_test", ""),
+        }
+
+    def removal_test(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Decompose a transmutation into its causal chain and run the removal test
+        on it, structured for animation.
+
+        The removal test is the whole of C2A stated as one question, and it is
+        currently delivered as prose the user has to apply to themselves. This
+        returns it as a mechanism the UI can play out: strip the filler, expose
+        constraint -> forced behaviour -> advantage, delete the constraint, and
+        say whether the advantage is still standing afterwards.
+        """
+        self.apply_model_override(payload.get("llm_model"))
+        scenario_input = payload.get("scenario") or {}
+        transmutation = (payload.get("transmutation") or "").strip()
+        archetype_name = (payload.get("archetype") or "velocity").lower()
+
+        if not transmutation:
+            return {"error": "transmutation is required"}
+
+        system = (
+            "You are a C2A analyst. You decompose constraint-to-advantage claims "
+            "into their causal chain and test whether the advantage depends on the "
+            "constraint. Respond ONLY with valid JSON."
+        )
+        prompt = f"""Run the REMOVAL TEST on this transmutation and return it as a causal chain.
+
+ARCHETYPE: {archetype_name.upper()}
+SCENARIO: {scenario_input.get('title', 'Untitled')}
+{str(scenario_input.get('situation', ''))[:400]}
+
+USER'S TRANSMUTATION:
+"{transmutation}"
+
+Do four things.
+
+1. LOAD-BEARING TEXT. Quote the substrings of the user's transmutation that
+   carry actual causal weight. Everything else is filler — hedges, restatement,
+   throat-clearing. Quote filler substrings EXACTLY as they appear so they can
+   be matched against the original text.
+
+2. THE CHAIN. Reduce the claim to three short links, under 12 words each:
+   - constraint: the limitation being worked with
+   - mechanism: the specific behaviour the constraint FORCES. A mechanism, not
+     a feeling. "Forces me to sell before building", not "makes me focused".
+   - advantage: what that behaviour produces
+
+3. THE REMOVAL TEST. Delete the constraint. Does the advantage still stand?
+   - survives=true means the advantage does NOT depend on the constraint. The
+     user COPED: they worked around it, narrowed scope, or found an unrelated
+     upside. This is a FAILURE.
+   - survives=false means the advantage dies with the constraint. The user
+     TRANSMUTED. This is SUCCESS.
+
+4. If they coped, write the transmuted version they missed: same scenario, but
+   the constraint is the engine. Under 40 words.
+
+Return ONLY JSON:
+{{
+  "constraint": "short phrase",
+  "mechanism": "what the constraint forces, as a mechanism",
+  "advantage": "what that produces",
+  "filler": ["exact substrings carrying no causal weight"],
+  "survives": true or false,
+  "survives_because": "one sentence: why the advantage does or does not need the constraint",
+  "without_constraint": "what the situation becomes once the constraint is deleted, under 20 words",
+  "rewrite": "the transmuted version they missed, or empty string if they transmuted"
+}}"""
+
+        raw = self.llm.chat(prompt, system=system, max_tokens=900)
+        try:
+            start, end = raw.find("{"), raw.rfind("}") + 1
+            data = json.loads(raw[start:end]) if start >= 0 and end > start else {}
+        except Exception:
+            data = {}
+
+        survives = bool(data.get("survives", True))
+        filler = [str(f) for f in (data.get("filler") or []) if str(f).strip()]
+
+        return {
+            "constraint": data.get("constraint", "the constraint"),
+            "mechanism": data.get("mechanism", ""),
+            "advantage": data.get("advantage", ""),
+            "filler": filler,
+            "survives": survives,
+            "verdict": "coped" if survives else "transmuted",
+            "survives_because": data.get("survives_because", ""),
+            "without_constraint": data.get("without_constraint", ""),
+            "rewrite": data.get("rewrite", "") if survives else "",
+            "transmutation": transmutation,
         }
 
     def chat_raw(self, payload: Dict[str, Any]) -> str:
@@ -703,6 +849,47 @@ def fallback_evaluation() -> Dict[str, Any]:
     }
 
 
+COPING_MARKERS = (
+    "work around", "worked around", "instead of", "narrow", "reduce", "reduced",
+    "cut back", "scale back", "settle for", "make do", "cope", "accept that",
+    "deal with", "at least", "silver lining", "minimize", "minimise",
+)
+
+
+def fallback_removal_test(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Keyword-only stand-in for the removal test when the LLM is unavailable.
+
+    This cannot actually run the test — deciding whether an advantage depends on
+    a constraint needs a reader. It flags the surface markers of coping and says
+    plainly that it is guessing, so the animation still plays without the result
+    being mistaken for a judgement.
+    """
+    transmutation = (payload.get("transmutation") or "").strip()
+    lowered = transmutation.lower()
+    looks_like_coping = any(marker in lowered for marker in COPING_MARKERS)
+    scenario = payload.get("scenario") or {}
+
+    return {
+        "constraint": scenario.get("title") or "the constraint",
+        "mechanism": "(needs the LLM to extract the mechanism)",
+        "advantage": "(needs the LLM to extract the advantage)",
+        "filler": [],
+        "survives": looks_like_coping,
+        "verdict": "coped" if looks_like_coping else "unknown",
+        "survives_because": (
+            "Offline guess from wording only — phrases like 'work around' or "
+            "'narrow scope' usually mean the constraint is not doing the work."
+            if looks_like_coping
+            else "Cannot run the removal test without the LLM. Set OPENAI_API_KEY."
+        ),
+        "without_constraint": "",
+        "rewrite": "",
+        "transmutation": transmutation,
+        "heuristic": True,
+    }
+
+
 def serializable_today_status() -> Dict[str, Any]:
     status = REAL_WORLD.get_today_status()
     entries = status.get("entries", [])
@@ -726,11 +913,24 @@ def start_speed_session() -> Dict[str, Any]:
     if reps <= 0:
         return {"active": False, "message": "Speed Track unlocks at Level 16."}
 
-    pool = list(CONSTRAINT_POOL)
-    random.shuffle(pool)
-    selected = pool[:reps]
-    if len(selected) < reps:
-        selected.extend(random.choices(pool, k=(reps - len(selected))))
+    # Weight toward the archetypes this user misses, and fold in their own
+    # logged constraints so the drill trains on real material too.
+    personal = []
+    try:
+        for entry in REAL_WORLD.get_all_entries():
+            data = entry.to_dict() if hasattr(entry, "to_dict") else entry
+            arch = (data.get("archetype_guess") or "").strip().lower()
+            text = (data.get("constraint") or "").strip()
+            if arch and text:
+                personal.append((text, arch))
+    except Exception:
+        personal = []
+
+    selected = select_drill_constraints(
+        reps,
+        speed_stats=SPEED_TRACK.get_stats_dict(),
+        extra_pool=personal,
+    )
 
     session_id = f"web_speed_{int(time.time() * 1000)}"
     ACTIVE_SPEED_SESSIONS[session_id] = {
@@ -948,7 +1148,7 @@ def run_amava_compile(payload: Dict[str, Any]) -> Dict[str, Any]:
 
     service = get_service()
     if service is None:
-        return {"error": "LLM service unavailable — configure Ollama or API keys."}
+        return {"error": "LLM service unavailable — set OPENAI_API_KEY."}
 
     model = effective_selected_model()
     service.apply_model_override(model)
@@ -1023,42 +1223,24 @@ def amava_info_payload() -> Dict[str, Any]:
 
 
 def available_local_models() -> list:
+    """Chat models this OpenAI key can reach. Name kept for UI compatibility."""
     service = get_service()
     if service is None:
-        return ["qwen3.5:9b"]
+        return [DEFAULT_MODEL]
     try:
-        provider_obj = getattr(getattr(service.llm, "config", None), "provider", "")
-        provider = getattr(provider_obj, "value", str(provider_obj)).lower()
-        if provider == "anthropic":
-            return [getattr(service.llm, "model", "claude-sonnet-4-20250514")]
-        models = service.llm._get_local_models()
-        return models or [getattr(service.llm, "model", "qwen3.5:9b")]
+        models = service.llm.list_models()
+        return models or [getattr(service.llm, "model", DEFAULT_MODEL)]
     except Exception:
-        return [getattr(service.llm, "model", "qwen3.5:9b")]
+        return [getattr(service.llm, "model", DEFAULT_MODEL)]
 
 
 def effective_selected_model() -> str:
-    """Return provider-compatible selected model for UI/backend requests."""
+    """Model the UI selected, falling back to the client's current model."""
     service = get_service()
     state_model = (WEB_STATE.data.get("llm_model") or "").strip()
     if service is None:
-        return state_model or "qwen3.5:9b"
-
-    current_model = str(getattr(service.llm, "model", "") or "")
-    provider_obj = getattr(getattr(service.llm, "config", None), "provider", "")
-    provider = getattr(provider_obj, "value", str(provider_obj)).lower()
-
-    if provider == "anthropic":
-        if state_model.startswith("claude"):
-            return state_model
-        return current_model or "claude-sonnet-4-20250514"
-
-    if provider == "local":
-        if state_model and not state_model.startswith("claude"):
-            return state_model
-        return current_model or "qwen3.5:9b"
-
-    return state_model or current_model or "qwen3.5:9b"
+        return state_model or DEFAULT_MODEL
+    return state_model or str(getattr(service.llm, "model", "") or "") or DEFAULT_MODEL
 
 
 class C2ARequestHandler(BaseHTTPRequestHandler):
@@ -1276,18 +1458,12 @@ class C2ARequestHandler(BaseHTTPRequestHandler):
                 self._send_json(fallback_scenario(payload))
                 return
             try:
-<<<<<<< HEAD
-                data = service.generate_scenario(payload)
-            except Exception:
-                traceback.print_exc()
-=======
                 data = run_with_timeout(lambda: service.generate_scenario(payload), SCENARIO_TIMEOUT_SEC)
             except FutureTimeoutError:
                 print(f"[WARN] /api/scenario timeout after {SCENARIO_TIMEOUT_SEC:.1f}s; using fallback")
                 data = fallback_scenario(payload)
             except Exception as exc:
                 print(f"[WARN] /api/scenario failed ({type(exc).__name__}); using fallback")
->>>>>>> refs/remotes/origin/main
                 data = fallback_scenario(payload)
             self._send_json(data)
             return
@@ -1303,18 +1479,12 @@ class C2ARequestHandler(BaseHTTPRequestHandler):
                 self._send_json(fallback_evaluation())
                 return
             try:
-<<<<<<< HEAD
-                data = service.evaluate_transmutation(payload)
-            except Exception:
-                traceback.print_exc()
-=======
                 data = run_with_timeout(lambda: service.evaluate_transmutation(payload), EVALUATE_TIMEOUT_SEC)
             except FutureTimeoutError:
                 print(f"[WARN] /api/evaluate timeout after {EVALUATE_TIMEOUT_SEC:.1f}s; using fallback")
                 data = fallback_evaluation()
             except Exception as exc:
                 print(f"[WARN] /api/evaluate failed ({type(exc).__name__}); using fallback")
->>>>>>> refs/remotes/origin/main
                 data = fallback_evaluation()
             self._send_json(data)
             return
@@ -1334,6 +1504,25 @@ class C2ARequestHandler(BaseHTTPRequestHandler):
             self._send_json(data)
             return
 
+        if self.path == "/api/removal-test":
+            service = get_service()
+            if service is None:
+                self._send_json(fallback_removal_test(payload))
+                return
+            payload.setdefault("llm_model", effective_selected_model())
+            try:
+                data = run_with_timeout(
+                    lambda: service.removal_test(payload), EVALUATE_TIMEOUT_SEC
+                )
+            except FutureTimeoutError:
+                print(f"[WARN] /api/removal-test timeout after {EVALUATE_TIMEOUT_SEC:.1f}s")
+                data = fallback_removal_test(payload)
+            except Exception as exc:
+                print(f"[WARN] /api/removal-test failed ({type(exc).__name__})")
+                data = fallback_removal_test(payload)
+            self._send_json(data)
+            return
+
         if self.path == "/api/llm":
             service = get_service()
             if service is None:
@@ -1341,18 +1530,12 @@ class C2ARequestHandler(BaseHTTPRequestHandler):
                 return
             payload.setdefault("llm_model", effective_selected_model())
             try:
-<<<<<<< HEAD
-                text = service.chat_raw(payload)
-            except Exception:
-                traceback.print_exc()
-=======
                 text = run_with_timeout(lambda: service.chat_raw(payload), CHAT_TIMEOUT_SEC)
             except FutureTimeoutError:
                 print(f"[WARN] /api/llm timeout after {CHAT_TIMEOUT_SEC:.1f}s")
                 text = ""
             except Exception as exc:
                 print(f"[WARN] /api/llm failed ({type(exc).__name__})")
->>>>>>> refs/remotes/origin/main
                 text = ""
             self._send_json({"text": text})
             return

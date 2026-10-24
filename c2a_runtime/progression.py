@@ -7,10 +7,35 @@ MIN_LEVEL = 1
 # No hard cap — levels climb with sustained practice.
 MAX_LEVEL = None
 
+# ─── Mastery weighting ────────────────────────────────────────────────────────
+# Level used to be 0.5 per session plus avg/10, which made it ~90% attendance:
+# 100 took ~190 sessions regardless of whether you were actually transmuting.
+# It now runs on quality. Each session is worth ATTENDANCE_FLOOR plus a mastery
+# bonus that only starts accruing above COPING_CEILING — the score below which
+# the judge considers a response coping rather than transmutation.
+#
+# Sessions to Level 100 at a sustained average:
+#     avg 50  ->  ~250     (coping; the curve refuses to move)
+#     avg 65  ->  ~73
+#     avg 75  ->  ~52
+#     avg 85  ->  ~40
+#     avg 95  ->  ~33
+ATTENDANCE_FLOOR = 0.25   # every completed session is worth a little
+COPING_CEILING = 45.0     # below this, only the floor accrues
+MASTERY_DIVISOR = 18.0    # points gained per point of score above the ceiling
+MASTERY_CAP = 2.75        # ceiling on the per-session mastery bonus
+
+
+def session_value(avg_score: float) -> float:
+    """Level-points a single session is worth at this average score."""
+    bonus = (float(avg_score) - COPING_CEILING) / MASTERY_DIVISOR
+    return ATTENDANCE_FLOOR + max(0.0, min(MASTERY_CAP, bonus))
+
 
 def raw_level_from_stats(total_sessions: int, avg_score: float) -> int:
-    """Session-derived level before speed gates."""
-    return max(MIN_LEVEL, int((total_sessions * 0.5) + (avg_score / 10)))
+    """Session-derived level before speed gates. Quality-weighted."""
+    points = int(total_sessions) * session_value(avg_score)
+    return max(MIN_LEVEL, int(MIN_LEVEL + points))
 
 
 def calculate_level(

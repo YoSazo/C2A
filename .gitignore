@@ -44,3 +44,6 @@ research_notes/session_notes/session_*.json
 node_modules/
 src-tauri/target/
 src-tauri/gen/
+# Secrets — never commit real keys
+config/api_keys.json
+.env

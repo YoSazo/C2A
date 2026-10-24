@@ -210,15 +210,22 @@ class ScaffoldingScheduler:
 
         If no speed data exists yet (new user), gates are not applied —
         the system gives benefit of the doubt until data exists.
-        """
-        # Find the highest gate that applies to this level
-        active_gate_level = None
-        for gate_level in sorted(SPEED_GATES.keys(), reverse=True):
-            if level > gate_level:
-                active_gate_level = gate_level
-                break
 
-        if active_gate_level is None:
+        Two things this must get right, both of which it previously got wrong:
+
+        1. "No data" is not "0%". SpeedTrack.get_stats_dict() returns a fully
+           populated dict of zeros when no drill has ever run, so testing
+           `current is None` never fired and a new user failed every gate.
+           Absence of data is now detected from total_reps.
+
+        2. Gates are checked lowest-unpassed first, not highest-applicable.
+           Checking only the highest meant a large enough raw level skipped
+           past the lower cap entirely — grinding sessions teleported you from
+           15 to 40 to 70 while failing every speed standard at 0%.
+        """
+        applicable = [g for g in sorted(SPEED_GATES.keys()) if level > g]
+
+        if not applicable:
             # No gate applies yet
             return SpeedGateStatus(
                 gate_level=0,
@@ -229,31 +236,68 @@ class ScaffoldingScheduler:
                 message="No speed gate at this level.",
             )
 
-        gate = SPEED_GATES[active_gate_level]
-        metric = gate['metric']
-        threshold = gate['threshold']
-        current = speed_stats.get(metric, None)
+        # Bootstrap grace: the drill is the only source of speed data, and it
+        # only exists above the first gate, so a user with no data at all gets
+        # the first gate waived. Exactly one gate — by the second, Speed Track
+        # has been available for 25 levels and never running it is a choice.
+        has_data = self._has_speed_data(speed_stats)
+        gates_to_check = applicable if has_data else applicable[1:]
 
-        # No speed data yet — don't block
-        if current is None:
+        if not gates_to_check:
+            first = applicable[0]
             return SpeedGateStatus(
-                gate_level=active_gate_level,
-                metric=metric,
-                threshold=threshold,
+                gate_level=first,
+                metric=SPEED_GATES[first]['metric'],
+                threshold=SPEED_GATES[first]['threshold'],
                 current_value=0.0,
                 passed=True,
                 message="No speed data yet. Complete Speed Track sessions to unlock gate check.",
             )
 
-        passed = current >= threshold
+        # Lowest unpassed gate wins.
+        for gate_level in gates_to_check:
+            gate = SPEED_GATES[gate_level]
+            metric = gate['metric']
+            threshold = gate['threshold']
+            current = float(speed_stats.get(metric) or 0.0)
+            if current < threshold:
+                return SpeedGateStatus(
+                    gate_level=gate_level,
+                    metric=metric,
+                    threshold=threshold,
+                    current_value=current,
+                    passed=False,
+                    message=gate['message'],
+                    # Hold one level *past* the gate, not at it. The remedy for
+                    # a speed gate is Speed Track, and Speed Track only exists
+                    # above the gate — capping at the gate itself would remove
+                    # the only way to clear it.
+                    blocked_at=gate_level + 1,
+                )
+
+        highest = applicable[-1]
+        metric = SPEED_GATES[highest]['metric']
+        current = float(speed_stats.get(metric) or 0.0)
         return SpeedGateStatus(
-            gate_level=active_gate_level,
+            gate_level=highest,
             metric=metric,
-            threshold=threshold,
+            threshold=SPEED_GATES[highest]['threshold'],
             current_value=current,
-            passed=passed,
-            message=gate['message'] if not passed else f"Speed gate passed: {metric} = {current:.0%}",
-            blocked_at=active_gate_level if not passed else None,
+            passed=True,
+            message=f"Speed gate passed: {metric} = {current:.0%}",
+        )
+
+    @staticmethod
+    def _has_speed_data(speed_stats: dict) -> bool:
+        """True once at least one Speed Track rep has been recorded."""
+        if not speed_stats:
+            return False
+        if 'total_reps' in speed_stats:
+            return int(speed_stats.get('total_reps') or 0) > 0
+        # Older callers may pass only the percentage metrics.
+        return any(
+            float(speed_stats.get(m) or 0.0) > 0.0
+            for m in ('pct_under_8s', 'pct_under_15s', 'pct_under_30s')
         )
 
     def apply_speed_gate(self, raw_level: int, speed_stats: dict) -> int:

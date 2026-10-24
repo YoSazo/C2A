@@ -244,6 +244,74 @@ textarea#trans-in::placeholder { color:rgba(245,245,242,.12); }
 .score-bar-track { height:1px; background:rgba(245,245,242,.08); position:relative; }
 .score-bar-fill { position:absolute; top:0; left:0; height:100%; background:var(--white); width:0; transition:width 1s cubic-bezier(.4,0,.2,1); }
 
+.removal-lab { border:1px solid var(--line); margin-top:2px; padding:20px; }
+.rl-trigger { background:transparent; border:1px solid var(--line); color:var(--white); font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; padding:10px 18px; cursor:pointer; transition:border-color .2s; }
+.rl-trigger:hover { border-color:rgba(245,245,242,.4); }
+.rl-trigger:disabled { opacity:.4; cursor:default; }
+.rl-stage { margin-top:18px; }
+.rl-step-label { font-family:var(--mono); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--mid); margin-bottom:10px; }
+
+/* Stage 1: the raw text, with filler cut away */
+.rl-text { font-family:var(--serif); font-size:19px; line-height:1.65; color:var(--white); max-width:680px; }
+.rl-text .filler { transition:opacity .5s, color .5s; }
+.rl-text.cutting .filler { text-decoration:line-through; color:var(--mid); }
+.rl-text.cut .filler { opacity:.12; text-decoration:line-through; }
+
+/* Stage 2: the causal chain */
+.rl-chain { display:flex; align-items:stretch; gap:0; flex-wrap:wrap; margin-top:8px; }
+.rl-node { flex:1 1 180px; min-width:170px; border:1px solid var(--line); padding:14px 16px; opacity:0; transform:translateY(8px); transition:opacity .45s, transform .45s, border-color .6s, background .6s; }
+.rl-node.in { opacity:1; transform:none; }
+.rl-node-role { font-family:var(--mono); font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--mid); margin-bottom:8px; }
+.rl-node-text { font-size:14px; line-height:1.5; color:var(--white); }
+.rl-link { display:flex; align-items:center; justify-content:center; padding:0 10px; font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); opacity:0; transition:opacity .45s, color .6s; }
+.rl-link.in { opacity:1; }
+
+/* Deletion */
+.rl-node.deleting { border-color:#d9544f; }
+.rl-node.deleted { border-style:dashed; border-color:rgba(217,84,79,.5); transform:scale(.97); }
+.rl-node.deleted .rl-node-text, .rl-node.deleted .rl-node-role { opacity:.18; }
+.rl-link.severed { color:#d9544f; text-decoration:line-through; }
+
+/* Outcome. Colour encodes DEPENDENCY, not survival:
+   collapsed = it needed the constraint = the move worked = green
+   still standing = it never needed the constraint = you coped = red */
+.rl-node.dying { border-color:#5fb87a; }
+.rl-node.dependent { border-style:dashed; border-color:#5fb87a; transform:scale(.97); }
+.rl-node.dependent .rl-node-text { opacity:.22; text-decoration:line-through; }
+.rl-node.dependent .rl-node-role { opacity:.35; }
+.rl-node.independent { border-color:#d9544f; background:rgba(217,84,79,.06); }
+.rl-node-fate { font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase; margin-top:10px; }
+.rl-node.dependent .rl-node-fate { color:#5fb87a; }
+.rl-node.independent .rl-node-fate { color:#d9544f; }
+
+/* Predict step */
+.rl-predict { margin-top:20px; border-top:1px solid var(--line); padding-top:18px; }
+.rl-predict-q { font-family:var(--serif); font-size:17px; color:var(--white); margin-bottom:14px; }
+.rl-choices { display:flex; gap:10px; flex-wrap:wrap; }
+.rl-choice { background:transparent; border:1px solid var(--line); color:var(--white); font-family:var(--mono); font-size:11px; letter-spacing:.06em; padding:12px 20px; cursor:pointer; transition:border-color .2s, background .2s; }
+.rl-choice:hover { border-color:rgba(245,245,242,.45); }
+.rl-choice:disabled { cursor:default; opacity:.35; }
+.rl-choice.picked { border-color:rgba(245,245,242,.7); background:rgba(245,245,242,.05); }
+
+/* Result */
+.rl-outcome { margin-top:20px; border-top:1px solid var(--line); padding-top:18px; }
+.rl-outcome-tag { font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; margin-bottom:8px; }
+.rl-outcome.transmuted .rl-outcome-tag { color:#5fb87a; }
+.rl-outcome.coped .rl-outcome-tag { color:#d9544f; }
+.rl-outcome-body { font-size:13px; line-height:1.6; color:var(--mid); max-width:680px; }
+.rl-callout { border-left:2px solid var(--line); padding:10px 0 10px 16px; margin-top:14px; font-family:var(--serif); font-size:16px; line-height:1.55; color:var(--white); max-width:660px; }
+.rl-hit { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; margin-top:12px; }
+.rl-hit.right { color:#5fb87a; }
+.rl-hit.wrong { color:#d9a441; }
+.removal-verdict { border:1px solid var(--line); padding:14px 20px; margin-top:2px; font-size:12px; letter-spacing:.01em; }
+.removal-verdict .rv-tag { font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; }
+.removal-verdict .rv-body { color:var(--mid); margin-top:6px; line-height:1.55; }
+.removal-verdict.coped { border-left:2px solid #d9544f; }
+.removal-verdict.coped .rv-tag { color:#d9544f; }
+.removal-verdict.weak { border-left:2px solid #d9a441; }
+.removal-verdict.weak .rv-tag { color:#d9a441; }
+.removal-verdict.transmuted { border-left:2px solid #5fb87a; }
+.removal-verdict.transmuted .rv-tag { color:#5fb87a; }
 .score-breakdown { border:1px solid var(--line); padding:16px 20px; margin-top:2px; font-size:11px; color:var(--mid); }
 .score-breakdown-row { display:flex; justify-content:space-between; padding:4px 0; border-top:1px solid rgba(245,245,242,.06); }
 .score-breakdown-row:first-child { border-top:none; }
@@ -452,30 +520,11 @@ body::after {
   <div id="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">Archetype</div>
-<<<<<<< HEAD
-      <div class="archetype-auto-note" id="arch-auto-note"></div>
-      <button class="archetype-btn" data-arch="scarcity" onclick="selectArchetype('scarcity')">
-        <span class="arch-sym"></span> Scarcity
-      </button>
-      <button class="archetype-btn active" data-arch="velocity" onclick="selectArchetype('velocity')">
-        <span class="arch-sym"></span> Velocity
-      </button>
-      <button class="archetype-btn" data-arch="asymmetry" onclick="selectArchetype('asymmetry')">
-        <span class="arch-sym"></span> Asymmetry
-      </button>
-      <button class="archetype-btn" data-arch="friction" onclick="selectArchetype('friction')">
-        <span class="arch-sym"></span> Friction
-      </button>
-      <button class="archetype-btn" data-arch="paradox" onclick="selectArchetype('paradox')">
-        <span class="arch-sym"></span> Paradox
-      </button>
-=======
       <div class="archetype-readonly" id="archetype-readonly">
         <div class="archetype-ro-label">System Selected</div>
         <div class="archetype-ro-name" id="auto-arch-name">Awaiting session...</div>
         <div class="archetype-ro-meta" id="auto-arch-meta">Chosen automatically when you begin training.</div>
       </div>
->>>>>>> refs/remotes/origin/main
     </div>
 
     <div class="sidebar-section">
@@ -637,6 +686,14 @@ body::after {
           <div class="velocity-badge" id="r-velocity"></div>
         </div>
         <div class="score-bars" id="score-bars"></div>
+      </div>
+
+      <div class="removal-verdict" id="r-verdict"></div>
+
+      <div class="removal-lab" id="removal-lab">
+        <div class="rl-step-label">The removal test</div>
+        <button class="rl-trigger" id="rl-trigger" onclick="runRemovalTest()">Run it on my answer</button>
+        <div class="rl-stage" id="rl-stage"></div>
       </div>
 
       <div class="score-breakdown" id="score-breakdown"></div>
@@ -990,23 +1047,7 @@ function goHome() { clearTimers(); show('home'); updateMenu(); }
 function showScreen(id) { show(id); populateScreen(id); }
 
 function populateScreen(id) {
-<<<<<<< HEAD
   if (id === 'settings') {
-=======
-  if (id === 'gallery') {
-    const g = document.getElementById('gallery-grid');
-    g.innerHTML = Object.entries(ARCHETYPES).map(([k,v]) => `
-      <div style="padding:28px 20px;border-right:1px solid var(--line);">
-        <div style="font-size:28px;margin-bottom:12px;">${v.sym}</div>
-        <div style="font-family:var(--serif);font-size:16px;letter-spacing:-.02em;margin-bottom:8px;">${k.charAt(0).toUpperCase()+k.slice(1)}</div>
-        <div style="font-size:11px;color:var(--mid);line-height:1.5;">${v.essence}</div>
-        <div style="margin-top:16px;display:flex;flex-direction:column;gap:3px;">
-          ${v.keys.map(kk=>`<div style="font-size:10px;color:rgba(245,245,242,.3);padding:3px 0;border-top:1px solid var(--line);">${kk}</div>`).join('')}
-        </div>
-      </div>`).join('');
-  }
-  if (id === 'domain') {
->>>>>>> refs/remotes/origin/main
     const d = STATE.domain;
     if (d) {
       const di = document.getElementById('domain-input');
@@ -1618,39 +1659,21 @@ async function callClaude(messages, system, maxTokens=1024) {
 }
 
 async function generateScenario(arch) {
-<<<<<<< HEAD
   const sessCount = STATE.sessions.length;
   const level = STATE.level || calcLevel() || 1;
   const domainField = STATE.domain?.field?.trim() || '';
-  try {
-    const data = await api('POST', '/api/scenario', {
-      level,
-      session_count: sessCount,
-      archetype: arch,
-      auto_archetype: level <= 20,
-      domain: domainField || 'general life',
-      active_lesson: STATE.activeLesson,
-      llm_model: STATE.llmModel || '',
-      sessions: STATE.sessions.slice(-8).map(s => ({
-        scenario_title: s.scenario_title || s.title || '',
-      })),
-      recent_scenario_titles: STATE.sessions.slice(-8).map(s => s.scenario_title || '').filter(Boolean),
-    });
-    return {
-      title: data.title,
-      situation: data.situation,
-      hook: data.hook,
-      hint: data.hint,
-      arch: data.arch || arch,
-    };
-  } catch (e) {
-    throw e;
-  }
-=======
   const payload = {
+    level,
+    session_count: sessCount,
     archetype: arch,
-    domain: STATE.domain?.field || null,
-    llm_model: STATE.llmModel || 'qwen3.5:9b',
+    auto_archetype: level <= 20,
+    domain: domainField || 'general life',
+    active_lesson: STATE.activeLesson,
+    llm_model: STATE.llmModel || '',
+    sessions: STATE.sessions.slice(-8).map(s => ({
+      scenario_title: s.scenario_title || s.title || '',
+    })),
+    recent_scenario_titles: STATE.sessions.slice(-8).map(s => s.scenario_title || '').filter(Boolean),
   };
   const data = await withTimeout(api('POST', '/api/scenario', payload), 12000, 'scenario');
   return {
@@ -1660,7 +1683,6 @@ async function generateScenario(arch) {
     hint: data.hint || '',
     arch: data.arch || arch,
   };
->>>>>>> refs/remotes/origin/main
 }
 
 async function evaluateTransmutation(transmutation, scenario, arch, duration) {
@@ -1668,7 +1690,7 @@ async function evaluateTransmutation(transmutation, scenario, arch, duration) {
     transmutation,
     scenario,
     archetype: arch,
-    llm_model: STATE.llmModel || 'qwen3.5:9b',
+    llm_model: STATE.llmModel || '',
   };
   const data = await withTimeout(api('POST', '/api/evaluate', payload), 20000, 'evaluate');
   return {
@@ -1944,6 +1966,31 @@ function showResult(ev, score) {
       <div class="score-bar-track"><div class="score-bar-fill" style="width:${(val/max*100)}%"></div></div>
     </div>`).join('');
 
+  // Removal-test verdict. Reframing is the only axis that asks whether the
+  // constraint actually became the advantage; the other 70 points are
+  // available to a well-written cope, so the blended score hides the one
+  // distinction that matters. Name it explicitly.
+  const verdict = document.getElementById('r-verdict');
+  if (verdict) {
+    const rf = ev.reframing || 0;
+    let cls, tag, body;
+    if (rf < 15) {
+      cls = 'coped';
+      tag = 'Coped — not transmuted';
+      body = 'Remove the constraint and your advantage still stands, so the constraint was never doing the work. Working around it, narrowing scope, or finding an unrelated upside all land here. Ask instead: what does this constraint force that I would never have chosen?';
+    } else if (rf < 22) {
+      cls = 'weak';
+      tag = 'Weak transmutation';
+      body = 'The constraint is in the answer but it is not yet the engine. Push the causal chain one step further: constraint → forced behaviour → advantage that a version of you without this constraint could not have.';
+    } else {
+      cls = 'transmuted';
+      tag = 'Transmuted';
+      body = 'The constraint is generating the advantage. Remove it and the advantage dies with it. That is the move.';
+    }
+    verdict.className = 'removal-verdict ' + cls;
+    verdict.innerHTML = `<div class="rv-tag">${tag} · reframing ${rf}/30</div><div class="rv-body">${body}</div>`;
+  }
+
   const breakdown = document.getElementById('score-breakdown');
   if (breakdown) {
     breakdown.innerHTML = `
@@ -1974,13 +2021,9 @@ function showResult(ev, score) {
   }
 
   // Record session
-<<<<<<< HEAD
-  STATE.sessions.push({ score: finalScore, arch: STATE.currentScenario.arch, pattern: ev.pattern, lessonMastered: false, ts: Date.now() });
-=======
   const extraSessionMeta = STATE._pendingSessionMeta || {};
-  STATE.sessions.push({ score, arch: STATE.currentScenario.arch, pattern: ev.pattern, lessonMastered: false, ts: Date.now(), ...extraSessionMeta });
+  STATE.sessions.push({ score: finalScore, arch: STATE.currentScenario.arch, pattern: ev.pattern, lessonMastered: false, ts: Date.now(), ...extraSessionMeta });
   STATE._pendingSessionMeta = null;
->>>>>>> refs/remotes/origin/main
   saveState();
   updateSidebar();
 
@@ -2067,6 +2110,202 @@ function toast(msg) {
 
 function delay(ms) { return new Promise(r=>setTimeout(r,ms)); }
 
+//
+// REMOVAL TEST LAB
+// ================
+// The removal test is the whole of C2A in one question, and stating it as prose
+// makes the reader apply it to themselves — which is exactly the step that is
+// not yet automatic. This plays it out instead: cut the filler, expose the
+// causal chain, then delete the constraint and watch what happens to the
+// advantage.
+//
+// The predict step is the part that installs it. You have to commit to "it
+// dies" or "it survives" BEFORE the reveal, so you are practising the judgement
+// rather than watching a result. Being wrong is the useful case.
+//
+// The counterintuitive bit the visual has to teach: the advantage DYING is the
+// good outcome. An advantage that shrugs off the deletion never needed the
+// constraint, which means you coped.
+//
+
+STATE.removalTest = STATE.removalTest || null;
+
+function rlMarkFiller(text, filler) {
+  let out = escapeHtml(text);
+  (filler || [])
+    .slice()
+    .sort((a, b) => b.length - a.length)
+    .forEach(frag => {
+      const clean = escapeHtml(String(frag).trim());
+      if (clean.length < 3) return;
+      const rx = new RegExp(clean.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+      out = out.replace(rx, m => `<span class="filler">${m}</span>`);
+    });
+  return out;
+}
+
+async function runRemovalTest() {
+  const stage = document.getElementById('rl-stage');
+  const trigger = document.getElementById('rl-trigger');
+  if (!stage) return;
+
+  const scenario = STATE.currentScenario || {};
+  const flow = STATE.cliFlow;
+  const text = (flow && flow.transmutations && flow.transmutations.length)
+    ? flow.transmutations[flow.transmutations.length - 1]
+    : (document.getElementById('trans-in')?.value || '').trim();
+
+  if (!text) { toast('No transmutation to test.'); return; }
+
+  trigger.disabled = true;
+  trigger.textContent = 'Reading your answer';
+  stage.innerHTML = '<div class="rl-step-label">Reading</div>';
+
+  let d;
+  try {
+    d = await api('POST', '/api/removal-test', {
+      transmutation: text,
+      scenario,
+      archetype: scenario.arch || STATE.selectedArch || 'velocity',
+    });
+  } catch (e) {
+    stage.innerHTML = '<div class="rl-outcome-body">Could not reach the analyser.</div>';
+    trigger.disabled = false;
+    trigger.textContent = 'Run it on my answer';
+    return;
+  }
+
+  STATE.removalTest = d;
+  trigger.textContent = 'Run it again';
+
+  // ── 1. Your text, then cut the filler away ────────────────────────────────
+  stage.innerHTML = `
+    <div class="rl-step-label">What you wrote</div>
+    <div class="rl-text" id="rl-text">${rlMarkFiller(d.transmutation || text, d.filler)}</div>`;
+  const textEl = document.getElementById('rl-text');
+  await delay(700);
+  if ((d.filler || []).length) {
+    textEl.classList.add('cutting');
+    await delay(900);
+    textEl.classList.add('cut');
+    await delay(600);
+  }
+
+  // ── 2. The chain ──────────────────────────────────────────────────────────
+  stage.insertAdjacentHTML('beforeend', `
+    <div class="rl-step-label" style="margin-top:24px;">The claim, as a chain</div>
+    <div class="rl-chain" id="rl-chain">
+      <div class="rl-node" id="rl-n-constraint">
+        <div class="rl-node-role">Constraint</div>
+        <div class="rl-node-text">${escapeHtml(d.constraint || '')}</div>
+      </div>
+      <div class="rl-link" id="rl-l1">forces &rarr;</div>
+      <div class="rl-node" id="rl-n-mechanism">
+        <div class="rl-node-role">Forced mechanism</div>
+        <div class="rl-node-text">${escapeHtml(d.mechanism || '')}</div>
+      </div>
+      <div class="rl-link" id="rl-l2">produces &rarr;</div>
+      <div class="rl-node" id="rl-n-advantage">
+        <div class="rl-node-role">Advantage</div>
+        <div class="rl-node-text">${escapeHtml(d.advantage || '')}</div>
+      </div>
+    </div>`);
+
+  for (const id of ['rl-n-constraint', 'rl-l1', 'rl-n-mechanism', 'rl-l2', 'rl-n-advantage']) {
+    document.getElementById(id).classList.add('in');
+    await delay(260);
+  }
+
+  // ── 3. Predict before the reveal ──────────────────────────────────────────
+  await delay(450);
+  stage.insertAdjacentHTML('beforeend', `
+    <div class="rl-predict" id="rl-predict">
+      <div class="rl-predict-q">Delete the constraint. What happens to the advantage?</div>
+      <div class="rl-choices">
+        <button class="rl-choice" onclick="revealRemoval(false)">It dies with it</button>
+        <button class="rl-choice" onclick="revealRemoval(true)">It survives without it</button>
+      </div>
+    </div>`);
+  document.getElementById('rl-predict').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function revealRemoval(predictedSurvives) {
+  const d = STATE.removalTest;
+  if (!d) return;
+
+  const predict = document.getElementById('rl-predict');
+  predict.querySelectorAll('.rl-choice').forEach((b, i) => {
+    b.disabled = true;
+    if ((i === 1) === predictedSurvives) b.classList.add('picked');
+  });
+
+  const survives = !!d.survives;
+  const correct = predictedSurvives === survives;
+
+  // Delete the constraint.
+  const cNode = document.getElementById('rl-n-constraint');
+  cNode.classList.add('deleting');
+  await delay(500);
+  cNode.classList.add('deleted');
+  document.getElementById('rl-l1').classList.add('severed');
+  await delay(700);
+
+  const fate = (node, text) => node.insertAdjacentHTML(
+    'beforeend', `<div class="rl-node-fate">${text}</div>`);
+
+  // The mechanism has nothing forcing it any more.
+  const mNode = document.getElementById('rl-n-mechanism');
+  if (survives) {
+    mNode.classList.add('independent');
+    fate(mNode, 'happens anyway');
+  } else {
+    mNode.classList.add('dying');
+    await delay(600);
+    mNode.classList.add('dependent');
+    document.getElementById('rl-l2').classList.add('severed');
+    fate(mNode, 'nothing forces it now');
+  }
+  await delay(600);
+
+  // And so the advantage either falls or shrugs.
+  const aNode = document.getElementById('rl-n-advantage');
+  if (survives) {
+    aNode.classList.add('independent');
+    fate(aNode, 'still standing — never needed it');
+  } else {
+    aNode.classList.add('dying');
+    await delay(500);
+    aNode.classList.add('dependent');
+    fate(aNode, 'collapsed — it depended on the constraint');
+  }
+  await delay(600);
+
+  const heuristic = !!d.heuristic;
+  const tag = heuristic
+    ? 'Offline guess \u2014 no model connected'
+    : (survives ? 'Survived \u2014 you coped' : 'Died with it \u2014 you transmuted');
+  const lead = survives
+    ? 'The advantage is still standing with the constraint gone, so the constraint was never producing it. That is coping: you worked around the limitation instead of using it.'
+    : 'The advantage collapsed the moment the constraint was removed. That dependency is the whole move \u2014 it means the limitation was generating the advantage, not merely surviving alongside it.';
+
+  const rewrite = (d.rewrite || '').trim();
+  const because = (d.survives_because || '').trim();
+  const without = (d.without_constraint || '').trim();
+
+  document.getElementById('rl-stage').insertAdjacentHTML('beforeend', `
+    <div class="rl-outcome ${survives ? 'coped' : 'transmuted'}">
+      <div class="rl-outcome-tag">${tag}</div>
+      <div class="rl-outcome-body">
+        ${heuristic ? 'Set OPENAI_API_KEY to run the real test.' : lead}
+        ${because ? `<div style="margin-top:10px;">${escapeHtml(because)}</div>` : ''}
+        ${without ? `<div style="margin-top:10px;"><span style="color:var(--white);">Without it:</span> ${escapeHtml(without)}</div>` : ''}
+      </div>
+      ${rewrite ? `<div class="rl-step-label" style="margin-top:18px;">What it looks like transmuted</div><div class="rl-callout">${escapeHtml(rewrite)}</div>` : ''}
+      ${heuristic ? '' : `<div class="rl-hit ${correct ? 'right' : 'wrong'}">${correct ? '\u2713 You called it' : '\u2717 You called it the other way \u2014 that gap is the rep'}</div>`}
+    </div>`);
+}
+
+
 function withTimeout(promise, ms, label='request') {
   const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error(label + ' timeout after ' + ms + 'ms')), ms));
   return Promise.race([promise, timeout]);
@@ -2112,17 +2351,12 @@ async function refreshBackendState() {
   STATE.phase = data.phase || null;
   STATE.speedStats = data.speed_stats || {};
   STATE.realworldToday = data.realworld_today || null;
-<<<<<<< HEAD
   STATE.next_milestone = data.next_milestone || null;
   STATE.progressionBand = data.progression_band || null;
   STATE.recommendedAction = data.recommended_action || null;
   STATE.speed_transmutation_target = data.speed_transmutation_target || null;
   STATE.llmModel = data.llm_model || STATE.llmModel || '';
-  document.querySelectorAll('.archetype-btn').forEach(b=>b.classList.toggle('active', b.dataset.arch===STATE.selectedArch));
-=======
-  STATE.llmModel = data.llm_model || STATE.llmModel || 'qwen3.5:9b';
   syncArchetypeHighlight(STATE.selectedArch);
->>>>>>> refs/remotes/origin/main
 }
 
 const _origUpdateMenu = updateMenu;
@@ -2151,7 +2385,6 @@ selectArchetype = function(arch) {
 const _origShowResult = showResult;
 showResult = function(ev, score) {
   _origShowResult(ev, score);
-<<<<<<< HEAD
   const flow = STATE.cliFlow;
   const scenario = STATE.currentScenario || {};
   const detection = STATE.lastDetection || {
@@ -2166,16 +2399,12 @@ showResult = function(ev, score) {
   const transmutations = flow && Array.isArray(flow.transmutations) && flow.transmutations.length
     ? flow.transmutations
     : [document.getElementById('trans-in')?.value || ''].filter(Boolean);
-=======
-  const lastSession = (STATE.sessions && STATE.sessions.length) ? STATE.sessions[STATE.sessions.length - 1] : {};
->>>>>>> refs/remotes/origin/main
   api('POST', '/api/session', {
     score,
     arch: (STATE.currentScenario && STATE.currentScenario.arch) || STATE.selectedArch || 'velocity',
     pattern: ev && ev.pattern ? ev.pattern : '',
     lessonMastered: !!(STATE.activeLesson && STATE.activeLesson.demonstrated),
     active_lesson: STATE.activeLesson || null,
-<<<<<<< HEAD
     scenario_title: scenario.title || '',
     scenario_situation: scenario.situation || '',
     scenario_hint: scenario.hint || '',
@@ -2191,17 +2420,10 @@ showResult = function(ev, score) {
     detection_confusion_type: detection.confusion_type || '',
     meta_reflection: (ev && ev.growth_edge) ? String(ev.growth_edge) : '',
     breakthrough: !!(ev && ev.breakthrough),
-=======
-    detection_required: !!lastSession.detection_required,
-    detection_success: !!lastSession.detection_success,
-    detection_user_arch: lastSession.detection_user_arch || '',
-    detection_user_constraint: lastSession.detection_user_constraint || '',
-    target_transmutations: Number(lastSession.target_transmutations || 1),
-    completed_transmutations: Number(lastSession.completed_transmutations || 1),
-    time_taken_total: Number(lastSession.time_taken_total || 0),
-    real_life_mode: !!lastSession.real_life_mode,
-    transmutations: Array.isArray(lastSession.transmutations) ? lastSession.transmutations : [],
->>>>>>> refs/remotes/origin/main
+    target_transmutations: Number((flow && flow.target) || 1),
+    completed_transmutations: Number((flow && flow.transmutations && flow.transmutations.length) || 1),
+    time_taken_total: Number((flow && flow.startedAtMs) ? (Date.now() - flow.startedAtMs) / 1000 : ((ev && ev.duration) || 0)),
+    real_life_mode: !!STATE.realLifeMode,
   }).then(refreshBackendState).then(updateSidebar).catch(()=>{});
 };
 
@@ -2270,7 +2492,18 @@ function ensureRealWorld3Q() {
   block.innerHTML = `
     <div class="trans-label" style="margin-bottom:12px;">What new constraint did the trade produce?</div>
     <textarea id="rw-new-constraint" rows="3" placeholder="The next constraint created by this trade..."
-      style="width:100%;max-width:600px;background:transparent;border:none;border-bottom:1px solid rgba(245,245,242,.2);color:var(--white);font-family:var(--mono);font-size:13px;padding:8px 0;outline:none;resize:none;line-height:1.6;user-select:text;"></textarea>`;
+      style="width:100%;max-width:600px;background:transparent;border:none;border-bottom:1px solid rgba(245,245,242,.2);color:var(--white);font-family:var(--mono);font-size:13px;padding:8px 0;outline:none;resize:none;line-height:1.6;user-select:text;"></textarea>
+    <div class="trans-label" style="margin:20px 0 8px;">Which archetype was it?</div>
+    <select id="rw-archetype"
+      style="background:transparent;border:none;border-bottom:1px solid rgba(245,245,242,.2);color:var(--white);font-family:var(--mono);font-size:13px;padding:6px 0;outline:none;min-width:220px;">
+      <option value="">— unsure, leave untagged —</option>
+      <option value="scarcity">Scarcity</option>
+      <option value="velocity">Velocity</option>
+      <option value="asymmetry">Asymmetry</option>
+      <option value="friction">Friction</option>
+      <option value="paradox">Paradox</option>
+    </select>
+    <div style="font-size:11px;color:var(--mid);margin-top:6px;max-width:600px;line-height:1.5;">Tagged entries get folded into your Speed Track drills, so you practise on constraints you actually met.</div>`;
   const actions = document.querySelector('#screen-realworld [style*="display:flex;gap:12px;"]');
   if (actions && actions.parentNode === parent) parent.insertBefore(block, actions);
   const btn = document.getElementById('rw-btn');
@@ -2293,7 +2526,7 @@ async function submitRealWorldLog() {
       constraint,
       transmutation,
       new_constraint,
-      archetype: STATE.selectedArch,
+      archetype: (document.getElementById('rw-archetype')?.value || '') || null,
       domain: STATE.domain && STATE.domain.field ? STATE.domain.field : null,
     });
     const today = resp.today || {entries_logged: 0, is_complete: false};
@@ -2301,6 +2534,8 @@ async function submitRealWorldLog() {
     document.getElementById('rw-constraint').value = '';
     document.getElementById('rw-response').value = '';
     if (newConstraintEl) newConstraintEl.value = '';
+    const archSel = document.getElementById('rw-archetype');
+    if (archSel) archSel.value = '';
     await refreshBackendState();
     updateSidebar();
   } catch (e) {
@@ -2324,6 +2559,7 @@ function ensureSpeedTrackScreen() {
       <p class="stub-body" id="st-intro">Tap archetype keys (1-5) as fast as possible.</p>
       <div id="st-progress" class="trans-label" style="margin-bottom:16px;">Not started</div>
       <div id="st-constraint" style="font-family:var(--serif);font-size:28px;line-height:1.4;margin-bottom:20px;max-width:760px;"></div>
+      <div id="st-feedback" style="font-family:var(--mono);font-size:13px;min-height:20px;margin-bottom:8px;"></div>
       <div id="st-keys" style="font-size:12px;color:var(--mid);margin-bottom:24px;">1 scarcity  2 velocity  3 asymmetry  4 friction  5 paradox</div>
       <div style="display:flex;gap:12px;">
         <button class="btn-transmute" id="st-start-btn" onclick="startSpeedTrackSession()">Start Drill</button>
@@ -2355,6 +2591,8 @@ async function startSpeedTrackSession() {
     results: [],
     startedAt: performance.now(),
   };
+  const fb0 = document.getElementById('st-feedback');
+  if (fb0) fb0.textContent = '';
   document.getElementById('st-progress').textContent = `Rep 1 / ${data.reps}`;
   document.getElementById('st-constraint').textContent = data.constraints[0].text;
   document.getElementById('st-start-btn').textContent = 'Running';
@@ -2388,6 +2626,7 @@ document.addEventListener('keydown', async (e) => {
   if (!/^[1-5]$/.test(e.key)) return;
   e.preventDefault();
   const rt = STATE.speedTrackRuntime;
+  if (rt.locked) return;
   const current = rt.constraints[rt.index];
   if (!current) return;
   const now = performance.now();
@@ -2401,11 +2640,30 @@ document.addEventListener('keydown', async (e) => {
     correct: user_arch === current.arch,
     duration_seconds: Number(dur.toFixed(2)),
   });
+  // Per-rep feedback. Volume at speed with no error signal does not install a
+  // mapping — it hardens whatever mapping you already have, wrong ones included.
+  // Correct reps get a bare tick so the drill stays fast; misses name the right
+  // archetype, because that is the only moment the correction can land.
+  const correct = user_arch === current.arch;
+  const fb = document.getElementById('st-feedback');
+  if (fb) {
+    fb.style.color = correct ? '#5fb87a' : '#d9544f';
+    fb.textContent = correct
+      ? `✓  ${dur.toFixed(1)}s`
+      : `✗  ${dur.toFixed(1)}s   → ${current.arch}`;
+  }
+
   rt.index += 1;
   if (rt.index >= rt.constraints.length) {
     await completeSpeedTrack();
     return;
   }
+
+  // Hold a miss long enough to read; a hit barely interrupts the rhythm.
+  rt.locked = true;
+  await new Promise(r => setTimeout(r, correct ? 200 : 750));
+  rt.locked = false;
+
   rt.startedAt = performance.now();
   document.getElementById('st-progress').textContent = `Rep ${rt.index + 1} / ${rt.constraints.length}`;
   document.getElementById('st-constraint').textContent = rt.constraints[rt.index].text;
@@ -2417,17 +2675,13 @@ document.addEventListener('keydown', async (e) => {
 // 
 STATE.cliFlow = STATE.cliFlow || null;
 STATE.detectionState = STATE.detectionState || { required: false, passed: true };
-<<<<<<< HEAD
 STATE.lastDetection = STATE.lastDetection || null;
-=======
 STATE._pendingSessionMeta = STATE._pendingSessionMeta || null;
->>>>>>> refs/remotes/origin/main
 
 function cliTargetTransmutations(level) {
   return Math.max(1, Math.min(10, Math.floor((level || 1) / 10) + 1));
 }
 
-<<<<<<< HEAD
 function pickTrainingArchetype(level) {
   const keys = Object.keys(ARCHETYPES);
   const n = STATE.sessions?.length || 0;
@@ -2435,7 +2689,8 @@ function pickTrainingArchetype(level) {
     return keys[n % keys.length] || 'scarcity';
   }
   return STATE.selectedArch || keys[n % keys.length] || 'velocity';
-=======
+}
+
 function archetypeNames() {
   return Object.keys(ARCHETYPES);
 }
@@ -2511,6 +2766,7 @@ function selectTrainingArchetype(level) {
 
 function syncArchetypeHighlight(arch) {
   STATE.selectedArch = arch;
+  document.querySelectorAll('.archetype-btn').forEach(b => b.classList.toggle('active', b.dataset.arch === arch));
   const nameEl = document.getElementById('auto-arch-name');
   const metaEl = document.getElementById('auto-arch-meta');
   if (nameEl) {
@@ -2521,7 +2777,6 @@ function syncArchetypeHighlight(arch) {
       ? 'Chosen by C2A training logic for this session.'
       : 'Chosen automatically when you begin training.';
   }
->>>>>>> refs/remotes/origin/main
 }
 
 function formatClock(secondsFloat) {
@@ -2649,7 +2904,12 @@ function confirmConstraintDetection() {
   }
 
   STATE.detectionState.passed = true;
-<<<<<<< HEAD
+  STATE._pendingSessionMeta = {
+    detection_required: true,
+    detection_success: true,
+    detection_user_arch: chosen,
+    detection_user_constraint: desc,
+  };
   STATE.lastDetection = {
     required: true,
     success: true,
@@ -2658,13 +2918,6 @@ function confirmConstraintDetection() {
     correct_archetype: correct,
     correct_answer: (STATE.currentScenario && (STATE.currentScenario.hidden_constraint || STATE.currentScenario.hint || '')) || '',
     confusion_type: '',
-=======
-  STATE._pendingSessionMeta = {
-    detection_required: true,
-    detection_success: true,
-    detection_user_arch: chosen,
-    detection_user_constraint: desc,
->>>>>>> refs/remotes/origin/main
   };
   status.textContent = 'Detection passed. Continue to transmutation.';
   status.style.color = 'var(--white)';
@@ -2897,54 +3150,7 @@ function finalizeCliFlow(reason) {
   STATE.cliFlow = null;
 }
 
-<<<<<<< HEAD
-const _baseFillScenario = fillScenario;
-fillScenario = function(sc, arch) {
-  _baseFillScenario(sc, arch);
-  ensureDetectionPanel();
-
-  const archTag = document.getElementById('sc-arch-tag');
-  if (archTag && STATE.detectionState.required) {
-    archTag.textContent = 'Constraint hidden';
-  }
-  updateDetectionUI();
-};
-
-const _legacyStartSession = startSession;
-startSession = async function() {
-  const level = STATE.level || calcLevel() || 1;
-  if (level <= 10) {
-    STATE.detectionState = { required: false, passed: true };
-    return _legacyStartSession();
-  }
-
-  const arch = pickTrainingArchetype(level);
-  STATE.detectionState = { required: true, passed: false };
-
-  let scenario;
-  try {
-    scenario = await generateScenario(arch);
-  } catch (e) {
-    toast('Could not generate scenario. Check your model/backend.');
-    show('home');
-    return;
-  }
-
-  const sessionArch = scenario.arch || arch;
-  STATE.currentScenario = { ...scenario, arch: sessionArch };
-  fillScenario(scenario, sessionArch);
-  show('scenario');
-};
-
-goToTransmute = function() {
-  if (STATE.detectionState.required && !STATE.detectionState.passed) {
-    toast('Identify the constraint archetype first.');
-    return;
-  }
-
-=======
 function startTransmutationBlock() {
->>>>>>> refs/remotes/origin/main
   const sc = STATE.currentScenario;
   if (!sc) {
     toast('No active scenario.');

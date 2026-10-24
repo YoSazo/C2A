@@ -1,13 +1,14 @@
-# C2A Elegant - main app (python c2a_elegant_main.py)
-chromadb>=0.4.0
-sentence-transformers>=2.2.0
-ollama>=0.1.0
+# C2A runtime (python C2A.py)
+requests>=2.31.0
 numpy>=1.24.0
 
-# Optional: other LLM providers (llm_client.py)
-anthropic>=0.3.0
-# openai>=1.0.0
-# google-generativeai>=0.3.0
+# Memory / vector store (c2a_elegant_main.py, ai_researcher.py)
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+
+# LLM: OpenAI only. Set OPENAI_API_KEY, or put your key in
+# config/api_keys.json as {"openai_api_key": "sk-..."} (gitignored).
+# The client talks to the REST API directly via requests — no SDK needed.
 
 # Extras (only if you use those scripts):
 # - extras/ PDF ingestion: pymupdf, pytesseract, Pillow (and Tesseract OCR binary)

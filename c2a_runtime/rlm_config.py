@@ -1,55 +1,44 @@
 #!/usr/bin/env python3
 """
-RLM Configuration - Adjust based on your hardware
+RLM Configuration — analysis depth tiers.
 
-Your Setup: RTX 3060 (12GB), Ryzen 5 5600X, 32GB RAM
-- Can run up to ~32B parameter models
-- RLM analysis can use simpler approaches
+C2A runs on OpenAI only. These tiers trade cost against analysis depth;
+they no longer describe local hardware. Override the model anywhere with
+the C2A_LLM_MODEL environment variable.
 """
 
-# Model options based on hardware
+from llm_client import DEFAULT_MODEL
+
 RLM_CONFIGS = {
-    "high_end": {
-        # 40GB+ VRAM, strong CPU
-        "model": "qwen2.5-coder:32b",
+    "max": {
+        "model": "gpt-4o",
         "use_code_generation": True,
-        "max_context": 10_000_000,
-        "description": "Full RLM with code generation"
+        "max_context": 128_000,
+        "description": "Full RLM with code generation. Highest cost.",
     },
-    
-    "mid_range": {
-        # 12-24GB VRAM (YOUR SETUP)
-        "model": "qwen2.5:32b",
-        "use_code_generation": False,  # Use simpler prompts instead
-        "max_context": 1_000_000,
-        "description": "Simplified RLM - no code generation, direct analysis"
-    },
-    
-    "low_end": {
-        # 8GB VRAM or less
-        "model": "qwen2.5:7b",
+    "balanced": {
+        "model": DEFAULT_MODEL,
         "use_code_generation": False,
-        "max_context": 100_000,
-        "description": "Basic analysis only"
+        "max_context": 128_000,
+        "description": "Direct analysis, no code generation. Default.",
     },
-    
-    "cpu_only": {
-        # No GPU
-        "model": "qwen2.5:7b",
+    "cheap": {
+        "model": "gpt-4o-mini",
         "use_code_generation": False,
-        "max_context": 50_000,
-        "description": "CPU inference - slow but works"
-    }
+        "max_context": 128_000,
+        "description": "Basic analysis only. Lowest cost.",
+    },
 }
 
-# Auto-detect or manually set
-RECOMMENDED_CONFIG = "mid_range"  # For your RTX 3060 setup
+RECOMMENDED_CONFIG = "balanced"
+
 
 def get_rlm_config(config_name: str = RECOMMENDED_CONFIG):
-    """Get RLM configuration"""
-    return RLM_CONFIGS[config_name]
+    """Get RLM configuration."""
+    return RLM_CONFIGS.get(config_name, RLM_CONFIGS[RECOMMENDED_CONFIG])
+
 
 def can_use_rlm(config_name: str = RECOMMENDED_CONFIG) -> bool:
-    """Check if RLM features are available"""
-    config = RLM_CONFIGS[config_name]
+    """Check if RLM features are available."""
+    config = get_rlm_config(config_name)
     return config["use_code_generation"] or config["max_context"] >= 100_000

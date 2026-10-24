@@ -11,7 +11,7 @@ Philosophy: "The model becomes its own architect, decomposing complexity recursi
 """
 
 import json
-import ollama
+from llm_client import DEFAULT_MODEL, create_client_from_env
 from typing import Dict, List, Optional, Any, Callable, Tuple
 from dataclasses import dataclass
 from pathlib import Path
@@ -245,7 +245,7 @@ class SafeREPL:
 class RLMEngine:
     """Recursive Language Model engine for processing massive contexts"""
     
-    def __init__(self, model: str = "qwen2.5:32b", memory_db=None, use_code_generation: bool = False):
+    def __init__(self, model: str = DEFAULT_MODEL, memory_db=None, use_code_generation: bool = False):
         self.model = model
         self.memory_db = memory_db
         self.query_history = []
@@ -466,17 +466,16 @@ Answer:
     def _query_llm(self, prompt: str) -> str:
         """Query LLM with error handling"""
         try:
-            response = ollama.chat(
-                model=self.model,
-                messages=[{
-                    "role": "system",
-                    "content": "You are an expert Python programmer and data analyst specializing in cognitive training data."
-                }, {
-                    "role": "user",
-                    "content": prompt
-                }]
+            if getattr(self, "_llm", None) is None:
+                self._llm = create_client_from_env()
+                self._llm.model = self.model
+            return self._llm.chat(
+                prompt,
+                system=(
+                    "You are an expert Python programmer and data analyst "
+                    "specializing in cognitive training data."
+                ),
             )
-            return response["message"]["content"]
         except Exception as e:
             print(f"LLM Error: {e}")
             return "# Error generating code"
@@ -507,7 +506,7 @@ Answer:
 class RLMConstraintAnalyzer:
     """High-level RLM interface for constraint analysis"""
     
-    def __init__(self, memory_db, model: str = "qwen2.5:32b", use_simplified: bool = True):
+    def __init__(self, memory_db, model: str = DEFAULT_MODEL, use_simplified: bool = True):
         # use_simplified=True: Works on 12GB VRAM (RTX 3060)
         # use_simplified=False: Needs 40GB+ VRAM (Full RLM with code generation)
         self.engine = RLMEngine(

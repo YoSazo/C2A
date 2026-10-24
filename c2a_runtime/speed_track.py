@@ -20,18 +20,22 @@ What this is NOT:
     - Not a scored training session
 
 What this IS:
-    - 20-50 constraints shown one at a time
+    - 20-50 constraints shown one at a time, drawn from a 150-item pool
     - User taps archetype (1-5 key) for each
-    - No written response. No LLM. No feedback during drill.
+    - No written response. No LLM. No scoring during the drill.
+    - Minimal per-rep signal only: a tick, or a miss naming the right
+      archetype. Volume at speed with NO error signal does not install a
+      mapping, it hardens whatever mapping you already have — so the
+      correction has to land in the same beat as the rep.
+    - Selection is weighted toward the archetypes you miss, and folds in
+      constraints you logged yourself (see select_drill_constraints)
     - Scored purely on speed distribution after completion
     - Takes ~5 minutes
-    - Mandatory above Level 15 (enforced by ScaffoldingScheduler)
 
 Retirement schedule (from ScaffoldingScheduler):
     Level 16-40:  Active, 20 reps, archetype labels shown
     Level 41-70:  Active, 50 reps, archetype labels shown
-    Level 71-99:  Active, 50 reps, archetype labels HIDDEN (cold recognition)
-    Level 100:    Full interface retired — Speed Track no longer presented
+    Level 71+:    Active, 50 reps, archetype labels HIDDEN (cold recognition)
 
 Speed gates (enforced by ScaffoldingScheduler):
     Level 15 gate: 50% of responses must be under 30s
@@ -52,9 +56,9 @@ from scaffolding_scheduler import scheduler
 
 
 # ─── Built-in constraint pool ────────────────────────────────────────────────
-# These are abstract, domain-agnostic constraints.
-# No real-world framing. Pure structural constraint.
-# Used when LLM is not available or level >= 41.
+# Abstract, domain-agnostic constraints. No real-world framing, pure structure.
+# 150 items, 30 per archetype — deliberately larger than the longest session
+# so a drill is a sample rather than a recital of the whole pool.
 
 CONSTRAINT_POOL = [
     # Scarcity
@@ -116,7 +120,193 @@ CONSTRAINT_POOL = [
     ("Saying less communicates more.", "paradox"),
     ("The most direct route requires the longest detour.", "paradox"),
     ("Reducing options is the only way to expand them.", "paradox"),
+
+    # ── Second bank ──────────────────────────────────────────────────────────
+    # The pool has to be larger than a session. At 50 reps against 50 items you
+    # drew the entire pool every time and memorised sentences instead of the
+    # pattern — and then "cold recognition" at Level 71 tested items you had
+    # seen hundreds of times. 30 per archetype keeps any single session a
+    # sample rather than a recital.
+
+    # Scarcity
+    ("Half the team left and the work did not.", "scarcity"),
+    ("There is one seat and three people who need it.", "scarcity"),
+    ("The reserve is gone and the season is not over.", "scarcity"),
+    ("You get one attempt and no materials for a second.", "scarcity"),
+    ("The bandwidth allows one channel, not four.", "scarcity"),
+    ("Rations must last twice as long as planned.", "scarcity"),
+    ("Only what fits in one hand can be carried out.", "scarcity"),
+    ("The library holds one book on the subject.", "scarcity"),
+    ("You may ask exactly one question.", "scarcity"),
+    ("There is enough for the process or the polish, not both.", "scarcity"),
+    ("The grant covers a third of the proposal.", "scarcity"),
+    ("One specialist exists and they are already booked.", "scarcity"),
+    ("Storage is full and nothing may be deleted.", "scarcity"),
+    ("The sample size will never exceed twelve.", "scarcity"),
+    ("You have the tools for yesterday's version of the problem.", "scarcity"),
+    ("Attention is the scarce good, not money.", "scarcity"),
+    ("The venue holds forty and four hundred want in.", "scarcity"),
+    ("There is one shot of daylight left.", "scarcity"),
+    ("The vocabulary available cannot express the idea.", "scarcity"),
+    ("Every additional gram must be paid for in fuel.", "scarcity"),
+
+    # Velocity
+    ("The answer is needed before the analysis finishes.", "velocity"),
+    ("Someone else ships tomorrow.", "velocity"),
+    ("The room empties in ten minutes.", "velocity"),
+    ("The market reprices every second you deliberate.", "velocity"),
+    ("You will be interrupted in ninety seconds.", "velocity"),
+    ("The story breaks whether or not you are ready.", "velocity"),
+    ("The offer stands until someone else takes it.", "velocity"),
+    ("Consensus takes a month; the choice takes an hour.", "velocity"),
+    ("The window between the two storms is narrow.", "velocity"),
+    ("Every rehearsal costs a performance.", "velocity"),
+    ("The prototype must exist before the meeting.", "velocity"),
+    ("Hesitation is itself a decision here.", "velocity"),
+    ("The competitor announced first and the clock started.", "velocity"),
+    ("You must commit before the evidence arrives.", "velocity"),
+    ("The advantage decays by the hour.", "velocity"),
+    ("There is time to do it once, not twice.", "velocity"),
+    ("The audience is already in the room.", "velocity"),
+    ("Approval takes longer than the opportunity lasts.", "velocity"),
+    ("The train leaves whether or not you have packed.", "velocity"),
+    ("Speed is the only variable still under your control.", "velocity"),
+
+    # Asymmetry
+    ("You are negotiating against someone who has read your file.", "asymmetry"),
+    ("The instrument reads the symptom, never the cause.", "asymmetry"),
+    ("Everyone assumes you already know.", "asymmetry"),
+    ("The results arrive a year after the commitment.", "asymmetry"),
+    ("The manual describes a machine you do not have.", "asymmetry"),
+    ("You can observe the output but not the process.", "asymmetry"),
+    ("Only the failures are visible; the successes are silent.", "asymmetry"),
+    ("The expert cannot explain how they decide.", "asymmetry"),
+    ("You are judged by criteria nobody will state.", "asymmetry"),
+    ("The sample you can see is the least representative one.", "asymmetry"),
+    ("Your counterpart knows which of you is bluffing.", "asymmetry"),
+    ("The translation loses exactly the part that mattered.", "asymmetry"),
+    ("You inherited the system without the reasoning.", "asymmetry"),
+    ("The measurement changes what is measured.", "asymmetry"),
+    ("Feedback arrives too late to correct anything.", "asymmetry"),
+    ("You know the destination but not the terrain.", "asymmetry"),
+    ("The question is well posed and the data is not.", "asymmetry"),
+    ("Half the variables are unobservable in principle.", "asymmetry"),
+    ("The precedent exists but nobody recorded why.", "asymmetry"),
+    ("You must price something that has never been sold.", "asymmetry"),
+
+    # Friction
+    ("The interface fights every intention.", "friction"),
+    ("Consent is required from people who never respond.", "friction"),
+    ("The format destroys the structure you need.", "friction"),
+    ("Each fix surfaces two dependencies.", "friction"),
+    ("The material behaves differently at scale.", "friction"),
+    ("Every handoff loses a little more fidelity.", "friction"),
+    ("The rules were written for a different problem.", "friction"),
+    ("The legacy system refuses the modern input.", "friction"),
+    ("Momentum dies at every boundary you cross.", "friction"),
+    ("The instrument is calibrated for the wrong range.", "friction"),
+    ("Nobody blocks you and nothing moves.", "friction"),
+    ("The terrain resists the direct route.", "friction"),
+    ("Coordination costs more than the work itself.", "friction"),
+    ("Your best tool is banned in this context.", "friction"),
+    ("The process demands precision the inputs cannot supply.", "friction"),
+    ("Every improvement must survive a committee.", "friction"),
+    ("The environment degrades whatever you build in it.", "friction"),
+    ("Translation between the two halves eats the schedule.", "friction"),
+    ("The grain of the material runs against the cut.", "friction"),
+    ("What worked at ten breaks at ten thousand.", "friction"),
+
+    # Paradox
+    ("To be trusted you must first admit you might be wrong.", "paradox"),
+    ("The audience grows only when you narrow the appeal.", "paradox"),
+    ("Control increases when you stop enforcing it.", "paradox"),
+    ("Being understood requires saying the harder thing.", "paradox"),
+    ("The system becomes robust by being allowed to fail.", "paradox"),
+    ("You must be certain enough to act and unsure enough to learn.", "paradox"),
+    ("Independence is achieved through dependence on the right thing.", "paradox"),
+    ("The shortcut is only available to those who took the long way.", "paradox"),
+    ("Depth requires refusing almost everything.", "paradox"),
+    ("You have to lose the argument to win the relationship.", "paradox"),
+    ("Speed comes from the discipline of stopping.", "paradox"),
+    ("The rule exists so that it can be broken knowingly.", "paradox"),
+    ("Openness is only possible behind a firm boundary.", "paradox"),
+    ("To finish you must abandon the definition of finished.", "paradox"),
+    ("The strongest position is the one you would give up.", "paradox"),
+    ("You see the whole only by committing to one part.", "paradox"),
+    ("Consistency requires changing the method.", "paradox"),
+    ("Safety is what makes the risk survivable, not avoidable.", "paradox"),
+    ("The teacher learns by refusing to answer.", "paradox"),
+    ("You keep the option by spending it.", "paradox"),
 ]
+
+def select_drill_constraints(
+    reps: int,
+    speed_stats: Optional[dict] = None,
+    extra_pool: Optional[list] = None,
+) -> list:
+    """
+    Choose `reps` (text, archetype) pairs for one drill.
+
+    Two things the old selection never did, despite the stats being computed:
+
+    - Bias toward the weakest archetype. `SpeedStats.weakest_archetype` and
+      `archetype_accuracy` were calculated every session and read by nothing,
+      so the drill practised what you were already good at as often as what
+      you were failing.
+    - Include the user's own logged constraints. `run_session` has always
+      accepted `custom_constraints` and nothing ever passed it, so the real
+      world log and the drill never touched.
+
+    extra_pool: additional (text, archetype) pairs — real-world log entries
+    that carry an archetype. Capped at a third of the drill so personal
+    material sharpens the drill without narrowing it.
+    """
+    if reps <= 0:
+        return []
+
+    pool = list(CONSTRAINT_POOL)
+    accuracy = (speed_stats or {}).get('archetype_accuracy') or {}
+
+    # Weight: an archetype at 50% accuracy is drawn ~2x as often as one at 100%.
+    # Unseen archetypes sit at the middle so they are neither starved nor forced.
+    def weight(archetype: str) -> float:
+        acc = accuracy.get(archetype)
+        if acc is None:
+            return 1.5
+        return 1.0 + 2.0 * (1.0 - max(0.0, min(1.0, float(acc))))
+
+    selected: list = []
+
+    if extra_pool:
+        personal = [p for p in extra_pool if p and p[0] and p[1] in ARCHETYPES]
+        random.shuffle(personal)
+        selected.extend(personal[: max(1, reps // 3)])
+
+    remaining = reps - len(selected)
+    if remaining > 0:
+        weights = [weight(arch) for _, arch in pool]
+        # Sample without replacement so a single drill never repeats an item.
+        chosen: list = []
+        available = list(zip(pool, weights))
+        for _ in range(min(remaining, len(available))):
+            total = sum(w for _, w in available)
+            r = random.uniform(0, total)
+            upto = 0.0
+            for i, (item, w) in enumerate(available):
+                upto += w
+                if upto >= r:
+                    chosen.append(item)
+                    available.pop(i)
+                    break
+        selected.extend(chosen)
+
+    # Only if the caller asked for more reps than we have distinct material.
+    while len(selected) < reps:
+        selected.append(random.choice(pool))
+
+    random.shuffle(selected)
+    return selected[:reps]
+
 
 ARCHETYPE_KEYS = {
     '1': 'scarcity',
@@ -510,15 +700,13 @@ class SpeedTrack:
     # ── Constraint selection ──────────────────────────────────────────────────
 
     def _select_constraints(self, n: int, custom: Optional[list]) -> list:
-        """Select n constraints for the drill."""
-        pool = custom if custom else CONSTRAINT_POOL
-
-        # Shuffle and cycle if needed
-        shuffled = random.sample(pool, min(len(pool), n))
-        if len(shuffled) < n:
-            extra = random.choices(pool, k=n - len(shuffled))
-            shuffled.extend(extra)
-        return shuffled[:n]
+        """Select n constraints for the drill, weighted toward weak archetypes."""
+        if custom:
+            shuffled = random.sample(custom, min(len(custom), n))
+            if len(shuffled) < n:
+                shuffled.extend(random.choices(custom, k=n - len(shuffled)))
+            return shuffled[:n]
+        return select_drill_constraints(n, self.get_stats_dict())
 
     # ── Persistence ───────────────────────────────────────────────────────────
 

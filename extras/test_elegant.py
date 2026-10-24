@@ -33,8 +33,8 @@ def run_test(index, total, name, fn, required=True):
 
 def test_dependencies():
     import chromadb  # noqa: F401
+    import requests  # noqa: F401
     from sentence_transformers import SentenceTransformer  # noqa: F401
-    import ollama  # noqa: F401
 
 
 def test_archetypes():
@@ -65,28 +65,127 @@ def test_scheduler_rules():
 
 
 def test_progression_logic():
+    """Progression must be exercised against the real scheduler, not a stub."""
+    from progression import calculate_level, session_value
+    from scaffolding_scheduler import scheduler
+
+    no_data = {"total_reps": 0, "pct_under_8s": 0.0, "pct_under_15s": 0.0, "pct_under_30s": 0.0}
+
+    assert calculate_level(0, 0.0, scheduler, no_data) == 1, "Floor must be level 1"
+
+    # Quality, not attendance: the same session count must land far apart.
+    coping = calculate_level(30, 48.0, scheduler, no_data)
+    strong = calculate_level(30, 85.0, scheduler, no_data)
+    assert strong > coping * 3, (
+        f"Score must dominate level: 30 sessions at avg 85 gave {strong}, at avg 48 gave {coping}"
+    )
+    assert session_value(40.0) < session_value(70.0) < session_value(95.0)
+
+
+def test_speed_gate_is_escapable():
+    """
+    Regression: Speed Track must be reachable.
+
+    The gate used to read a populated dict of zeros as "0%, failed" rather than
+    "no data", capping every user at 15 — one level below where Speed Track
+    unlocks. The drill was the only way to produce speed data, so the drill
+    could never run.
+    """
     from progression import calculate_level
+    from scaffolding_scheduler import scheduler
 
-    class DummyScheduler:
-        @staticmethod
-        def apply_speed_gate(level, speed_stats):
-            return level
+    no_data = {"total_reps": 0, "pct_under_8s": 0.0, "pct_under_15s": 0.0, "pct_under_30s": 0.0}
 
-    level = calculate_level(total_sessions=20, avg_score=80.0, scheduler=DummyScheduler(), speed_stats={})
-    assert level == 18, f"Expected level 18, got {level}"
+    reached = [calculate_level(n, 80.0, scheduler, no_data) for n in range(1, 40)]
+    assert max(reached) >= 16, f"Never reached Speed Track; peaked at {max(reached)}"
 
-    clamped_low = calculate_level(total_sessions=0, avg_score=0.0, scheduler=DummyScheduler(), speed_stats={})
-    assert clamped_low == 1, f"Expected minimum level 1, got {clamped_low}"
+    # Every level a gate can hold you at must still offer the drill, or the
+    # only remedy for the gate is unreachable from the gate.
+    for stats in (
+        no_data,
+        {"total_reps": 40, "pct_under_8s": 0.0, "pct_under_15s": 0.0, "pct_under_30s": 0.1},
+        {"total_reps": 40, "pct_under_8s": 0.0, "pct_under_15s": 0.1, "pct_under_30s": 0.9},
+    ):
+        for n in (10, 30, 80, 300):
+            level = calculate_level(n, 85.0, scheduler, stats)
+            gate = scheduler.check_speed_gate(level, stats)
+            if not gate.passed:
+                held = scheduler.get_feature_state(gate.blocked_at)
+                assert held.speed_track_reps > 0, (
+                    f"Held at level {gate.blocked_at} with no Speed Track reps available"
+                )
 
-    clamped_high = calculate_level(total_sessions=1000, avg_score=100.0, scheduler=DummyScheduler(), speed_stats={})
-    assert clamped_high == 510, f"Expected uncapped level 510, got {clamped_high}"
+
+def test_speed_gates_are_ordered():
+    """A low gate must not be skipped by having a high raw level."""
+    from scaffolding_scheduler import scheduler
+
+    slow = {"total_reps": 100, "pct_under_8s": 0.0, "pct_under_15s": 0.0, "pct_under_30s": 0.0}
+    # Failing the level-15 standard must not grant level-40 or level-70 privileges.
+    for raw in (20, 45, 90, 400):
+        assert scheduler.apply_speed_gate(raw, slow) <= 16, (
+            f"raw level {raw} escaped the first speed gate"
+        )
+
+
+def test_judge_rubric_is_coherent():
+    """
+    Regression: the judge prompt must teach the move at every level, and must
+    not carry a band table that inverts.
+    """
+    from llm_transmutation_judge import TransmutationJudge
+
+    judge = TransmutationJudge.__new__(TransmutationJudge)
+    scenario = {"title": "T", "situation": "S", "archetype": "friction"}
+
+    for level in (1, 5, 30, 60, 90, 150):
+        prompt = TransmutationJudge._build_evaluation_prompt(
+            judge, "narrowed the scope", scenario, {}, level, ""
+        )
+        assert "THE REMOVAL TEST" in prompt, f"Level {level} prompt lost the removal test"
+        assert "COPING" in prompt, f"Level {level} prompt lost the coping distinction"
+        assert "SCORING CALIBRATION FOR LEVEL" not in prompt, (
+            f"Level {level} still carries the level-scaled band table"
+        )
+
+
+def test_drill_pool_and_selection():
+    """The pool must outlast a session, and selection must favour weak spots."""
+    from collections import Counter
+    from speed_track import CONSTRAINT_POOL, select_drill_constraints
+
+    assert len(CONSTRAINT_POOL) > 50, (
+        f"Pool of {len(CONSTRAINT_POOL)} is not larger than a 50-rep session"
+    )
+
+    picked = select_drill_constraints(20, {})
+    assert len(picked) == 20
+    assert len({t for t, _ in picked}) == 20, "A single drill repeated an item"
+
+    stats = {"archetype_accuracy": {"paradox": 0.2, "friction": 0.95,
+                                    "scarcity": 0.95, "velocity": 0.95, "asymmetry": 0.95}}
+    counts = Counter()
+    for _ in range(150):
+        for _, arch in select_drill_constraints(20, stats):
+            counts[arch] += 1
+    assert counts["paradox"] > counts["friction"], (
+        f"Weak archetype not favoured: {counts}"
+    )
+
+    personal = [("A constraint I actually met", "velocity")]
+    got = select_drill_constraints(9, stats, extra_pool=personal)
+    assert any(t == personal[0][0] for t, _ in got), "Logged constraints never reach the drill"
 
 
 def test_scenario_engine_init():
+    """Structural only — must not need a live key to pass."""
+    from llm_client import DEFAULT_MODEL, LLMClient
     from llm_scenario_engine import LLMScenarioEngine
 
-    engine = LLMScenarioEngine(model="qwen2.5:14b")
+    client = LLMClient(api_key="test-key-not-used")
+    engine = LLMScenarioEngine(model=DEFAULT_MODEL, llm_client=client)
     assert hasattr(engine, "generate_scenario"), "Engine missing generate_scenario"
+    assert engine.llm.model == DEFAULT_MODEL
 
 
 def test_judge_score_shape():
@@ -136,14 +235,13 @@ def test_memory_system():
             pass
 
 
-def test_ollama_connection_optional():
-    import ollama
+def test_openai_config_optional():
+    """Optional: a usable OpenAI key is configured."""
+    from llm_client import LLMClient
 
-    response = ollama.chat(
-        model="qwen2.5:14b",
-        messages=[{"role": "user", "content": "Say ready."}],
-    )
-    assert "message" in response, "Unexpected Ollama response shape"
+    client = LLMClient()
+    models = client.list_models()
+    assert models, "No models returned"
 
 
 def main():
@@ -152,12 +250,16 @@ def main():
         ("Constraint archetypes", test_archetypes, True),
         ("Scheduler rules", test_scheduler_rules, True),
         ("Progression logic", test_progression_logic, True),
+        ("Speed gate is escapable", test_speed_gate_is_escapable, True),
+        ("Speed gates are ordered", test_speed_gates_are_ordered, True),
+        ("Judge rubric coherent", test_judge_rubric_is_coherent, True),
+        ("Drill pool and selection", test_drill_pool_and_selection, True),
         ("Scenario engine init", test_scenario_engine_init, True),
         ("Judge score structure", test_judge_score_shape, True),
         ("UI init", test_ui_init, True),
         ("RLM imports", test_rlm_imports, True),
         ("Memory system", test_memory_system, True),
-        ("Ollama connection (optional)", test_ollama_connection_optional, False),
+        ("OpenAI config (optional)", test_openai_config_optional, False),
     ]
 
     print("=" * 60)
@@ -187,7 +289,7 @@ def main():
         sys.exit(1)
 
     print("\nSystem is ready.")
-    print("Run: python c2a_runtime/c2a_elegant_main.py")
+    print("Run: python C2A.py")
 
 
 if __name__ == "__main__":

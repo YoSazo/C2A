@@ -15,7 +15,7 @@ from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, asdict
 from pathlib import Path
 
-from llm_client import LLMClient, create_client_from_env
+from llm_client import DEFAULT_MODEL, LLMClient, create_client_from_env
 
 from constraint_archetypes import ARCHETYPES, ConstraintArchetype
 
@@ -66,7 +66,7 @@ class ConstraintScenario:
 class LLMScenarioEngine:
     """Generates beautiful, personalized constraint scenarios using an LLM"""
 
-    def __init__(self, model: str = "qwen2.5:32b", llm_client: Optional[LLMClient] = None):
+    def __init__(self, model: str = DEFAULT_MODEL, llm_client: Optional[LLMClient] = None):
         # Backwards compatible: if no client passed, pick from env or default local.
         self.llm = llm_client or create_client_from_env()
         self.model = model  # retained for legacy/debug output

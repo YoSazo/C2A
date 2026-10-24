@@ -6,7 +6,7 @@ Cognitive training system that turns constraints into advantages, with memory-en
 
 ```bash
 pip install -r requirements.txt
-python setup.py
+export OPENAI_API_KEY="sk-..."     # or fill in config/api_keys.json
 python C2A.py
 ```
 
@@ -28,13 +28,22 @@ If you want one folder to point another LLM at, use: `c2a_runtime/`.
 ## Requirements
 
 - Python 3.10+
-- Ollama (recommended): [ollama.ai](https://ollama.ai)
-- A local model such as `qwen2.5:14b` or `mistral`
+- An OpenAI API key
+
+C2A talks to the OpenAI REST API directly — no SDK required. Provide the key
+either way:
+
+- `export OPENAI_API_KEY="sk-..."`, or
+- `config/api_keys.json` containing `{"openai_api_key": "sk-..."}` (gitignored)
+
+Optional: `C2A_LLM_MODEL` picks the model (defaults to `gpt-4o`). The in-app
+model picker lists whatever your key can reach.
 
 ## Commands
 
 - `python C2A.py` - start C2A Training Grounds (default)
 - `python extras/test_elegant.py` - run smoke tests
+- `python c2a_runtime/scaffolding_scheduler.py <level>` - inspect feature state at a level
 - `npm run tauri:dev` - run desktop app
 - `npm run tauri:build` - build installers
 

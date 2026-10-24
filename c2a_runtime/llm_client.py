@@ -1,285 +1,159 @@
+#!/usr/bin/env python3
 """
-LLM Client Abstraction Layer
+llm_client.py
+=============
+The single LLM path for C2A. OpenAI only.
 
-Supports:
-- Local models via Ollama (default)
-- Anthropic Claude API (when API key provided)
+C2A used to fan out across Ollama, Anthropic and NVIDIA NIM. Three providers
+meant three key-resolution paths, three response shapes, three failure modes,
+and three chances for the training loop to break for reasons that had nothing
+to do with training. There is now one.
+
+Key resolution, in order:
+    1. api_key= passed to the constructor
+    2. OPENAI_API_KEY environment variable
+    3. config/api_keys.json at the repo root, {"openai_api_key": "sk-..."}
+
+That file is gitignored. Never commit a key.
 
 Usage:
-    # Local (default)
-    client = LLMClient()
-    
-    # With Anthropic API
-    client = LLMClient(provider="anthropic", api_key="your-key")
-    
-    # Or set environment variable
-    # export ANTHROPIC_API_KEY="your-key"
-    client = LLMClient(provider="anthropic")
+    from llm_client import LLMClient, create_client_from_env
+
+    client = create_client_from_env()
+    text = client.chat("Hello", system="Be brief.")
 """
 
-import os
 import json
-from typing import Optional, Dict, List, Any
-from dataclasses import dataclass
-from enum import Enum
+import os
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 
-class LLMProvider(Enum):
-    LOCAL = "local"           # Ollama
-    ANTHROPIC = "anthropic"   # Claude API
-    NVIDIA = "nvidia"         # NVIDIA NIM (OpenAI-compatible)
+DEFAULT_MODEL = "gpt-4o"
+DEFAULT_BASE_URL = "https://api.openai.com/v1"
+
+# Repo root is the parent of c2a_runtime/. Keys live at <root>/config/api_keys.json.
+REPO_ROOT = Path(__file__).resolve().parent.parent
+KEY_FILE_CANDIDATES = (
+    REPO_ROOT / "config" / "api_keys.json",
+    Path(__file__).resolve().parent / "config" / "api_keys.json",  # legacy location
+)
+
+# Models that take max_completion_tokens instead of max_tokens and reject
+# a custom temperature. Matched by prefix.
+REASONING_MODEL_PREFIXES = ("o1", "o3", "o4", "gpt-5")
+
+# USD per 1M tokens. Used only for the running cost estimate; unknown models
+# fall back to the generic entry rather than pretending to be free.
+PRICING = {
+    "gpt-4o":          {"input": 2.50, "output": 10.00},
+    "gpt-4o-mini":     {"input": 0.15, "output": 0.60},
+    "gpt-4.1":         {"input": 2.00, "output": 8.00},
+    "gpt-4.1-mini":    {"input": 0.40, "output": 1.60},
+    "gpt-4.1-nano":    {"input": 0.10, "output": 0.40},
+    "o3":              {"input": 2.00, "output": 8.00},
+    "o4-mini":         {"input": 1.10, "output": 4.40},
+}
+GENERIC_PRICING = {"input": 2.50, "output": 10.00}
+
+
+class LLMError(RuntimeError):
+    """Raised when the OpenAI call fails in a way the caller should surface."""
 
 
 @dataclass
 class LLMConfig:
-    """Configuration for LLM client"""
-    provider: LLMProvider = LLMProvider.LOCAL
-    
-    # Local model settings (Ollama)
-    local_model: str = "qwen2.5:14b"
-    
-    # Anthropic settings
-    anthropic_model: str = "claude-sonnet-4-20250514"  # Default to Sonnet 4
-    anthropic_api_key: Optional[str] = None
-
-    # NVIDIA NIM (OpenAI-compatible) settings
-    # Base URL from NVIDIA docs/model card.
-    nvidia_base_url: str = "https://integrate.api.nvidia.com/v1"
-    nvidia_model: str = "moonshotai/kimi-k2.5"
-    nvidia_api_key: Optional[str] = None
-
-    # You can upgrade to Opus for maximum quality:
-    # anthropic_model: str = "claude-3-opus-20240229"
-    
-    # Generation settings
-    max_tokens: int = 4096
-    temperature: float = 0.7
+    model: str = DEFAULT_MODEL
+    api_key: Optional[str] = None
+    base_url: str = DEFAULT_BASE_URL
+    temperature: float = 0.8
+    max_tokens: int = 2000
+    timeout_seconds: float = 120.0
+    session_costs: List[Dict[str, Any]] = field(default_factory=list)
 
 
 class LLMClient:
-    """
-    Unified LLM client supporting local and cloud models.
-    
-    ═══════════════════════════════════════════════════════════════
-    SETUP INSTRUCTIONS FOR ANTHROPIC API:
-    ═══════════════════════════════════════════════════════════════
-    
-    1. Go to: https://console.anthropic.com
-    2. Create account and add payment method
-    3. Go to API Keys section
-    4. Create new API key
-    5. Either:
-       a) Set environment variable:
-          export ANTHROPIC_API_KEY="sk-ant-api03-..."
-          
-       b) Or pass directly:
-          client = LLMClient(provider="anthropic", api_key="sk-ant-api03-...")
-          
-       c) Or create config file at: C2A/config/api_keys.json (or alongside this script in config/api_keys.json)
-          {"anthropic_api_key": "sk-ant-api03-..."}
-    
-    PRICING (as of Jan 2025):
-    - Claude 3.5 Sonnet: $3/1M input, $15/1M output (~$30 for Level 100)
-    - Claude 3 Opus:     $15/1M input, $75/1M output (~$150 for Level 100)
-    ═══════════════════════════════════════════════════════════════
-    """
-    
+    """OpenAI chat client. One provider, one response shape."""
+
     def __init__(
         self,
-        provider: str = "local",
         model: Optional[str] = None,
         api_key: Optional[str] = None,
-        config: Optional[LLMConfig] = None
+        base_url: Optional[str] = None,
+        provider: Optional[str] = None,
     ):
         """
-        Initialize LLM client.
-        
-        Args:
-            provider: "local" for Ollama, "anthropic" for Claude API, "nvidia" for NVIDIA NIM
-            model: Override default model for the provider
-            api_key: API key for cloud providers (or use env var)
-            config: Full LLMConfig object (overrides other params)
+        model:    OpenAI model id. Defaults to DEFAULT_MODEL or C2A_LLM_MODEL.
+        api_key:  Overrides env and config file.
+        base_url: Overrides the API host (for a proxy or compatible gateway).
+        provider: Accepted only for backwards compatibility. Anything other
+                  than "openai" is a hard error rather than a silent fallback.
         """
-        if config:
-            self.config = config
-        else:
-            self.config = LLMConfig(
-                provider=LLMProvider(provider),
-                anthropic_api_key=api_key if provider == "anthropic" else None,
-                nvidia_api_key=api_key if provider == "nvidia" else None
+        if provider is not None and str(provider).lower() not in ("openai", ""):
+            raise LLMError(
+                f"C2A is OpenAI-only; provider={provider!r} is no longer supported. "
+                "Drop the provider argument, or set C2A_LLM_MODEL to choose a model."
             )
-            if model:
-                if provider == "local":
-                    self.config.local_model = model
-                elif provider == "anthropic":
-                    self.config.anthropic_model = model
-                elif provider == "nvidia":
-                    self.config.nvidia_model = model
-        
-        # Initialize the appropriate client
-        self._init_client()
-        
-        # Token tracking for cost estimation
+
+        self.config = LLMConfig(
+            model=model or os.environ.get("C2A_LLM_MODEL") or DEFAULT_MODEL,
+            base_url=base_url or os.environ.get("C2A_OPENAI_BASE_URL") or DEFAULT_BASE_URL,
+        )
+        self.config.base_url = self.config.base_url.rstrip("/")
+
+        self.config.api_key = api_key or self._resolve_api_key()
+        if not self.config.api_key:
+            raise LLMError(
+                "OpenAI API key not found. Do one of:\n"
+                "  1. export OPENAI_API_KEY='sk-...'\n"
+                f"  2. create {KEY_FILE_CANDIDATES[0]} with "
+                '{"openai_api_key": "sk-..."}\n'
+                "  3. pass api_key= to LLMClient()"
+            )
+
         self.total_input_tokens = 0
         self.total_output_tokens = 0
-        self.session_costs = []
-    
-    def _init_client(self):
-        """Initialize the underlying LLM client"""
-        
-        if self.config.provider == LLMProvider.LOCAL:
-            self._init_local()
-        elif self.config.provider == LLMProvider.ANTHROPIC:
-            self._init_anthropic()
-        elif self.config.provider == LLMProvider.NVIDIA:
-            self._init_nvidia()
-    
-    def _init_local(self):
-        """Initialize Ollama client"""
-        try:
-            import ollama
-            self.client = ollama
-            self.model = self._resolve_local_model(self.config.local_model)
-            print(f"[OK] LLM Client initialized: Ollama ({self.model})")
-        except ImportError:
-            raise ImportError("Ollama not installed. Run: pip install ollama")
+        self._models_cache: Optional[List[str]] = None
 
-    def _get_local_models(self) -> List[str]:
-        """Return installed local model names from Ollama."""
-        try:
-            model_data = self.client.list()
-        except Exception:
-            return []
+        print(f"[OK] LLM Client initialized: OpenAI ({self.config.model})")
 
-        models = model_data.get("models", []) if isinstance(model_data, dict) else []
-        names: List[str] = []
-        for model_info in models:
-            if not isinstance(model_info, dict):
+    # ── model property (callers assign to .model directly) ───────────────────
+
+    @property
+    def model(self) -> str:
+        return self.config.model
+
+    @model.setter
+    def model(self, value: str) -> None:
+        if value:
+            self.config.model = value
+
+    # ── key resolution ───────────────────────────────────────────────────────
+
+    @staticmethod
+    def _resolve_api_key() -> Optional[str]:
+        env_key = os.environ.get("OPENAI_API_KEY")
+        if env_key:
+            return env_key.strip()
+
+        for path in KEY_FILE_CANDIDATES:
+            if not path.exists():
                 continue
-            name = model_info.get("model") or model_info.get("name")
-            if name:
-                names.append(name)
-        return names
-
-    def _resolve_local_model(self, requested_model: str) -> str:
-        """Pick an installed local model with graceful fallback."""
-        installed = self._get_local_models()
-        if not installed:
-            return requested_model
-
-        if requested_model in installed:
-            return requested_model
-
-        requested_base = requested_model.split(":")[0]
-        for name in installed:
-            if name.split(":")[0] == requested_base:
-                print(f"WARNING: requested model '{requested_model}' not found. Using '{name}'.")
-                return name
-
-        fallback_preference = [
-            "qwen2.5:14b",
-            "qwen2.5:7b",
-            "mistral",
-            "llama3.2",
-        ]
-        for candidate in fallback_preference:
-            candidate_base = candidate.split(":")[0]
-            for name in installed:
-                if name == candidate or name.split(":")[0] == candidate_base:
-                    print(f"WARNING: requested model '{requested_model}' not found. Using '{name}'.")
-                    return name
-
-        chosen = installed[0]
-        print(f"WARNING: requested model '{requested_model}' not found. Using '{chosen}'.")
-        return chosen
-
-    def _init_anthropic(self):
-        """Initialize Anthropic client"""
-        try:
-            import anthropic
-        except ImportError:
-            raise ImportError("Anthropic not installed. Run: pip install anthropic")
-        
-        # Try to get API key from multiple sources
-        api_key = self._get_anthropic_key()
-        
-        if not api_key:
-            raise ValueError(
-                "Anthropic API key not found. Please either:\n"
-                "1. Set ANTHROPIC_API_KEY environment variable\n"
-                "2. Pass api_key parameter to LLMClient\n"
-                "3. Create config/api_keys.json with {'anthropic_api_key': 'your-key'}"
-            )
-        
-        self.client = anthropic.Anthropic(api_key=api_key)
-        self.model = self.config.anthropic_model
-        print(f"[OK] LLM Client initialized: Anthropic ({self.model})")
-    
-    def _get_anthropic_key(self) -> Optional[str]:
-        """Get Anthropic API key from various sources"""
-        
-        # 1. Direct config
-        if self.config.anthropic_api_key:
-            return self.config.anthropic_api_key
-        
-        # 2. Environment variable
-        env_key = os.environ.get("ANTHROPIC_API_KEY")
-        if env_key:
-            return env_key
-        
-        # 3. Config file
-        config_path = os.path.join(os.path.dirname(__file__), "config", "api_keys.json")
-        if os.path.exists(config_path):
             try:
-                with open(config_path, 'r') as f:
-                    config_data = json.load(f)
-                    return config_data.get("anthropic_api_key")
-            except:
-                pass
-        
-        return None
-
-    def _init_nvidia(self):
-        """Initialize NVIDIA NIM (OpenAI-compatible HTTP API)"""
-        api_key = self._get_nvidia_key()
-        if not api_key:
-            raise ValueError(
-                "NVIDIA API key not found. Please either:\n"
-                "1. Set NVIDIA_API_KEY environment variable\n"
-                "2. Pass api_key parameter to LLMClient(provider='nvidia', api_key=...)\n"
-                "3. Create config/api_keys.json with {'nvidia_api_key': 'your-key'}"
-            )
-
-        # Stored for request headers
-        self._nvidia_api_key = api_key
-        self._nvidia_base_url = self.config.nvidia_base_url.rstrip("/")
-        self.model = self.config.nvidia_model
-        self.client = None  # HTTP via requests
-        print(f"[OK] LLM Client initialized: NVIDIA NIM ({self.model})")
-
-    def _get_nvidia_key(self) -> Optional[str]:
-        """Get NVIDIA API key from various sources"""
-
-        # 1. Direct config
-        if self.config.nvidia_api_key:
-            return self.config.nvidia_api_key
-
-        # 2. Environment variable
-        env_key = os.environ.get("NVIDIA_API_KEY")
-        if env_key:
-            return env_key
-
-        # 3. Config file
-        config_path = os.path.join(os.path.dirname(__file__), "config", "api_keys.json")
-        if os.path.exists(config_path):
-            try:
-                with open(config_path, 'r') as f:
-                    config_data = json.load(f)
-                    return config_data.get("nvidia_api_key")
+                with open(path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                key = (data.get("openai_api_key") or "").strip()
+                if key:
+                    return key
             except Exception:
-                pass
-
+                continue
         return None
+
+    # ── chat ─────────────────────────────────────────────────────────────────
+
+    def _is_reasoning_model(self) -> bool:
+        return self.config.model.startswith(REASONING_MODEL_PREFIXES)
 
     def chat(
         self,
@@ -287,92 +161,13 @@ class LLMClient:
         system: Optional[str] = None,
         history: Optional[List[Dict]] = None,
         temperature: Optional[float] = None,
-        max_tokens: Optional[int] = None
+        max_tokens: Optional[int] = None,
     ) -> str:
-        """
-        Send a chat message and get response.
-        
-        Args:
-            prompt: The user message
-            system: Optional system prompt
-            history: Optional conversation history
-            temperature: Override default temperature
-            max_tokens: Override default max_tokens
-            
-        Returns:
-            The assistant's response text
-        """
-        if self.config.provider == LLMProvider.LOCAL:
-            return self._chat_local(prompt, system, history, temperature)
-        elif self.config.provider == LLMProvider.ANTHROPIC:
-            return self._chat_anthropic(prompt, system, history, temperature, max_tokens)
-        elif self.config.provider == LLMProvider.NVIDIA:
-            return self._chat_nvidia(prompt, system, history, temperature, max_tokens)
-        else:
-            raise ValueError(f"Unsupported provider: {self.config.provider}")
-    
-    def _chat_local(
-        self,
-        prompt: str,
-        system: Optional[str] = None,
-        history: Optional[List[Dict]] = None,
-        temperature: Optional[float] = None
-    ) -> str:
-        """Chat via Ollama"""
-
-        messages = []
-
-        if system:
-            messages.append({"role": "system", "content": system})
-
-        if history:
-            messages.extend(history)
-
-        messages.append({"role": "user", "content": prompt})
-
-        options = {}
-        if temperature is not None:
-            options["temperature"] = temperature
-
-        try:
-            response = self.client.chat(
-                model=self.model,
-                messages=messages,
-                options=options if options else None
-            )
-        except Exception as exc:
-            # If model is missing, retry once with an installed fallback.
-            error_text = str(exc).lower()
-            if "not found" in error_text and "model" in error_text:
-                fallback = self._resolve_local_model(self.model)
-                if fallback != self.model:
-                    self.model = fallback
-                    response = self.client.chat(
-                        model=self.model,
-                        messages=messages,
-                        options=options if options else None
-                    )
-                else:
-                    raise
-            else:
-                raise
-
-        return response["message"]["content"]
-
-    def _chat_nvidia(
-        self,
-        prompt: str,
-        system: Optional[str] = None,
-        history: Optional[List[Dict]] = None,
-        temperature: Optional[float] = None,
-        max_tokens: Optional[int] = None
-    ) -> str:
-        """Chat via NVIDIA NIM (OpenAI-compatible endpoint)"""
-
+        """Send one turn and return the assistant text."""
         try:
             import requests
         except ImportError as e:
-            raise ImportError("requests not installed. Run: pip install requests") from e
+            raise LLMError("requests not installed. Run: pip install requests") from e
 
         messages: List[Dict[str, str]] = []
         if system:
@@ -381,215 +176,123 @@ class LLMClient:
             messages.extend(history)
         messages.append({"role": "user", "content": prompt})
 
-        payload: Dict[str, Any] = {
-            "model": self.model,
-            "messages": messages,
-            "temperature": temperature if temperature is not None else self.config.temperature,
-        }
-        if max_tokens is not None:
-            payload["max_tokens"] = max_tokens
+        payload: Dict[str, Any] = {"model": self.config.model, "messages": messages}
+        limit = max_tokens if max_tokens is not None else self.config.max_tokens
 
-        url = f"{self._nvidia_base_url}/chat/completions"
-        headers = {
-            "Authorization": f"Bearer {self._nvidia_api_key}",
-            "Content-Type": "application/json",
-        }
+        if self._is_reasoning_model():
+            # Reasoning models reject temperature and rename the token cap.
+            payload["max_completion_tokens"] = limit
+        else:
+            payload["temperature"] = (
+                temperature if temperature is not None else self.config.temperature
+            )
+            payload["max_tokens"] = limit
 
-        resp = requests.post(url, headers=headers, json=payload, timeout=120)
-        try:
-            resp.raise_for_status()
-        except Exception as e:
-            # Try to include response body for debugging
-            raise RuntimeError(f"NVIDIA NIM request failed: {resp.status_code} {resp.text[:500]}") from e
+        resp = requests.post(
+            f"{self.config.base_url}/chat/completions",
+            headers={
+                "Authorization": f"Bearer {self.config.api_key}",
+                "Content-Type": "application/json",
+            },
+            json=payload,
+            timeout=self.config.timeout_seconds,
+        )
 
-        data = resp.json()
-        choice0 = (data.get("choices") or [{}])[0] or {}
-        msg = choice0.get("message") or {}
-
-        # Most OpenAI-compatible models put final text here
-        content = msg.get("content")
-
-        # Some NIM-served models may return null content and instead provide
-        # text in reasoning_content / reasoning fields.
-        if not content:
-            content = msg.get("reasoning_content") or msg.get("reasoning")
-
-        # If still empty, fail with a helpful error
-        if not content:
-            raise RuntimeError(
-                "Unexpected NVIDIA NIM response shape (no content/reasoning fields): "
-                f"{str(data)[:500]}"
+        if resp.status_code != 200:
+            raise LLMError(
+                f"OpenAI request failed: {resp.status_code} {resp.text[:400]}"
             )
 
-        # Token usage (if provided)
+        data = resp.json()
+        choices = data.get("choices") or []
+        if not choices:
+            raise LLMError(f"OpenAI returned no choices: {str(data)[:400]}")
+
+        content = (choices[0].get("message") or {}).get("content") or ""
+
         usage = data.get("usage") or {}
         self.total_input_tokens += int(usage.get("prompt_tokens") or 0)
         self.total_output_tokens += int(usage.get("completion_tokens") or 0)
 
+        if not content.strip():
+            finish = choices[0].get("finish_reason")
+            raise LLMError(
+                f"OpenAI returned empty content (finish_reason={finish!r}). "
+                "If this is a reasoning model, raise max_tokens."
+            )
         return content
 
-    def _chat_anthropic(
-        self,
-        prompt: str,
-        system: Optional[str] = None,
-        history: Optional[List[Dict]] = None,
-        temperature: Optional[float] = None,
-        max_tokens: Optional[int] = None
-    ) -> str:
-        """Chat via Anthropic API"""
-        
-        messages = []
-        
-        if history:
-            for msg in history:
-                role = msg.get("role")
-                if role not in ("user", "assistant"):
-                    # Anthropic messages API only supports user/assistant in messages.
-                    continue
-                messages.append({"role": role, "content": msg.get("content", "")})
-        
-        messages.append({"role": "user", "content": prompt})
-        
-        kwargs = {
-            "model": self.model,
-            "max_tokens": max_tokens or self.config.max_tokens,
-            "messages": messages
-        }
-        
-        if system:
-            kwargs["system"] = system
-        
-        if temperature is not None:
-            kwargs["temperature"] = temperature
-        
-        response = self.client.messages.create(**kwargs)
-        
-        # Track tokens for cost estimation
-        self.total_input_tokens += response.usage.input_tokens
-        self.total_output_tokens += response.usage.output_tokens
-        
-        return response.content[0].text
-    
-    def get_cost_estimate(self) -> Dict[str, Any]:
-        """Get estimated cost based on token usage (Anthropic only)"""
-        
-        if self.config.provider == LLMProvider.LOCAL:
-            return {
-                "provider": "local",
-                "cost": 0.0,
-                "note": "Local models are free"
-            }
-        
-        if self.config.provider == LLMProvider.NVIDIA:
-            return {
-                "provider": "nvidia",
-                "model": self.model,
-                "input_tokens": self.total_input_tokens,
-                "output_tokens": self.total_output_tokens,
-                "note": "Pricing varies by model/NIM plan; see NVIDIA console for exact costs."
-            }
+    # ── model listing (drives the UI picker) ─────────────────────────────────
 
-        # Anthropic pricing (as of Jan 2025)
-        pricing = {
-            "claude-sonnet-4-20250514": {"input": 3.0, "output": 15.0},
-            "claude-3-5-sonnet-20241022": {"input": 3.0, "output": 15.0},
-            "claude-3-opus-20240229": {"input": 15.0, "output": 75.0},
-            "claude-3-sonnet-20240229": {"input": 3.0, "output": 15.0},
-            "claude-3-haiku-20240307": {"input": 0.25, "output": 1.25},
-        }
-        
-        model_pricing = pricing.get(self.model, {"input": 3.0, "output": 15.0})
-        
-        input_cost = (self.total_input_tokens / 1_000_000) * model_pricing["input"]
-        output_cost = (self.total_output_tokens / 1_000_000) * model_pricing["output"]
-        total_cost = input_cost + output_cost
-        
+    def list_models(self) -> List[str]:
+        """
+        Chat-capable model ids available to this key, newest-looking first.
+        Falls back to the configured model if the listing call fails, so the
+        picker is never empty.
+        """
+        if self._models_cache is not None:
+            return self._models_cache
+
+        models: List[str] = []
+        try:
+            import requests
+
+            resp = requests.get(
+                f"{self.config.base_url}/models",
+                headers={"Authorization": f"Bearer {self.config.api_key}"},
+                timeout=15,
+            )
+            if resp.status_code == 200:
+                for item in resp.json().get("data", []):
+                    mid = item.get("id", "")
+                    if mid.startswith(("gpt-", "o1", "o3", "o4", "chatgpt-")):
+                        models.append(mid)
+        except Exception:
+            pass
+
+        models = sorted(set(models))
+        if not models:
+            models = [self.config.model]
+        self._models_cache = models
+        return models
+
+    # ── cost ─────────────────────────────────────────────────────────────────
+
+    def get_cost_estimate(self) -> Dict[str, Any]:
+        rates = PRICING.get(self.config.model, GENERIC_PRICING)
+        input_cost = (self.total_input_tokens / 1_000_000) * rates["input"]
+        output_cost = (self.total_output_tokens / 1_000_000) * rates["output"]
+        total = input_cost + output_cost
         return {
-            "provider": "anthropic",
-            "model": self.model,
+            "provider": "openai",
+            "model": self.config.model,
             "input_tokens": self.total_input_tokens,
             "output_tokens": self.total_output_tokens,
             "input_cost": round(input_cost, 4),
             "output_cost": round(output_cost, 4),
-            "total_cost": round(total_cost, 4),
-            "total_cost_formatted": f"${total_cost:.2f}"
+            "total_cost": round(total, 4),
+            "total_cost_formatted": f"${total:.4f}",
+            "estimated": self.config.model not in PRICING,
         }
-    
-    def reset_cost_tracking(self):
-        """Reset token counters"""
+
+    def reset_cost_tracking(self) -> None:
         self.total_input_tokens = 0
         self.total_output_tokens = 0
-        self.session_costs = []
+        self.config.session_costs = []
 
 
 def create_client_from_env() -> LLMClient:
-    """Create LLM client based on environment.
-
-    Priority:
-    1) If NVIDIA_API_KEY set: NVIDIA NIM
-    2) Else if ANTHROPIC_API_KEY set: Anthropic
-    3) Else: local Ollama
-
-    Optional overrides:
-    - C2A_LLM_PROVIDER: force provider (local|anthropic|nvidia)
-    - C2A_LLM_MODEL: override model name for chosen provider
-    """
-
-    forced_provider = os.environ.get("C2A_LLM_PROVIDER")
-    forced_model = os.environ.get("C2A_LLM_MODEL")
-
-    if forced_provider:
-        return LLMClient(provider=forced_provider, model=forced_model)
-
-    if os.environ.get("NVIDIA_API_KEY"):
-        return LLMClient(provider="nvidia", model=forced_model)
-    if os.environ.get("ANTHROPIC_API_KEY"):
-        return LLMClient(provider="anthropic", model=forced_model)
-
-    return LLMClient(provider="local", model=forced_model)
-
-
-# ═══════════════════════════════════════════════════════════════
-# QUICK START
-# ═══════════════════════════════════════════════════════════════
-#
-# FOR LOCAL (FREE):
-#   client = LLMClient()
-#   response = client.chat("Hello!")
-#
-# FOR ANTHROPIC (PAID, BETTER):
-#   export ANTHROPIC_API_KEY="sk-ant-api03-..."
-#   client = LLMClient(provider="anthropic")
-#   response = client.chat("Hello!")
-#
-# FOR OPUS (MAXIMUM QUALITY):
-#   client = LLMClient(provider="anthropic", model="claude-3-opus-20240229")
-#
-# ═══════════════════════════════════════════════════════════════
+    """Build the client from environment. C2A_LLM_MODEL overrides the model."""
+    return LLMClient(model=os.environ.get("C2A_LLM_MODEL"))
 
 
 if __name__ == "__main__":
-    # Test the client
-    print("Testing LLM Client...\n")
-    
-    # Test local
     try:
-        client = LLMClient(provider="local")
-        response = client.chat("Say 'Hello from Ollama!' in exactly those words.")
-        print(f"Local response: {response[:100]}...")
-        print(f"Cost: {client.get_cost_estimate()}\n")
-    except Exception as e:
-        print(f"Local test failed: {e}\n")
-    
-    # Test Anthropic (if key available)
-    if os.environ.get("ANTHROPIC_API_KEY"):
-        try:
-            client = LLMClient(provider="anthropic")
-            response = client.chat("Say 'Hello from Claude!' in exactly those words.")
-            print(f"Anthropic response: {response[:100]}...")
-            print(f"Cost: {client.get_cost_estimate()}\n")
-        except Exception as e:
-            print(f"Anthropic test failed: {e}\n")
-    else:
-        print("Skipping Anthropic test (no API key set)")
-        print("To enable: export ANTHROPIC_API_KEY='your-key'")
+        client = LLMClient()
+    except LLMError as exc:
+        print(f"[FAIL] {exc}")
+        raise SystemExit(1)
+
+    print(f"Available models: {', '.join(client.list_models()[:12])}")
+    print(client.chat("Reply with exactly: OpenAI path is live."))
+    print(f"Cost: {client.get_cost_estimate()['total_cost_formatted']}")
