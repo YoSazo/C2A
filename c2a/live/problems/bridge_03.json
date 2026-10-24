@@ -1,0 +1,180 @@
+{
+  "id": "bridge_03",
+  "title": "Overbuilt and over budget",
+  "difficulty": 2,
+  "tutorial": false,
+  "brief": "A 9 m bridge made of triangles, carrying 30 kN at each of the two inner deck points. It's strong enough, but every bar is the same thick size and the bridge costs twice the budget.",
+  "material": {
+    "name": "structural steel",
+    "E": 200000000000.0,
+    "yield": 250000000.0,
+    "cost_per_m3": 60000
+  },
+  "sections": {
+    "XS": 0.0002,
+    "S": 0.0005,
+    "M": 0.001,
+    "L": 0.002,
+    "XL": 0.004
+  },
+  "budget": 1800,
+  "region": {
+    "xmin": 0,
+    "xmax": 9,
+    "ymin": 0,
+    "ymax": 3
+  },
+  "design": {
+    "nodes": {
+      "A": [
+        0,
+        0
+      ],
+      "B": [
+        3,
+        0
+      ],
+      "C": [
+        6,
+        0
+      ],
+      "D": [
+        9,
+        0
+      ],
+      "E": [
+        1.5,
+        2
+      ],
+      "F": [
+        4.5,
+        2
+      ],
+      "G": [
+        7.5,
+        2
+      ]
+    },
+    "members": [
+      {
+        "id": "m1",
+        "a": "A",
+        "b": "B",
+        "section": "L"
+      },
+      {
+        "id": "m2",
+        "a": "B",
+        "b": "C",
+        "section": "L"
+      },
+      {
+        "id": "m3",
+        "a": "C",
+        "b": "D",
+        "section": "L"
+      },
+      {
+        "id": "m4",
+        "a": "E",
+        "b": "F",
+        "section": "L"
+      },
+      {
+        "id": "m5",
+        "a": "F",
+        "b": "G",
+        "section": "L"
+      },
+      {
+        "id": "m6",
+        "a": "A",
+        "b": "E",
+        "section": "L"
+      },
+      {
+        "id": "m7",
+        "a": "E",
+        "b": "B",
+        "section": "L"
+      },
+      {
+        "id": "m8",
+        "a": "B",
+        "b": "F",
+        "section": "L"
+      },
+      {
+        "id": "m9",
+        "a": "F",
+        "b": "C",
+        "section": "L"
+      },
+      {
+        "id": "m10",
+        "a": "C",
+        "b": "G",
+        "section": "L"
+      },
+      {
+        "id": "m11",
+        "a": "G",
+        "b": "D",
+        "section": "L"
+      }
+    ],
+    "supports": {
+      "A": "pin",
+      "D": "roller"
+    },
+    "loads": [
+      {
+        "node": "B",
+        "fy": -30000
+      },
+      {
+        "node": "C",
+        "fy": -30000
+      }
+    ]
+  },
+  "reference_solution": {
+    "ops": [
+      {
+        "op": "resize_member",
+        "id": "m1",
+        "section": "XS"
+      },
+      {
+        "op": "resize_member",
+        "id": "m2",
+        "section": "XS"
+      },
+      {
+        "op": "resize_member",
+        "id": "m3",
+        "section": "XS"
+      },
+      {
+        "op": "resize_member",
+        "id": "m7",
+        "section": "XS"
+      },
+      {
+        "op": "resize_member",
+        "id": "m8",
+        "section": "XS"
+      },
+      {
+        "op": "resize_member",
+        "id": "m9",
+        "section": "XS"
+      },
+      {
+        "op": "resize_member",
+        "id": "m10",
+        "section": "XS"
+      }
+    ]
+  }
+}

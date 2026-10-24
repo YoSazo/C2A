@@ -1,0 +1,103 @@
+{
+  "id": "bridge_01",
+  "title": "Footbridge with a weak top",
+  "difficulty": 1,
+  "tutorial": false,
+  "brief": "A 6 m footbridge over a ditch. A 40 kN load (about four tonnes) sits at the middle of the deck. The deck is held up by a single triangle: two slanted bars meet at a peak above the middle. The ends rest on the banks; one end is pinned, the other can slide sideways.",
+  "material": {
+    "name": "structural steel",
+    "E": 200000000000.0,
+    "yield": 250000000.0,
+    "cost_per_m3": 60000
+  },
+  "sections": {
+    "XS": 0.0002,
+    "S": 0.0005,
+    "M": 0.001,
+    "L": 0.002,
+    "XL": 0.004
+  },
+  "budget": 1100,
+  "region": {
+    "xmin": 0,
+    "xmax": 6,
+    "ymin": 0,
+    "ymax": 2.5
+  },
+  "design": {
+    "nodes": {
+      "A": [
+        0,
+        0
+      ],
+      "B": [
+        3,
+        0
+      ],
+      "C": [
+        6,
+        0
+      ],
+      "D": [
+        3,
+        1.5
+      ]
+    },
+    "members": [
+      {
+        "id": "m1",
+        "a": "A",
+        "b": "B",
+        "section": "S"
+      },
+      {
+        "id": "m2",
+        "a": "B",
+        "b": "C",
+        "section": "S"
+      },
+      {
+        "id": "m3",
+        "a": "A",
+        "b": "D",
+        "section": "M"
+      },
+      {
+        "id": "m4",
+        "a": "D",
+        "b": "C",
+        "section": "M"
+      },
+      {
+        "id": "m5",
+        "a": "B",
+        "b": "D",
+        "section": "S"
+      }
+    ],
+    "supports": {
+      "A": "pin",
+      "C": "roller"
+    },
+    "loads": [
+      {
+        "node": "B",
+        "fy": -40000
+      }
+    ]
+  },
+  "reference_solution": {
+    "ops": [
+      {
+        "op": "resize_member",
+        "id": "m3",
+        "section": "L"
+      },
+      {
+        "op": "resize_member",
+        "id": "m4",
+        "section": "L"
+      }
+    ]
+  }
+}

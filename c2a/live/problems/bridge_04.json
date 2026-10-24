@@ -1,0 +1,217 @@
+{
+  "id": "bridge_04",
+  "title": "Long bars that bend",
+  "difficulty": 3,
+  "tutorial": false,
+  "brief": "A 12 m bridge with a 60 kN load at the middle. Two long slanted bars, over 6 m each, push up on a short post at the middle. The long bars bow out sideways under the push. Even the thickest bar available isn't enough on its own. Nothing may go below the deck (there's a river) or more than 2.5 m above it.",
+  "material": {
+    "name": "structural steel",
+    "E": 200000000000.0,
+    "yield": 250000000.0,
+    "cost_per_m3": 60000
+  },
+  "sections": {
+    "XS": 0.0002,
+    "S": 0.0005,
+    "M": 0.001,
+    "L": 0.002,
+    "XL": 0.004
+  },
+  "budget": 4000,
+  "region": {
+    "xmin": 0,
+    "xmax": 12,
+    "ymin": 0,
+    "ymax": 2.5
+  },
+  "design": {
+    "nodes": {
+      "A": [
+        0,
+        0
+      ],
+      "B": [
+        6,
+        0
+      ],
+      "C": [
+        12,
+        0
+      ],
+      "D": [
+        6,
+        1.5
+      ]
+    },
+    "members": [
+      {
+        "id": "m1",
+        "a": "A",
+        "b": "B",
+        "section": "M"
+      },
+      {
+        "id": "m2",
+        "a": "B",
+        "b": "C",
+        "section": "M"
+      },
+      {
+        "id": "m3",
+        "a": "A",
+        "b": "D",
+        "section": "L"
+      },
+      {
+        "id": "m4",
+        "a": "D",
+        "b": "C",
+        "section": "L"
+      },
+      {
+        "id": "m5",
+        "a": "B",
+        "b": "D",
+        "section": "S"
+      }
+    ],
+    "supports": {
+      "A": "pin",
+      "C": "roller"
+    },
+    "loads": [
+      {
+        "node": "B",
+        "fy": -60000
+      }
+    ]
+  },
+  "reference_solution": {
+    "ops": [
+      {
+        "op": "add_node",
+        "id": "P",
+        "x": 3,
+        "y": 0.75
+      },
+      {
+        "op": "add_node",
+        "id": "Q",
+        "x": 9,
+        "y": 0.75
+      },
+      {
+        "op": "add_node",
+        "id": "R",
+        "x": 3,
+        "y": 0
+      },
+      {
+        "op": "add_node",
+        "id": "S",
+        "x": 9,
+        "y": 0
+      },
+      {
+        "op": "remove_member",
+        "id": "m1"
+      },
+      {
+        "op": "remove_member",
+        "id": "m2"
+      },
+      {
+        "op": "remove_member",
+        "id": "m3"
+      },
+      {
+        "op": "remove_member",
+        "id": "m4"
+      },
+      {
+        "op": "add_member",
+        "id": "m1a",
+        "a": "A",
+        "b": "R",
+        "section": "M"
+      },
+      {
+        "op": "add_member",
+        "id": "m1b",
+        "a": "R",
+        "b": "B",
+        "section": "M"
+      },
+      {
+        "op": "add_member",
+        "id": "m2a",
+        "a": "B",
+        "b": "S",
+        "section": "M"
+      },
+      {
+        "op": "add_member",
+        "id": "m2b",
+        "a": "S",
+        "b": "C",
+        "section": "M"
+      },
+      {
+        "op": "add_member",
+        "id": "t1",
+        "a": "A",
+        "b": "P",
+        "section": "XL"
+      },
+      {
+        "op": "add_member",
+        "id": "t2",
+        "a": "P",
+        "b": "D",
+        "section": "XL"
+      },
+      {
+        "op": "add_member",
+        "id": "t3",
+        "a": "D",
+        "b": "Q",
+        "section": "XL"
+      },
+      {
+        "op": "add_member",
+        "id": "t4",
+        "a": "Q",
+        "b": "C",
+        "section": "XL"
+      },
+      {
+        "op": "add_member",
+        "id": "v1",
+        "a": "R",
+        "b": "P",
+        "section": "XS"
+      },
+      {
+        "op": "add_member",
+        "id": "v3",
+        "a": "S",
+        "b": "Q",
+        "section": "XS"
+      },
+      {
+        "op": "add_member",
+        "id": "d1",
+        "a": "P",
+        "b": "B",
+        "section": "XS"
+      },
+      {
+        "op": "add_member",
+        "id": "d2",
+        "a": "Q",
+        "b": "B",
+        "section": "XS"
+      }
+    ]
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "id": "bridge_05",
+  "title": "No headroom",
+  "difficulty": 3,
+  "tutorial": false,
+  "brief": "An 8 m bridge carrying 80 kN at the middle of the deck. A power line runs just above, so nothing may rise more than 0.5 m above the deck. Below the deck there's a dry gully 2.5 m deep that the structure may use. The middle of the deck may not sag more than 20 mm.",
+  "material": {
+    "name": "structural steel",
+    "E": 200000000000.0,
+    "yield": 250000000.0,
+    "cost_per_m3": 60000
+  },
+  "sections": {
+    "XS": 0.0002,
+    "S": 0.0005,
+    "M": 0.001,
+    "L": 0.002,
+    "XL": 0.004
+  },
+  "budget": 2500,
+  "region": {
+    "xmin": 0,
+    "xmax": 8,
+    "ymin": -2.5,
+    "ymax": 0.5
+  },
+  "design": {
+    "nodes": {
+      "A": [
+        0,
+        0
+      ],
+      "B": [
+        4,
+        0
+      ],
+      "C": [
+        8,
+        0
+      ],
+      "D": [
+        4,
+        0.5
+      ]
+    },
+    "members": [
+      {
+        "id": "m1",
+        "a": "A",
+        "b": "B",
+        "section": "L"
+      },
+      {
+        "id": "m2",
+        "a": "B",
+        "b": "C",
+        "section": "L"
+      },
+      {
+        "id": "m3",
+        "a": "A",
+        "b": "D",
+        "section": "L"
+      },
+      {
+        "id": "m4",
+        "a": "D",
+        "b": "C",
+        "section": "L"
+      },
+      {
+        "id": "m5",
+        "a": "B",
+        "b": "D",
+        "section": "S"
+      }
+    ],
+    "supports": {
+      "A": "pin",
+      "C": "roller"
+    },
+    "loads": [
+      {
+        "node": "B",
+        "fy": -80000
+      }
+    ]
+  },
+  "reference_solution": {
+    "ops": [
+      {
+        "op": "move_node",
+        "id": "D",
+        "x": 4,
+        "y": -2
+      },
+      {
+        "op": "resize_member",
+        "id": "m1",
+        "section": "XL"
+      },
+      {
+        "op": "resize_member",
+        "id": "m2",
+        "section": "XL"
+      },
+      {
+        "op": "resize_member",
+        "id": "m3",
+        "section": "S"
+      },
+      {
+        "op": "resize_member",
+        "id": "m4",
+        "section": "S"
+      },
+      {
+        "op": "resize_member",
+        "id": "m5",
+        "section": "L"
+      }
+    ]
+  },
+  "max_deflection": 0.02
+}
