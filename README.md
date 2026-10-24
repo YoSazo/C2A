@@ -43,11 +43,24 @@ python -m c2a
 | `python -m c2a cases` | Predict a real case, see the outcome, self-mark | No |
 | `python -m c2a live [--problem bridge_01]` | Fix a truss with an LLM translating, scored by a stiffness solver | Yes |
 | `python -m c2a live --baseline --runs 5` | Same problem, LLM alone, for comparison | Yes |
+| `python -m c2a live --manual` | Same loop, but you type the JSON edits yourself | No |
 | `python -m c2a log` | Log a real decision and prediction; follow up on outcomes | No |
 | `python -m c2a stats` | Patterns mastered, reaction-time trend, real-world hit rate | No |
 | `python tools/validate_data.py` | Check every data file | No |
 
-Live mode uses OpenAI. Set `OPENAI_API_KEY` (and optionally `C2A_MODEL`, default `gpt-4o`). Everything else works offline.
+Live mode uses OpenAI. Set `OPENAI_API_KEY` (and optionally `C2A_MODEL`, default `gpt-4o`). Everything else works offline. The mastery threshold defaults to a 3000 ms median reaction time; change it with `C2A_MASTERY_MS`.
+
+## Data status
+
+| File | Count | Notes |
+|---|---|---|
+| `data/patterns.json` | 30 patterns | Each has at least one sourced real example |
+| `data/drill_items.json` | 300 items, 10 per pattern | 76 adapted from sourced real events, 224 synthetic. Target: at least 100 sourced |
+| `data/select_items.json` | 15 items | All sourced: A/B tests, field experiments, documented decisions. Target: 30 |
+| `data/cases.json` | 25 cases | 16 famous tutorials (`low` obscurity, corrected from v1) and 9 less-famous engineering failures and postmortems |
+| `c2a/live/problems/` | 5 truss problems | Each starts broken and ships a reference solution that the tests prove passes |
+
+Every source was fetched and checked automatically for the stated fact. Spot-check them by hand before relying on them. Run `python -m c2a live --baseline` on each problem; any problem the LLM alone always solves should be marked `"tutorial": true`.
 
 ## Read next
 

@@ -1,0 +1,522 @@
+[
+  {
+    "id": "scarcity-forces-focus",
+    "name": "Scarcity forces focus",
+    "constraint": "Too little of a key resource for everything planned",
+    "move": "Cut to the one use that matters most; let the scarcity be the filter",
+    "anti_pattern": "Spread the resource thin to keep everything alive",
+    "family": "scarcity",
+    "real_examples": [
+      {
+        "text": "In 2014 P&G announced it would drop or sell about 100 brands to focus on its remaining 65.",
+        "source": "https://en.wikipedia.org/wiki/Procter_%26_Gamble"
+      },
+      {
+        "text": "Ford under Alan Mulally sold Jaguar, Land Rover, Aston Martin and Volvo to concentrate on the Ford brand.",
+        "source": "https://en.wikipedia.org/wiki/Alan_Mulally"
+      }
+    ]
+  },
+  {
+    "id": "build-from-what-is-on-hand",
+    "name": "Build from what's on hand",
+    "constraint": "The right part or tool isn't available and can't arrive in time",
+    "move": "Inventory what you already have and make it do the job",
+    "anti_pattern": "Wait for the proper part",
+    "family": "scarcity",
+    "real_examples": [
+      {
+        "text": "Apollo 13: engineers improvised an adapter for the incompatible CO2 scrubber canisters from manual covers, duct tape and other items on board.",
+        "source": "https://en.wikipedia.org/wiki/Apollo_13"
+      }
+    ]
+  },
+  {
+    "id": "borrow-outside-capacity",
+    "name": "Borrow outside capacity",
+    "constraint": "You lack the people or capacity the job needs",
+    "move": "Recruit capacity that already exists outside: users, volunteers, partners",
+    "anti_pattern": "Try to build all the capacity yourself",
+    "family": "scarcity",
+    "real_examples": [
+      {
+        "text": "The Oxford English Dictionary assigned books to volunteer readers, who copied usage quotations onto slips.",
+        "source": "https://en.wikipedia.org/wiki/Oxford_English_Dictionary"
+      },
+      {
+        "text": "Over 800 naval, requisitioned and private boats helped rescue more than 336,000 soldiers from Dunkirk.",
+        "source": "https://en.wikipedia.org/wiki/Little_Ships_of_Dunkirk"
+      }
+    ]
+  },
+  {
+    "id": "test-small-first",
+    "name": "Test small before scaling",
+    "constraint": "Too few resources to risk a full-scale attempt",
+    "move": "Run a cheap small-scale version first; scale only what works",
+    "anti_pattern": "Bet everything on one full-size attempt",
+    "family": "scarcity",
+    "real_examples": [
+      {
+        "text": "The Wright brothers used a small home-built wind tunnel to get better wing data before building their aircraft.",
+        "source": "https://en.wikipedia.org/wiki/Wright_brothers"
+      },
+      {
+        "text": "William Froude tested 3-, 6- and 12-foot scale hull models in towing trials to predict full-size behaviour.",
+        "source": "https://en.wikipedia.org/wiki/William_Froude"
+      }
+    ]
+  },
+  {
+    "id": "waste-becomes-input",
+    "name": "Waste becomes input",
+    "constraint": "A byproduct piles up as a cost",
+    "move": "Use the waste as raw material for something else",
+    "anti_pattern": "Pay to get rid of it",
+    "family": "scarcity",
+    "real_examples": [
+      {
+        "text": "Singapore's NEWater is reclaimed wastewater, treated for reuse.",
+        "source": "https://en.wikipedia.org/wiki/NEWater"
+      },
+      {
+        "text": "At Kalundborg, gypsum from a power plant's scrubber supplies a nearby wallboard maker.",
+        "source": "https://en.wikipedia.org/wiki/Kalundborg_Eco-industrial_Park"
+      }
+    ]
+  },
+  {
+    "id": "substitute-the-abundant",
+    "name": "Substitute the abundant",
+    "constraint": "The resource you need is scarce or too expensive",
+    "move": "Swap in a plentiful resource that does the same job",
+    "anti_pattern": "Compete for the scarce resource",
+    "family": "scarcity",
+    "real_examples": [
+      {
+        "text": "Edison's team found that a carbonized bamboo filament could last more than 1,200 hours.",
+        "source": "https://en.wikipedia.org/wiki/Incandescent_light_bulb"
+      },
+      {
+        "text": "Synthetic rubber production expanded in World War II after the Axis controlled nearly all natural rubber.",
+        "source": "https://en.wikipedia.org/wiki/Synthetic_rubber"
+      }
+    ]
+  },
+  {
+    "id": "ship-then-iterate",
+    "name": "Ship the core, then iterate",
+    "constraint": "Not enough time to build the complete version",
+    "move": "Release a minimal working core now; improve it from real feedback",
+    "anti_pattern": "Delay until everything is finished",
+    "family": "velocity",
+    "real_examples": [
+      {
+        "text": "The first Linux kernel, version 0.01, was released in 1991 as an early hobby project.",
+        "source": "https://en.wikipedia.org/wiki/History_of_Linux"
+      },
+      {
+        "text": "Gmail launched as a beta in 2004 and came out of beta in 2009.",
+        "source": "https://en.wikipedia.org/wiki/Gmail"
+      }
+    ]
+  },
+  {
+    "id": "run-paths-in-parallel",
+    "name": "Run paths in parallel",
+    "constraint": "Steps done one after another take too long, and you don't know which will work",
+    "move": "Run several independent approaches at once; accept the duplicated cost",
+    "anti_pattern": "Try one approach, wait, then try the next",
+    "family": "velocity",
+    "real_examples": [
+      {
+        "text": "The Manhattan Project pursued electromagnetic, gaseous diffusion and thermal diffusion separation at the same time.",
+        "source": "https://en.wikipedia.org/wiki/Manhattan_Project"
+      },
+      {
+        "text": "Operation Warp Speed funded manufacturing of vaccines at scale before knowing whether they would work.",
+        "source": "https://en.wikipedia.org/wiki/Operation_Warp_Speed"
+      }
+    ]
+  },
+  {
+    "id": "standardize-for-throughput",
+    "name": "Standardize for throughput",
+    "constraint": "Volume must rise fast with the same people and equipment",
+    "move": "Make every cycle identical: one routine, no variation, no exceptions",
+    "anti_pattern": "Handle each case individually",
+    "family": "velocity",
+    "real_examples": [
+      {
+        "text": "Liberty ships were built assembly-line style from prefabricated sections; by 1943 three were completed daily.",
+        "source": "https://en.wikipedia.org/wiki/Liberty_ship"
+      },
+      {
+        "text": "Southwest Airlines began flying with Boeing 737s and operated the type exclusively in its early history.",
+        "source": "https://en.wikipedia.org/wiki/Southwest_Airlines_fleet"
+      }
+    ]
+  },
+  {
+    "id": "decide-in-advance",
+    "name": "Decide in advance",
+    "constraint": "The moment of decision is too fast or stressful to think clearly",
+    "move": "Settle the decision beforehand as a rule or checklist",
+    "anti_pattern": "Rely on judgment in the moment",
+    "family": "velocity",
+    "real_examples": [
+      {
+        "text": "The 1935 crash of Boeing's Model 299 led to the written pilot's checklist.",
+        "source": "https://en.wikipedia.org/wiki/Boeing_B-17_Flying_Fortress"
+      },
+      {
+        "text": "Peter Pronovost's ICU checklist protocol is credited with saving about 1,500 lives in Michigan over 18 months.",
+        "source": "https://en.wikipedia.org/wiki/Peter_Pronovost"
+      }
+    ]
+  },
+  {
+    "id": "buy-time",
+    "name": "Buy time with something else",
+    "constraint": "The deadline arrives before the real fix can",
+    "move": "Trade a side asset or a concession for more time, then do the real fix",
+    "anti_pattern": "Rush the real fix and break it",
+    "family": "velocity",
+    "real_examples": [
+      {
+        "text": "Airbnb's founders raised $30,000 selling novelty election cereal before joining Y Combinator.",
+        "source": "https://en.wikipedia.org/wiki/Airbnb"
+      },
+      {
+        "text": "In 1997 Apple secured a $150 million investment from Microsoft and a commitment to keep developing Mac software.",
+        "source": "https://en.wikipedia.org/wiki/Apple_Inc."
+      }
+    ]
+  },
+  {
+    "id": "mechanize-the-bottleneck",
+    "name": "Mechanize the bottleneck",
+    "constraint": "One repetitive step limits how fast everything moves",
+    "move": "Build a machine or tool for that one step",
+    "anti_pattern": "Add more people to the slow step",
+    "family": "velocity",
+    "real_examples": [
+      {
+        "text": "The Bombe, designed by Alan Turing at Bletchley Park, mechanized the search for Enigma settings.",
+        "source": "https://en.wikipedia.org/wiki/Bombe"
+      },
+      {
+        "text": "Hollerith's tabulators helped cut census processing from eight years (1880) to six (1890).",
+        "source": "https://en.wikipedia.org/wiki/Herman_Hollerith"
+      }
+    ]
+  },
+  {
+    "id": "send-a-costly-signal",
+    "name": "Send a costly signal",
+    "constraint": "Others can't verify your quality, so they won't trust you",
+    "move": "Make a promise that would be ruinous to make if you were lying",
+    "anti_pattern": "Just say you're good",
+    "family": "asymmetry",
+    "real_examples": [
+      {
+        "text": "With a poor reputation for quality, Hyundai added a 10-year/100,000-mile powertrain warranty in the US.",
+        "source": "https://en.wikipedia.org/wiki/Hyundai_Motor_America"
+      },
+      {
+        "text": "When most of L.L.Bean's first boots were returned as defective, Bean honoured his money-back guarantee and fixed the design.",
+        "source": "https://en.wikipedia.org/wiki/L.L.Bean"
+      }
+    ]
+  },
+  {
+    "id": "remeasure-the-given",
+    "name": "Re-measure the 'fact'",
+    "constraint": "An accepted fact makes the plan look impossible",
+    "move": "Check the fact yourself; it may be wrong or out of date",
+    "anti_pattern": "Accept the fact and give up",
+    "family": "asymmetry",
+    "real_examples": [
+      {
+        "text": "Barry Marshall and Robin Warren showed H. pylori causes many ulcers, against doctrine blaming stress and acid; Marshall drank a culture to prove it.",
+        "source": "https://en.wikipedia.org/wiki/Barry_Marshall"
+      }
+    ]
+  },
+  {
+    "id": "probe-before-committing",
+    "name": "Buy information before committing",
+    "constraint": "You must commit without knowing what will work",
+    "move": "Run a quick, cheap comparison that tells you before you commit",
+    "anti_pattern": "Guess and commit fully",
+    "family": "asymmetry",
+    "real_examples": [
+      {
+        "text": "Obama's 2008 campaign tested 4 buttons and 6 media on its sign-up page; 'Learn More' with a family photo beat the staff's favourite video.",
+        "source": "https://www.optimizely.com/insights/blog/how-obama-raised-60-million-by-running-a-simple-experiment/"
+      },
+      {
+        "text": "In 1747 James Lind gave twelve scurvy patients different treatments; the group given oranges and a lemon recovered.",
+        "source": "https://en.wikipedia.org/wiki/James_Lind"
+      }
+    ]
+  },
+  {
+    "id": "align-incentives",
+    "name": "Align their incentive with yours",
+    "constraint": "The other side's interest differs from yours, and you can't watch them",
+    "move": "Restructure the deal so what they want produces what you want",
+    "anti_pattern": "Add more rules and monitoring",
+    "family": "asymmetry",
+    "real_examples": [
+      {
+        "text": "Netflix dropped per-rental pricing for flat-fee rentals without due dates or late fees.",
+        "source": "https://en.wikipedia.org/wiki/Netflix,_Inc."
+      },
+      {
+        "text": "Ford's 1914 $5 daily wage was aimed at turnover so high that departments hired 300 men a year to fill 100 jobs.",
+        "source": "https://en.wikipedia.org/wiki/Henry_Ford"
+      }
+    ]
+  },
+  {
+    "id": "map-the-effects",
+    "name": "Map where the effects cluster",
+    "constraint": "You can see the effects but not the cause",
+    "move": "Plot where and when the effects occur; the pattern points to the cause",
+    "anti_pattern": "Argue about theories without data",
+    "family": "asymmetry",
+    "real_examples": [
+      {
+        "text": "John Snow used a dot map to show cholera cases around the Broad Street pump in 1854.",
+        "source": "https://en.wikipedia.org/wiki/1854_Broad_Street_cholera_outbreak"
+      },
+      {
+        "text": "Semmelweis compared two maternity clinics, one with about 10% mortality and one under 4%.",
+        "source": "https://en.wikipedia.org/wiki/Ignaz_Semmelweis"
+      }
+    ]
+  },
+  {
+    "id": "keep-it-reversible",
+    "name": "Keep it reversible",
+    "constraint": "You must decide now without the information you'd want",
+    "move": "Pick the option you can undo cheaply, then learn and adjust",
+    "anti_pattern": "Make a big irreversible bet",
+    "family": "asymmetry",
+    "real_examples": [
+      {
+        "text": "Stockholm ran its congestion charge as a seven-month trial in 2006, then held a referendum before making it permanent.",
+        "source": "https://en.wikipedia.org/wiki/Stockholm_congestion_tax"
+      }
+    ]
+  },
+  {
+    "id": "go-direct",
+    "name": "Go around the gatekeeper",
+    "constraint": "An intermediary blocks or taxes your way to the people you serve",
+    "move": "Reach them directly or build your own channel",
+    "anti_pattern": "Keep pleading with the gatekeeper",
+    "family": "friction",
+    "real_examples": [
+      {
+        "text": "When no UK manufacturer would take his bagless vacuum, Dyson launched it in Japan through catalogue sales.",
+        "source": "https://en.wikipedia.org/wiki/James_Dyson"
+      },
+      {
+        "text": "Radiohead self-released In Rainbows as a download and let fans set their own price.",
+        "source": "https://en.wikipedia.org/wiki/In_Rainbows"
+      }
+    ]
+  },
+  {
+    "id": "make-only-what-is-pulled",
+    "name": "Make only what's pulled",
+    "constraint": "Stock piles up between steps and hides problems",
+    "move": "Make each step produce only what the next step has used up",
+    "anti_pattern": "Produce to a forecast and store the excess",
+    "family": "friction",
+    "real_examples": [
+      {
+        "text": "In the late 1940s Toyota studied supermarkets' shelf-stocking to replenish factory parts only as they were used (kanban).",
+        "source": "https://en.wikipedia.org/wiki/Kanban"
+      }
+    ]
+  },
+  {
+    "id": "remove-the-step",
+    "name": "Remove the step",
+    "constraint": "A step in the process causes delay and drop-off",
+    "move": "Eliminate the step entirely instead of speeding it up",
+    "anti_pattern": "Optimize the step",
+    "family": "friction",
+    "real_examples": [
+      {
+        "text": "Piggly Wiggly (1916) let customers collect goods themselves instead of handing a list to a clerk.",
+        "source": "https://en.wikipedia.org/wiki/Piggly_Wiggly"
+      },
+      {
+        "text": "Amazon patented 1-Click ordering in 1999.",
+        "source": "https://en.wikipedia.org/wiki/1-Click"
+      }
+    ]
+  },
+  {
+    "id": "make-the-mistake-impossible",
+    "name": "Make the mistake impossible",
+    "constraint": "The same human error keeps recurring",
+    "move": "Change the design so the wrong action physically can't happen",
+    "anti_pattern": "Train people harder and add warnings",
+    "family": "friction",
+    "real_examples": [
+      {
+        "text": "The Pin Index Safety System uses pins on medical gas cylinders so the wrong gas can't be connected.",
+        "source": "https://en.wikipedia.org/wiki/Pin_Index_Safety_System"
+      },
+      {
+        "text": "Poka-yoke, formalized by Shigeo Shingo at Toyota; e.g. HDMI plugs are shaped so they can't go in the wrong way.",
+        "source": "https://en.wikipedia.org/wiki/Poka-yoke"
+      }
+    ]
+  },
+  {
+    "id": "change-the-shape",
+    "name": "Change the shape, not the strength",
+    "constraint": "It fails under its load, and making it stronger costs too much",
+    "move": "Change the shape so the load stops doing the damage",
+    "anti_pattern": "Pile on more material",
+    "family": "friction",
+    "real_examples": [
+      {
+        "text": "Borlaug bred semi-dwarf wheat with shorter, stronger stalks that didn't collapse under heavy grain (lodging).",
+        "source": "https://en.wikipedia.org/wiki/Norman_Borlaug"
+      },
+      {
+        "text": "Corrugations increase a metal sheet's bending strength without adding thickness.",
+        "source": "https://en.wikipedia.org/wiki/Corrugated_galvanised_iron"
+      }
+    ]
+  },
+  {
+    "id": "make-it-the-default",
+    "name": "Make it the default",
+    "constraint": "People don't do what's good for them because starting takes effort",
+    "move": "Make the good choice happen automatically unless they opt out",
+    "anti_pattern": "Persuade and remind",
+    "family": "friction",
+    "real_examples": [
+      {
+        "text": "Switching a 401(k) plan to automatic enrollment 'dramatically changed' employees' saving behaviour (Madrian & Shea).",
+        "source": "https://www.nber.org/papers/w7682"
+      },
+      {
+        "text": "Countries where organ donation is the default have far higher effective consent (Johnson & Goldstein, 2003).",
+        "source": "https://doi.org/10.1126/science.1091721"
+      }
+    ]
+  },
+  {
+    "id": "sell-the-limitation",
+    "name": "Sell the limitation",
+    "constraint": "A built-in limitation makes the product look weak",
+    "move": "Present the limitation openly as the point of the product",
+    "anti_pattern": "Hide or apologise for it",
+    "family": "paradox",
+    "real_examples": [
+      {
+        "text": "Volkswagen's 'Think Small' campaign sold the Beetle on its smallness.",
+        "source": "https://en.wikipedia.org/wiki/Think_Small"
+      },
+      {
+        "text": "Guinness turned its slow two-part pour into the campaign 'good things come to those who wait'.",
+        "source": "https://en.wikipedia.org/wiki/Guinness"
+      }
+    ]
+  },
+  {
+    "id": "give-away-the-core",
+    "name": "Give away the core",
+    "constraint": "You can't win by charging for the main thing",
+    "move": "Give it away and earn on something next to it",
+    "anti_pattern": "Fight on price for the main thing",
+    "family": "paradox",
+    "real_examples": [
+      {
+        "text": "Spotify is a freemium service with a free, ad-supported tier alongside paid Premium.",
+        "source": "https://en.wikipedia.org/wiki/Spotify"
+      },
+      {
+        "text": "Red Hat builds on free, open-source software and sells subscriptions, support and training.",
+        "source": "https://en.wikipedia.org/wiki/Red_Hat"
+      }
+    ]
+  },
+  {
+    "id": "stop-to-go-faster",
+    "name": "Stop to go faster",
+    "constraint": "Rushing creates defects and rework that slow everything down",
+    "move": "Stop and fix each problem at its source the moment it appears",
+    "anti_pattern": "Push on and fix it later",
+    "family": "paradox",
+    "real_examples": [
+      {
+        "text": "Toyota's andon cord lets a worker stop the production line immediately when a problem arises.",
+        "source": "https://en.wikipedia.org/wiki/Andon_(manufacturing)"
+      }
+    ]
+  },
+  {
+    "id": "admit-the-weakness",
+    "name": "Admit the weakness",
+    "constraint": "An obvious weakness undermines trust in everything you claim",
+    "move": "Say it first and openly; candour makes the rest believable",
+    "anti_pattern": "Deny it",
+    "family": "paradox",
+    "real_examples": [
+      {
+        "text": "Avis's 1962 'We Try Harder' put a positive spin on being the second-largest rental company, behind Hertz.",
+        "source": "https://en.wikipedia.org/wiki/Avis_Car_Rental"
+      },
+      {
+        "text": "Domino's ran ads in which customers criticised its pizza, admitting earlier taste problems.",
+        "source": "https://en.wikipedia.org/wiki/Domino%27s"
+      }
+    ]
+  },
+  {
+    "id": "small-controlled-dose",
+    "name": "Take a small controlled dose",
+    "constraint": "A big damaging event is likely if nothing is done",
+    "move": "Cause a small, controlled version of it on purpose",
+    "anti_pattern": "Prevent every small occurrence until a big one comes",
+    "family": "paradox",
+    "real_examples": [
+      {
+        "text": "Controlled burns reduce the fuel available to wildfires.",
+        "source": "https://en.wikipedia.org/wiki/Controlled_burn"
+      },
+      {
+        "text": "Netflix's Chaos Monkey randomly disables servers during working hours to force resilience.",
+        "source": "https://en.wikipedia.org/wiki/Chaos_engineering"
+      }
+    ]
+  },
+  {
+    "id": "recruit-the-resisters",
+    "name": "Make the resisters participants",
+    "constraint": "The people you need are afraid of the plan or resist it",
+    "move": "Give them a role and an identity in the effort",
+    "anti_pattern": "Pressure them or go around them",
+    "family": "paradox",
+    "real_examples": [
+      {
+        "text": "The 1954 polio vaccine trial children were known as the 'polio pioneers'.",
+        "source": "https://en.wikipedia.org/wiki/Jonas_Salk"
+      },
+      {
+        "text": "Netscape launched a bug bounty for its Navigator 2.0 beta in 1995.",
+        "source": "https://en.wikipedia.org/wiki/Bug_bounty_program"
+      }
+    ]
+  }
+]

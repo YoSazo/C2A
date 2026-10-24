@@ -1,0 +1,4202 @@
+[
+  {
+    "id": "d-0001",
+    "pattern_id": "scarcity-forces-focus",
+    "situation": "A consumer-goods giant owns about 165 brands. Most earn little, and all of them compete for the same marketing money and management attention.",
+    "options": [
+      "map-the-effects",
+      "build-from-what-is-on-hand",
+      "sell-the-limitation",
+      "scarcity-forces-focus"
+    ],
+    "answer": "scarcity-forces-focus",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Procter_%26_Gamble"
+  },
+  {
+    "id": "d-0002",
+    "pattern_id": "scarcity-forces-focus",
+    "situation": "A loss-making carmaker owns several luxury brands besides its main one. Each needs its own investment, and the company can't fund them all.",
+    "options": [
+      "substitute-the-abundant",
+      "give-away-the-core",
+      "scarcity-forces-focus",
+      "make-it-the-default"
+    ],
+    "answer": "scarcity-forces-focus",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Alan_Mulally"
+  },
+  {
+    "id": "d-0003",
+    "pattern_id": "scarcity-forces-focus",
+    "situation": "You have one evening to study for three exams, and one of them counts for most of your grade.",
+    "options": [
+      "decide-in-advance",
+      "substitute-the-abundant",
+      "scarcity-forces-focus",
+      "standardize-for-throughput"
+    ],
+    "answer": "scarcity-forces-focus",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0004",
+    "pattern_id": "scarcity-forces-focus",
+    "situation": "A startup has six months of cash left and a roadmap of eleven features.",
+    "options": [
+      "make-it-the-default",
+      "build-from-what-is-on-hand",
+      "scarcity-forces-focus",
+      "recruit-the-resisters"
+    ],
+    "answer": "scarcity-forces-focus",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0005",
+    "pattern_id": "scarcity-forces-focus",
+    "situation": "A food bank's volunteers can give two hours a week in total, but the food bank runs five programmes.",
+    "options": [
+      "make-only-what-is-pulled",
+      "test-small-first",
+      "keep-it-reversible",
+      "scarcity-forces-focus"
+    ],
+    "answer": "scarcity-forces-focus",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0006",
+    "pattern_id": "scarcity-forces-focus",
+    "situation": "During a drought you're allowed enough water for one garden bed, and you planted four.",
+    "options": [
+      "align-incentives",
+      "scarcity-forces-focus",
+      "build-from-what-is-on-hand",
+      "give-away-the-core"
+    ],
+    "answer": "scarcity-forces-focus",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0007",
+    "pattern_id": "scarcity-forces-focus",
+    "situation": "A band can afford studio time to record three songs well or ten songs badly.",
+    "options": [
+      "scarcity-forces-focus",
+      "ship-then-iterate",
+      "substitute-the-abundant",
+      "align-incentives"
+    ],
+    "answer": "scarcity-forces-focus",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0008",
+    "pattern_id": "scarcity-forces-focus",
+    "situation": "A charity's only grant writer applies for forty small grants a year and wins almost none.",
+    "options": [
+      "standardize-for-throughput",
+      "waste-becomes-input",
+      "scarcity-forces-focus",
+      "make-only-what-is-pulled"
+    ],
+    "answer": "scarcity-forces-focus",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0009",
+    "pattern_id": "scarcity-forces-focus",
+    "situation": "A student council has a small budget and has promised eight different events this year.",
+    "options": [
+      "scarcity-forces-focus",
+      "substitute-the-abundant",
+      "admit-the-weakness",
+      "make-it-the-default"
+    ],
+    "answer": "scarcity-forces-focus",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0010",
+    "pattern_id": "scarcity-forces-focus",
+    "situation": "Your team can fix only a handful of the 200 open bugs before the release.",
+    "options": [
+      "waste-becomes-input",
+      "make-it-the-default",
+      "stop-to-go-faster",
+      "scarcity-forces-focus"
+    ],
+    "answer": "scarcity-forces-focus",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0011",
+    "pattern_id": "build-from-what-is-on-hand",
+    "situation": "Three people in a crippled spacecraft are breathing air that is slowly turning toxic. The spare air filters on board are the wrong shape for the slot, and nothing can be delivered.",
+    "options": [
+      "small-controlled-dose",
+      "scarcity-forces-focus",
+      "run-paths-in-parallel",
+      "build-from-what-is-on-hand"
+    ],
+    "answer": "build-from-what-is-on-hand",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Apollo_13"
+  },
+  {
+    "id": "d-0012",
+    "pattern_id": "build-from-what-is-on-hand",
+    "situation": "Your tent pole snaps on the first night of a hike, two days from the nearest shop.",
+    "options": [
+      "buy-time",
+      "make-the-mistake-impossible",
+      "build-from-what-is-on-hand",
+      "borrow-outside-capacity"
+    ],
+    "answer": "build-from-what-is-on-hand",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0013",
+    "pattern_id": "build-from-what-is-on-hand",
+    "situation": "A field hospital runs out of splints. It has plenty of cardboard and tape.",
+    "options": [
+      "build-from-what-is-on-hand",
+      "test-small-first",
+      "small-controlled-dose",
+      "make-the-mistake-impossible"
+    ],
+    "answer": "build-from-what-is-on-hand",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0014",
+    "pattern_id": "build-from-what-is-on-hand",
+    "situation": "A theatre's main set piece arrives broken an hour before opening night.",
+    "options": [
+      "build-from-what-is-on-hand",
+      "align-incentives",
+      "test-small-first",
+      "make-it-the-default"
+    ],
+    "answer": "build-from-what-is-on-hand",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0015",
+    "pattern_id": "build-from-what-is-on-hand",
+    "situation": "Your car's fan belt breaks on a rural road with no phone signal. In the boot are tights, rope and a basic toolkit.",
+    "options": [
+      "scarcity-forces-focus",
+      "align-incentives",
+      "probe-before-committing",
+      "build-from-what-is-on-hand"
+    ],
+    "answer": "build-from-what-is-on-hand",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0016",
+    "pattern_id": "build-from-what-is-on-hand",
+    "situation": "The oven dies ten minutes before dinner for twelve. The grill and the stovetop still work.",
+    "options": [
+      "give-away-the-core",
+      "build-from-what-is-on-hand",
+      "test-small-first",
+      "remove-the-step"
+    ],
+    "answer": "build-from-what-is-on-hand",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0017",
+    "pattern_id": "build-from-what-is-on-hand",
+    "situation": "A lab's custom motion sensor is back-ordered for months. A drawer holds a dozen old phones, each with a built-in accelerometer.",
+    "options": [
+      "build-from-what-is-on-hand",
+      "borrow-outside-capacity",
+      "small-controlled-dose",
+      "make-the-mistake-impossible"
+    ],
+    "answer": "build-from-what-is-on-hand",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0018",
+    "pattern_id": "build-from-what-is-on-hand",
+    "situation": "A sailor's rudder breaks mid-ocean, weeks from port.",
+    "options": [
+      "admit-the-weakness",
+      "make-it-the-default",
+      "borrow-outside-capacity",
+      "build-from-what-is-on-hand"
+    ],
+    "answer": "build-from-what-is-on-hand",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0019",
+    "pattern_id": "build-from-what-is-on-hand",
+    "situation": "A small museum can't afford display cases for a new exhibit, but its basement is full of old wooden shipping crates.",
+    "options": [
+      "remove-the-step",
+      "build-from-what-is-on-hand",
+      "borrow-outside-capacity",
+      "decide-in-advance"
+    ],
+    "answer": "build-from-what-is-on-hand",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0020",
+    "pattern_id": "build-from-what-is-on-hand",
+    "situation": "A village school has no science kit. The market sells bottles, magnets, wire and batteries.",
+    "options": [
+      "make-the-mistake-impossible",
+      "borrow-outside-capacity",
+      "recruit-the-resisters",
+      "build-from-what-is-on-hand"
+    ],
+    "answer": "build-from-what-is-on-hand",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0021",
+    "pattern_id": "borrow-outside-capacity",
+    "situation": "A student is writing an operating system kernel alone. There is far more work than one person can do and no money to hire anyone, but thousands of programmers read the same online newsgroup.",
+    "options": [
+      "borrow-outside-capacity",
+      "decide-in-advance",
+      "keep-it-reversible",
+      "waste-becomes-input"
+    ],
+    "answer": "borrow-outside-capacity",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/History_of_Linux"
+  },
+  {
+    "id": "d-0022",
+    "pattern_id": "borrow-outside-capacity",
+    "situation": "Editors are compiling a dictionary of every word in the language, with quotations showing how each word was used over the centuries. The staff is tiny and the reading would take lifetimes.",
+    "options": [
+      "remove-the-step",
+      "build-from-what-is-on-hand",
+      "ship-then-iterate",
+      "borrow-outside-capacity"
+    ],
+    "answer": "borrow-outside-capacity",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Oxford_English_Dictionary"
+  },
+  {
+    "id": "d-0023",
+    "pattern_id": "borrow-outside-capacity",
+    "situation": "An army trapped on a beach must be evacuated within days, and the navy doesn't have enough small craft to reach the shallow water.",
+    "options": [
+      "standardize-for-throughput",
+      "make-it-the-default",
+      "borrow-outside-capacity",
+      "substitute-the-abundant"
+    ],
+    "answer": "borrow-outside-capacity",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Little_Ships_of_Dunkirk"
+  },
+  {
+    "id": "d-0024",
+    "pattern_id": "borrow-outside-capacity",
+    "situation": "Defenders must rush thousands of soldiers to the front tonight. Trains and trucks are already full, and the city has hundreds of taxis.",
+    "options": [
+      "borrow-outside-capacity",
+      "substitute-the-abundant",
+      "make-it-the-default",
+      "run-paths-in-parallel"
+    ],
+    "answer": "borrow-outside-capacity",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/First_Battle_of_the_Marne"
+  },
+  {
+    "id": "d-0025",
+    "pattern_id": "borrow-outside-capacity",
+    "situation": "Millions of scanned book pages contain words computers can't read, and hiring typists would cost a fortune. Meanwhile millions of people a day type distorted words to prove they're human.",
+    "options": [
+      "build-from-what-is-on-hand",
+      "borrow-outside-capacity",
+      "ship-then-iterate",
+      "map-the-effects"
+    ],
+    "answer": "borrow-outside-capacity",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/ReCAPTCHA"
+  },
+  {
+    "id": "d-0026",
+    "pattern_id": "borrow-outside-capacity",
+    "situation": "Scientists have failed for fifteen years to work out a protein's 3D shape. Huge numbers of people enjoy spatial puzzle games.",
+    "options": [
+      "borrow-outside-capacity",
+      "make-the-mistake-impossible",
+      "remeasure-the-given",
+      "substitute-the-abundant"
+    ],
+    "answer": "borrow-outside-capacity",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Foldit"
+  },
+  {
+    "id": "d-0027",
+    "pattern_id": "borrow-outside-capacity",
+    "situation": "A town wants to count bird species across the whole county every winter and employs two biologists.",
+    "options": [
+      "make-only-what-is-pulled",
+      "small-controlled-dose",
+      "borrow-outside-capacity",
+      "scarcity-forces-focus"
+    ],
+    "answer": "borrow-outside-capacity",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0028",
+    "pattern_id": "borrow-outside-capacity",
+    "situation": "A two-person software company gets more support questions than it can answer. Its users are enthusiastic and skilled.",
+    "options": [
+      "go-direct",
+      "borrow-outside-capacity",
+      "make-only-what-is-pulled",
+      "substitute-the-abundant"
+    ],
+    "answer": "borrow-outside-capacity",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0029",
+    "pattern_id": "borrow-outside-capacity",
+    "situation": "A street-food stall lands a huge catering order for this weekend. Several neighbouring stalls sit idle at weekends.",
+    "options": [
+      "waste-becomes-input",
+      "ship-then-iterate",
+      "borrow-outside-capacity",
+      "decide-in-advance"
+    ],
+    "answer": "borrow-outside-capacity",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0030",
+    "pattern_id": "borrow-outside-capacity",
+    "situation": "A teacher has 120 essays that each need written feedback by Friday.",
+    "options": [
+      "admit-the-weakness",
+      "test-small-first",
+      "keep-it-reversible",
+      "borrow-outside-capacity"
+    ],
+    "answer": "borrow-outside-capacity",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0031",
+    "pattern_id": "test-small-first",
+    "situation": "Two bicycle makers want to build a flying machine. Full-size gliders are expensive, slow to build and dangerous to crash, and the published data on wing shapes turns out to be wrong.",
+    "options": [
+      "make-it-the-default",
+      "borrow-outside-capacity",
+      "test-small-first",
+      "go-direct"
+    ],
+    "answer": "test-small-first",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Wright_brothers"
+  },
+  {
+    "id": "d-0032",
+    "pattern_id": "test-small-first",
+    "situation": "Navy designers must predict how much power a new hull shape needs before spending a fortune building the ship.",
+    "options": [
+      "send-a-costly-signal",
+      "test-small-first",
+      "admit-the-weakness",
+      "waste-becomes-input"
+    ],
+    "answer": "test-small-first",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/William_Froude"
+  },
+  {
+    "id": "d-0033",
+    "pattern_id": "test-small-first",
+    "situation": "You want to open a restaurant and have savings for exactly one attempt.",
+    "options": [
+      "waste-becomes-input",
+      "test-small-first",
+      "recruit-the-resisters",
+      "make-only-what-is-pulled"
+    ],
+    "answer": "test-small-first",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0034",
+    "pattern_id": "test-small-first",
+    "situation": "A city is considering rebuilding every intersection to a layout nobody there has tried.",
+    "options": [
+      "scarcity-forces-focus",
+      "stop-to-go-faster",
+      "make-the-mistake-impossible",
+      "test-small-first"
+    ],
+    "answer": "test-small-first",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0035",
+    "pattern_id": "test-small-first",
+    "situation": "A writer plans to self-publish a five-book series without knowing whether anyone will buy the first.",
+    "options": [
+      "scarcity-forces-focus",
+      "test-small-first",
+      "stop-to-go-faster",
+      "standardize-for-throughput"
+    ],
+    "answer": "test-small-first",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0036",
+    "pattern_id": "test-small-first",
+    "situation": "A farmer is offered a seed variety that promises a much higher yield. A failed crop would ruin her year.",
+    "options": [
+      "mechanize-the-bottleneck",
+      "test-small-first",
+      "run-paths-in-parallel",
+      "waste-becomes-input"
+    ],
+    "answer": "test-small-first",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0037",
+    "pattern_id": "test-small-first",
+    "situation": "A school wants to switch every class to a new teaching method next year.",
+    "options": [
+      "test-small-first",
+      "make-the-mistake-impossible",
+      "build-from-what-is-on-hand",
+      "send-a-costly-signal"
+    ],
+    "answer": "test-small-first",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0038",
+    "pattern_id": "test-small-first",
+    "situation": "A company wants to roll out a new pricing scheme to all its customers worldwide at once.",
+    "options": [
+      "make-the-mistake-impossible",
+      "test-small-first",
+      "go-direct",
+      "scarcity-forces-focus"
+    ],
+    "answer": "test-small-first",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0039",
+    "pattern_id": "test-small-first",
+    "situation": "A bakery is thinking of launching a whole line of expensive celebration cakes.",
+    "options": [
+      "test-small-first",
+      "make-it-the-default",
+      "borrow-outside-capacity",
+      "sell-the-limitation"
+    ],
+    "answer": "test-small-first",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0040",
+    "pattern_id": "test-small-first",
+    "situation": "A charity plans to spend its whole annual budget on a new kind of outreach campaign.",
+    "options": [
+      "make-only-what-is-pulled",
+      "test-small-first",
+      "build-from-what-is-on-hand",
+      "give-away-the-core"
+    ],
+    "answer": "test-small-first",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0041",
+    "pattern_id": "waste-becomes-input",
+    "situation": "An island city has almost no natural fresh water, and every day it pays to treat and discharge huge volumes of used water.",
+    "options": [
+      "test-small-first",
+      "change-the-shape",
+      "probe-before-committing",
+      "waste-becomes-input"
+    ],
+    "answer": "waste-becomes-input",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/NEWater"
+  },
+  {
+    "id": "d-0042",
+    "pattern_id": "waste-becomes-input",
+    "situation": "A power station's flue scrubber produces tons of gypsum it pays to landfill. A few kilometres away, a wallboard factory buys gypsum from a mine.",
+    "options": [
+      "remove-the-step",
+      "waste-becomes-input",
+      "scarcity-forces-focus",
+      "standardize-for-throughput"
+    ],
+    "answer": "waste-becomes-input",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Kalundborg_Eco-industrial_Park"
+  },
+  {
+    "id": "d-0043",
+    "pattern_id": "waste-becomes-input",
+    "situation": "A sugar mill is left with mountains of crushed cane fibre after extracting the juice, and it buys expensive fuel to run its boilers.",
+    "options": [
+      "scarcity-forces-focus",
+      "waste-becomes-input",
+      "mechanize-the-bottleneck",
+      "keep-it-reversible"
+    ],
+    "answer": "waste-becomes-input",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Bagasse"
+  },
+  {
+    "id": "d-0044",
+    "pattern_id": "waste-becomes-input",
+    "situation": "Coal plants pile up huge amounts of fine ash. Cement makers need fine mineral powders.",
+    "options": [
+      "scarcity-forces-focus",
+      "waste-becomes-input",
+      "small-controlled-dose",
+      "give-away-the-core"
+    ],
+    "answer": "waste-becomes-input",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Coal_combustion_products"
+  },
+  {
+    "id": "d-0045",
+    "pattern_id": "waste-becomes-input",
+    "situation": "A brewery pays to haul away tons of spent grain each week. Local farmers buy animal feed.",
+    "options": [
+      "test-small-first",
+      "waste-becomes-input",
+      "sell-the-limitation",
+      "align-incentives"
+    ],
+    "answer": "waste-becomes-input",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0046",
+    "pattern_id": "waste-becomes-input",
+    "situation": "A coffee shop throws out bags of used coffee grounds every day.",
+    "options": [
+      "scarcity-forces-focus",
+      "probe-before-committing",
+      "waste-becomes-input",
+      "decide-in-advance"
+    ],
+    "answer": "waste-becomes-input",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0047",
+    "pattern_id": "waste-becomes-input",
+    "situation": "A furniture workshop fills bins with sawdust and offcuts every week.",
+    "options": [
+      "keep-it-reversible",
+      "waste-becomes-input",
+      "run-paths-in-parallel",
+      "test-small-first"
+    ],
+    "answer": "waste-becomes-input",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0048",
+    "pattern_id": "waste-becomes-input",
+    "situation": "A data centre blows its excess heat into the air. The town next door pays to heat its public pool.",
+    "options": [
+      "probe-before-committing",
+      "map-the-effects",
+      "test-small-first",
+      "waste-becomes-input"
+    ],
+    "answer": "waste-becomes-input",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0049",
+    "pattern_id": "waste-becomes-input",
+    "situation": "A school canteen bins its vegetable scraps while the school garden buys compost.",
+    "options": [
+      "standardize-for-throughput",
+      "probe-before-committing",
+      "scarcity-forces-focus",
+      "waste-becomes-input"
+    ],
+    "answer": "waste-becomes-input",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0050",
+    "pattern_id": "waste-becomes-input",
+    "situation": "A theatre throws away its sets after every production, and each new production buys new timber.",
+    "options": [
+      "borrow-outside-capacity",
+      "ship-then-iterate",
+      "run-paths-in-parallel",
+      "waste-becomes-input"
+    ],
+    "answer": "waste-becomes-input",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0051",
+    "pattern_id": "substitute-the-abundant",
+    "situation": "An inventor needs a lamp filament that lasts. The materials tried so far either burn out quickly or are far too costly to sell.",
+    "options": [
+      "substitute-the-abundant",
+      "small-controlled-dose",
+      "borrow-outside-capacity",
+      "decide-in-advance"
+    ],
+    "answer": "substitute-the-abundant",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Incandescent_light_bulb"
+  },
+  {
+    "id": "d-0052",
+    "pattern_id": "substitute-the-abundant",
+    "situation": "In 1942 a country at war is cut off from almost all the world's natural rubber, which grows in regions the enemy now controls.",
+    "options": [
+      "recruit-the-resisters",
+      "admit-the-weakness",
+      "test-small-first",
+      "substitute-the-abundant"
+    ],
+    "answer": "substitute-the-abundant",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Synthetic_rubber"
+  },
+  {
+    "id": "d-0053",
+    "pattern_id": "substitute-the-abundant",
+    "situation": "An emperor wants a cheap stand-in for butter to feed his army and the poor, because butter is scarce and costly.",
+    "options": [
+      "send-a-costly-signal",
+      "substitute-the-abundant",
+      "test-small-first",
+      "stop-to-go-faster"
+    ],
+    "answer": "substitute-the-abundant",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Margarine"
+  },
+  {
+    "id": "d-0054",
+    "pattern_id": "substitute-the-abundant",
+    "situation": "Farms depend on fertilizer made from bird droppings mined on distant islands, and demand for nitrogen keeps rising.",
+    "options": [
+      "substitute-the-abundant",
+      "make-it-the-default",
+      "test-small-first",
+      "keep-it-reversible"
+    ],
+    "answer": "substitute-the-abundant",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Haber_process"
+  },
+  {
+    "id": "d-0055",
+    "pattern_id": "substitute-the-abundant",
+    "situation": "A potter's favourite imported clay quadruples in price. The riverbank behind the studio is full of local clay.",
+    "options": [
+      "run-paths-in-parallel",
+      "borrow-outside-capacity",
+      "substitute-the-abundant",
+      "recruit-the-resisters"
+    ],
+    "answer": "substitute-the-abundant",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0056",
+    "pattern_id": "substitute-the-abundant",
+    "situation": "A builder in a desert region can't get timber, but sand and clay are everywhere.",
+    "options": [
+      "align-incentives",
+      "map-the-effects",
+      "test-small-first",
+      "substitute-the-abundant"
+    ],
+    "answer": "substitute-the-abundant",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0057",
+    "pattern_id": "substitute-the-abundant",
+    "situation": "A recipe calls for a pinch of saffron for colour, and you can't afford it.",
+    "options": [
+      "borrow-outside-capacity",
+      "ship-then-iterate",
+      "substitute-the-abundant",
+      "give-away-the-core"
+    ],
+    "answer": "substitute-the-abundant",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0058",
+    "pattern_id": "substitute-the-abundant",
+    "situation": "A school can't buy textbooks for every student. Every student has a phone, and good course material is freely available online.",
+    "options": [
+      "test-small-first",
+      "decide-in-advance",
+      "mechanize-the-bottleneck",
+      "substitute-the-abundant"
+    ],
+    "answer": "substitute-the-abundant",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0059",
+    "pattern_id": "substitute-the-abundant",
+    "situation": "A startup's model training needs GPUs that are sold out everywhere, while its servers have hundreds of idle CPU cores.",
+    "options": [
+      "keep-it-reversible",
+      "scarcity-forces-focus",
+      "substitute-the-abundant",
+      "make-it-the-default"
+    ],
+    "answer": "substitute-the-abundant",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0060",
+    "pattern_id": "substitute-the-abundant",
+    "situation": "Copper cable has become so expensive that thieves strip it from building sites. Aluminium cable is cheap.",
+    "options": [
+      "substitute-the-abundant",
+      "buy-time",
+      "test-small-first",
+      "keep-it-reversible"
+    ],
+    "answer": "substitute-the-abundant",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0061",
+    "pattern_id": "ship-then-iterate",
+    "situation": "A hobbyist's operating system kernel works but lacks many features. Finishing it could take years, and nobody knows yet which features people need most.",
+    "options": [
+      "align-incentives",
+      "change-the-shape",
+      "ship-then-iterate",
+      "standardize-for-throughput"
+    ],
+    "answer": "ship-then-iterate",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/History_of_Linux"
+  },
+  {
+    "id": "d-0062",
+    "pattern_id": "ship-then-iterate",
+    "situation": "A search company has built an email service with a new idea, huge free storage plus search, but many rough edges remain.",
+    "options": [
+      "mechanize-the-bottleneck",
+      "make-the-mistake-impossible",
+      "ship-then-iterate",
+      "stop-to-go-faster"
+    ],
+    "answer": "ship-then-iterate",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Gmail"
+  },
+  {
+    "id": "d-0063",
+    "pattern_id": "ship-then-iterate",
+    "situation": "A man wants to help friends find local events and listings. Building a proper website would take months he doesn't have.",
+    "options": [
+      "ship-then-iterate",
+      "scarcity-forces-focus",
+      "run-paths-in-parallel",
+      "map-the-effects"
+    ],
+    "answer": "ship-then-iterate",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Craigslist"
+  },
+  {
+    "id": "d-0064",
+    "pattern_id": "ship-then-iterate",
+    "situation": "You've been rewriting your novel's first chapter for a year and haven't shown it to anyone.",
+    "options": [
+      "decide-in-advance",
+      "substitute-the-abundant",
+      "admit-the-weakness",
+      "ship-then-iterate"
+    ],
+    "answer": "ship-then-iterate",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0065",
+    "pattern_id": "ship-then-iterate",
+    "situation": "A team's app is 80% done. Launch is Friday, and the unfinished features are nice-to-haves.",
+    "options": [
+      "mechanize-the-bottleneck",
+      "make-only-what-is-pulled",
+      "ship-then-iterate",
+      "map-the-effects"
+    ],
+    "answer": "ship-then-iterate",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0066",
+    "pattern_id": "ship-then-iterate",
+    "situation": "A new podcaster keeps re-recording the first episode, chasing perfect sound.",
+    "options": [
+      "build-from-what-is-on-hand",
+      "ship-then-iterate",
+      "sell-the-limitation",
+      "standardize-for-throughput"
+    ],
+    "answer": "ship-then-iterate",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0067",
+    "pattern_id": "ship-then-iterate",
+    "situation": "A charity wants a perfect donor database before it starts next month's fundraising campaign.",
+    "options": [
+      "align-incentives",
+      "ship-then-iterate",
+      "buy-time",
+      "remove-the-step"
+    ],
+    "answer": "ship-then-iterate",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0068",
+    "pattern_id": "ship-then-iterate",
+    "situation": "A teacher is designing a new course over the summer and won't know what works until students try it.",
+    "options": [
+      "ship-then-iterate",
+      "decide-in-advance",
+      "remove-the-step",
+      "make-it-the-default"
+    ],
+    "answer": "ship-then-iterate",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0069",
+    "pattern_id": "ship-then-iterate",
+    "situation": "A café owner wants to perfect a full menu before opening, and rent is already being paid.",
+    "options": [
+      "ship-then-iterate",
+      "remeasure-the-given",
+      "go-direct",
+      "mechanize-the-bottleneck"
+    ],
+    "answer": "ship-then-iterate",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0070",
+    "pattern_id": "ship-then-iterate",
+    "situation": "A city plans a five-year study before trying a single bike lane.",
+    "options": [
+      "ship-then-iterate",
+      "standardize-for-throughput",
+      "scarcity-forces-focus",
+      "sell-the-limitation"
+    ],
+    "answer": "ship-then-iterate",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0071",
+    "pattern_id": "run-paths-in-parallel",
+    "situation": "A wartime project must separate a rare isotope. Three methods might work, none is proven, and there's no time to try them one after another.",
+    "options": [
+      "substitute-the-abundant",
+      "admit-the-weakness",
+      "ship-then-iterate",
+      "run-paths-in-parallel"
+    ],
+    "answer": "run-paths-in-parallel",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Manhattan_Project"
+  },
+  {
+    "id": "d-0072",
+    "pattern_id": "run-paths-in-parallel",
+    "situation": "In a pandemic, several vaccine candidates are in trials. Building factories only after a winner is known would add many months.",
+    "options": [
+      "mechanize-the-bottleneck",
+      "align-incentives",
+      "waste-becomes-input",
+      "run-paths-in-parallel"
+    ],
+    "answer": "run-paths-in-parallel",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Operation_Warp_Speed"
+  },
+  {
+    "id": "d-0073",
+    "pattern_id": "run-paths-in-parallel",
+    "situation": "You must find a flat within two weeks, and every landlord takes days to reply.",
+    "options": [
+      "give-away-the-core",
+      "map-the-effects",
+      "mechanize-the-bottleneck",
+      "run-paths-in-parallel"
+    ],
+    "answer": "run-paths-in-parallel",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0074",
+    "pattern_id": "run-paths-in-parallel",
+    "situation": "A patient's illness has three likely causes, each needing a different test that takes a week to come back.",
+    "options": [
+      "admit-the-weakness",
+      "run-paths-in-parallel",
+      "make-it-the-default",
+      "mechanize-the-bottleneck"
+    ],
+    "answer": "run-paths-in-parallel",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0075",
+    "pattern_id": "run-paths-in-parallel",
+    "situation": "A job seeker applies to one company at a time and waits for each answer before applying to the next.",
+    "options": [
+      "run-paths-in-parallel",
+      "ship-then-iterate",
+      "make-only-what-is-pulled",
+      "waste-becomes-input"
+    ],
+    "answer": "run-paths-in-parallel",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0076",
+    "pattern_id": "run-paths-in-parallel",
+    "situation": "A wedding planner must book a venue, a caterer and a band. Each takes a week to confirm, and none depends on the others.",
+    "options": [
+      "build-from-what-is-on-hand",
+      "give-away-the-core",
+      "run-paths-in-parallel",
+      "decide-in-advance"
+    ],
+    "answer": "run-paths-in-parallel",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0077",
+    "pattern_id": "run-paths-in-parallel",
+    "situation": "A lab doesn't know which of four chemical routes will work, and the grant ends in six months.",
+    "options": [
+      "map-the-effects",
+      "decide-in-advance",
+      "run-paths-in-parallel",
+      "sell-the-limitation"
+    ],
+    "answer": "run-paths-in-parallel",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0078",
+    "pattern_id": "run-paths-in-parallel",
+    "situation": "A team must choose a supplier, and each supplier takes three weeks to send a sample.",
+    "options": [
+      "run-paths-in-parallel",
+      "admit-the-weakness",
+      "standardize-for-throughput",
+      "scarcity-forces-focus"
+    ],
+    "answer": "run-paths-in-parallel",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0079",
+    "pattern_id": "run-paths-in-parallel",
+    "situation": "A lost hiker could be on any of three trails, and four search teams are available.",
+    "options": [
+      "substitute-the-abundant",
+      "mechanize-the-bottleneck",
+      "make-it-the-default",
+      "run-paths-in-parallel"
+    ],
+    "answer": "run-paths-in-parallel",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0080",
+    "pattern_id": "run-paths-in-parallel",
+    "situation": "An author waits months for each publisher's reply before sending the manuscript to the next one.",
+    "options": [
+      "mechanize-the-bottleneck",
+      "waste-becomes-input",
+      "substitute-the-abundant",
+      "run-paths-in-parallel"
+    ],
+    "answer": "run-paths-in-parallel",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0081",
+    "pattern_id": "standardize-for-throughput",
+    "situation": "A blockaded city must be supplied entirely by air. Hundreds of cargo planes from different units each fly with their own habits, and landings keep getting delayed.",
+    "options": [
+      "run-paths-in-parallel",
+      "keep-it-reversible",
+      "standardize-for-throughput",
+      "borrow-outside-capacity"
+    ],
+    "answer": "standardize-for-throughput",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Berlin_Blockade"
+  },
+  {
+    "id": "d-0082",
+    "pattern_id": "standardize-for-throughput",
+    "situation": "A country at war must build cargo ships far faster than its shipyards ever have, using thousands of newly trained workers.",
+    "options": [
+      "stop-to-go-faster",
+      "remeasure-the-given",
+      "standardize-for-throughput",
+      "buy-time"
+    ],
+    "answer": "standardize-for-throughput",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Liberty_ship"
+  },
+  {
+    "id": "d-0083",
+    "pattern_id": "standardize-for-throughput",
+    "situation": "A carmaker wants cars cheap enough for ordinary families, but building each car slightly differently slows the whole factory.",
+    "options": [
+      "standardize-for-throughput",
+      "test-small-first",
+      "run-paths-in-parallel",
+      "borrow-outside-capacity"
+    ],
+    "answer": "standardize-for-throughput",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Ford_Model_T"
+  },
+  {
+    "id": "d-0084",
+    "pattern_id": "standardize-for-throughput",
+    "situation": "A new low-fare airline must keep costs tiny. Every extra aircraft type means separate pilot training, spare parts and mechanics.",
+    "options": [
+      "test-small-first",
+      "standardize-for-throughput",
+      "buy-time",
+      "keep-it-reversible"
+    ],
+    "answer": "standardize-for-throughput",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Southwest_Airlines_fleet"
+  },
+  {
+    "id": "d-0085",
+    "pattern_id": "standardize-for-throughput",
+    "situation": "Loading a cargo ship takes days because every crate, sack and barrel is a different shape and has to be stowed by hand.",
+    "options": [
+      "standardize-for-throughput",
+      "buy-time",
+      "remeasure-the-given",
+      "make-it-the-default"
+    ],
+    "answer": "standardize-for-throughput",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Malcom_McLean"
+  },
+  {
+    "id": "d-0086",
+    "pattern_id": "standardize-for-throughput",
+    "situation": "A caterer serving 300 wedding plates lets each cook plate however they like. Service is slow and uneven.",
+    "options": [
+      "keep-it-reversible",
+      "buy-time",
+      "borrow-outside-capacity",
+      "standardize-for-throughput"
+    ],
+    "answer": "standardize-for-throughput",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0087",
+    "pattern_id": "standardize-for-throughput",
+    "situation": "A support team writes every reply from scratch, though the same ten questions make up most tickets.",
+    "options": [
+      "probe-before-committing",
+      "small-controlled-dose",
+      "standardize-for-throughput",
+      "run-paths-in-parallel"
+    ],
+    "answer": "standardize-for-throughput",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0088",
+    "pattern_id": "standardize-for-throughput",
+    "situation": "A hospital lab receives samples in dozens of different tube types, each labelled differently.",
+    "options": [
+      "standardize-for-throughput",
+      "sell-the-limitation",
+      "run-paths-in-parallel",
+      "make-it-the-default"
+    ],
+    "answer": "standardize-for-throughput",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0089",
+    "pattern_id": "standardize-for-throughput",
+    "situation": "A nursery's mornings are chaos because every family drops off at a different door with different paperwork.",
+    "options": [
+      "map-the-effects",
+      "standardize-for-throughput",
+      "substitute-the-abundant",
+      "run-paths-in-parallel"
+    ],
+    "answer": "standardize-for-throughput",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0090",
+    "pattern_id": "standardize-for-throughput",
+    "situation": "A print shop's jobs arrive in every possible file format and page size, and half the day goes on converting them.",
+    "options": [
+      "buy-time",
+      "keep-it-reversible",
+      "standardize-for-throughput",
+      "make-only-what-is-pulled"
+    ],
+    "answer": "standardize-for-throughput",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0091",
+    "pattern_id": "decide-in-advance",
+    "situation": "A new bomber is so complex that even an expert test pilot misses a step during take-off, and the plane crashes.",
+    "options": [
+      "decide-in-advance",
+      "give-away-the-core",
+      "small-controlled-dose",
+      "run-paths-in-parallel"
+    ],
+    "answer": "decide-in-advance",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Boeing_B-17_Flying_Fortress"
+  },
+  {
+    "id": "d-0092",
+    "pattern_id": "decide-in-advance",
+    "situation": "Intensive-care patients keep getting infections from central lines, although every doctor knows the few steps that prevent them.",
+    "options": [
+      "decide-in-advance",
+      "map-the-effects",
+      "run-paths-in-parallel",
+      "test-small-first"
+    ],
+    "answer": "decide-in-advance",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Peter_Pronovost"
+  },
+  {
+    "id": "d-0093",
+    "pattern_id": "decide-in-advance",
+    "situation": "Operating theatres have avoidable complications: the wrong site, missed antibiotics, unchecked equipment.",
+    "options": [
+      "admit-the-weakness",
+      "ship-then-iterate",
+      "decide-in-advance",
+      "sell-the-limitation"
+    ],
+    "answer": "decide-in-advance",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/WHO_Surgical_Safety_Checklist"
+  },
+  {
+    "id": "d-0094",
+    "pattern_id": "decide-in-advance",
+    "situation": "You keep overspending whenever you go food shopping hungry.",
+    "options": [
+      "decide-in-advance",
+      "test-small-first",
+      "ship-then-iterate",
+      "sell-the-limitation"
+    ],
+    "answer": "decide-in-advance",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0095",
+    "pattern_id": "decide-in-advance",
+    "situation": "A trader keeps holding losing positions far too long, because selling feels like admitting defeat.",
+    "options": [
+      "decide-in-advance",
+      "buy-time",
+      "scarcity-forces-focus",
+      "go-direct"
+    ],
+    "answer": "decide-in-advance",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0096",
+    "pattern_id": "decide-in-advance",
+    "situation": "Every time a customer asks for a discount, the sales rep agonises and gives in.",
+    "options": [
+      "run-paths-in-parallel",
+      "decide-in-advance",
+      "test-small-first",
+      "small-controlled-dose"
+    ],
+    "answer": "decide-in-advance",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0097",
+    "pattern_id": "decide-in-advance",
+    "situation": "On summit day, exhaustion and summit fever make climbers bad at deciding when to turn back.",
+    "options": [
+      "admit-the-weakness",
+      "run-paths-in-parallel",
+      "decide-in-advance",
+      "keep-it-reversible"
+    ],
+    "answer": "decide-in-advance",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0098",
+    "pattern_id": "decide-in-advance",
+    "situation": "A parent negotiates bedtime from scratch with the kids every single night.",
+    "options": [
+      "decide-in-advance",
+      "buy-time",
+      "scarcity-forces-focus",
+      "substitute-the-abundant"
+    ],
+    "answer": "decide-in-advance",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0099",
+    "pattern_id": "decide-in-advance",
+    "situation": "In a busy ward, the early signs of sepsis are easy to miss when nurses are rushed.",
+    "options": [
+      "decide-in-advance",
+      "map-the-effects",
+      "ship-then-iterate",
+      "give-away-the-core"
+    ],
+    "answer": "decide-in-advance",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0100",
+    "pattern_id": "decide-in-advance",
+    "situation": "A firefighter has seconds to decide whether to enter a burning building.",
+    "options": [
+      "build-from-what-is-on-hand",
+      "decide-in-advance",
+      "scarcity-forces-focus",
+      "run-paths-in-parallel"
+    ],
+    "answer": "decide-in-advance",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0101",
+    "pattern_id": "buy-time",
+    "situation": "A young startup is out of money and needs a few more months to prove its idea, and investors aren't interested yet.",
+    "options": [
+      "buy-time",
+      "map-the-effects",
+      "scarcity-forces-focus",
+      "standardize-for-throughput"
+    ],
+    "answer": "buy-time",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Airbnb"
+  },
+  {
+    "id": "d-0102",
+    "pattern_id": "buy-time",
+    "situation": "A struggling computer maker's new products are a year away, and cash and confidence are running out. Its biggest rival profits from selling software for its machines.",
+    "options": [
+      "mechanize-the-bottleneck",
+      "keep-it-reversible",
+      "stop-to-go-faster",
+      "buy-time"
+    ],
+    "answer": "buy-time",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Apple_Inc."
+  },
+  {
+    "id": "d-0103",
+    "pattern_id": "buy-time",
+    "situation": "Your landlord wants you out in a week, but your new flat isn't ready for a month.",
+    "options": [
+      "scarcity-forces-focus",
+      "buy-time",
+      "test-small-first",
+      "mechanize-the-bottleneck"
+    ],
+    "answer": "buy-time",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0104",
+    "pattern_id": "buy-time",
+    "situation": "A paper is due tomorrow, and you need three more days to finish the analysis properly.",
+    "options": [
+      "buy-time",
+      "give-away-the-core",
+      "send-a-costly-signal",
+      "decide-in-advance"
+    ],
+    "answer": "buy-time",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0105",
+    "pattern_id": "buy-time",
+    "situation": "A bridge is deteriorating faster than its replacement can be built.",
+    "options": [
+      "make-only-what-is-pulled",
+      "sell-the-limitation",
+      "buy-time",
+      "ship-then-iterate"
+    ],
+    "answer": "buy-time",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0106",
+    "pattern_id": "buy-time",
+    "situation": "A patient needs a kidney transplant, and no matching organ is available yet.",
+    "options": [
+      "build-from-what-is-on-hand",
+      "buy-time",
+      "make-only-what-is-pulled",
+      "standardize-for-throughput"
+    ],
+    "answer": "buy-time",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0107",
+    "pattern_id": "buy-time",
+    "situation": "A restaurant's main supplier goes bust, and the new one needs two weeks to start deliveries.",
+    "options": [
+      "buy-time",
+      "map-the-effects",
+      "decide-in-advance",
+      "admit-the-weakness"
+    ],
+    "answer": "buy-time",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0108",
+    "pattern_id": "buy-time",
+    "situation": "Your software has a security hole, and the proper fix needs a week of redesign.",
+    "options": [
+      "buy-time",
+      "make-the-mistake-impossible",
+      "mechanize-the-bottleneck",
+      "probe-before-committing"
+    ],
+    "answer": "buy-time",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0109",
+    "pattern_id": "buy-time",
+    "situation": "A shop's lease ends next month, and its new premises won't open for three months.",
+    "options": [
+      "stop-to-go-faster",
+      "make-the-mistake-impossible",
+      "buy-time",
+      "ship-then-iterate"
+    ],
+    "answer": "buy-time",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0110",
+    "pattern_id": "buy-time",
+    "situation": "A reservoir is close to overtopping its dam, and the new spillway is months from finished.",
+    "options": [
+      "buy-time",
+      "probe-before-committing",
+      "remove-the-step",
+      "standardize-for-throughput"
+    ],
+    "answer": "buy-time",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0111",
+    "pattern_id": "mechanize-the-bottleneck",
+    "situation": "Codebreakers can read enemy messages only once they find each day's cipher-machine settings, and testing settings by hand is far too slow to be useful.",
+    "options": [
+      "align-incentives",
+      "mechanize-the-bottleneck",
+      "go-direct",
+      "buy-time"
+    ],
+    "answer": "mechanize-the-bottleneck",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Bombe"
+  },
+  {
+    "id": "d-0112",
+    "pattern_id": "mechanize-the-bottleneck",
+    "situation": "A national census takes most of a decade to tabulate by hand, and the population keeps growing.",
+    "options": [
+      "admit-the-weakness",
+      "mechanize-the-bottleneck",
+      "run-paths-in-parallel",
+      "borrow-outside-capacity"
+    ],
+    "answer": "mechanize-the-bottleneck",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Herman_Hollerith"
+  },
+  {
+    "id": "d-0113",
+    "pattern_id": "mechanize-the-bottleneck",
+    "situation": "A bakery's sales are capped by one person rolling dough by hand.",
+    "options": [
+      "mechanize-the-bottleneck",
+      "stop-to-go-faster",
+      "buy-time",
+      "make-it-the-default"
+    ],
+    "answer": "mechanize-the-bottleneck",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0114",
+    "pattern_id": "mechanize-the-bottleneck",
+    "situation": "A lab spends three weeks per experiment counting cells in microscope images by hand.",
+    "options": [
+      "keep-it-reversible",
+      "map-the-effects",
+      "mechanize-the-bottleneck",
+      "buy-time"
+    ],
+    "answer": "mechanize-the-bottleneck",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0115",
+    "pattern_id": "mechanize-the-bottleneck",
+    "situation": "An accountant spends every Monday copying numbers from one spreadsheet into another.",
+    "options": [
+      "run-paths-in-parallel",
+      "go-direct",
+      "make-it-the-default",
+      "mechanize-the-bottleneck"
+    ],
+    "answer": "mechanize-the-bottleneck",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0116",
+    "pattern_id": "mechanize-the-bottleneck",
+    "situation": "A wedding photographer spends ten hours per wedding renaming and sorting photos.",
+    "options": [
+      "remove-the-step",
+      "mechanize-the-bottleneck",
+      "remeasure-the-given",
+      "ship-then-iterate"
+    ],
+    "answer": "mechanize-the-bottleneck",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0117",
+    "pattern_id": "mechanize-the-bottleneck",
+    "situation": "A food bank's packing line is held up by one volunteer weighing every bag of rice.",
+    "options": [
+      "send-a-costly-signal",
+      "buy-time",
+      "mechanize-the-bottleneck",
+      "probe-before-committing"
+    ],
+    "answer": "mechanize-the-bottleneck",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0118",
+    "pattern_id": "mechanize-the-bottleneck",
+    "situation": "A school office checks 900 permission slips by hand before every trip.",
+    "options": [
+      "go-direct",
+      "admit-the-weakness",
+      "mechanize-the-bottleneck",
+      "run-paths-in-parallel"
+    ],
+    "answer": "mechanize-the-bottleneck",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0119",
+    "pattern_id": "mechanize-the-bottleneck",
+    "situation": "A warehouse slows down because every package's address is typed in by hand.",
+    "options": [
+      "buy-time",
+      "small-controlled-dose",
+      "waste-becomes-input",
+      "mechanize-the-bottleneck"
+    ],
+    "answer": "mechanize-the-bottleneck",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0120",
+    "pattern_id": "mechanize-the-bottleneck",
+    "situation": "A potter's output is limited by how fast she can wedge clay by hand.",
+    "options": [
+      "mechanize-the-bottleneck",
+      "align-incentives",
+      "substitute-the-abundant",
+      "run-paths-in-parallel"
+    ],
+    "answer": "mechanize-the-bottleneck",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0121",
+    "pattern_id": "send-a-costly-signal",
+    "situation": "A carmaker's early models were unreliable, and buyers now distrust its much-improved cars whatever the ads say.",
+    "options": [
+      "substitute-the-abundant",
+      "send-a-costly-signal",
+      "remove-the-step",
+      "probe-before-committing"
+    ],
+    "answer": "send-a-costly-signal",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Hyundai_Motor_America"
+  },
+  {
+    "id": "d-0122",
+    "pattern_id": "send-a-costly-signal",
+    "situation": "A new mail-order company sells boots to customers who can't see or try them before paying.",
+    "options": [
+      "send-a-costly-signal",
+      "probe-before-committing",
+      "recruit-the-resisters",
+      "waste-becomes-input"
+    ],
+    "answer": "send-a-costly-signal",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/L.L.Bean"
+  },
+  {
+    "id": "d-0123",
+    "pattern_id": "send-a-costly-signal",
+    "situation": "A new freelance designer has no portfolio, and clients doubt she can deliver.",
+    "options": [
+      "send-a-costly-signal",
+      "decide-in-advance",
+      "scarcity-forces-focus",
+      "keep-it-reversible"
+    ],
+    "answer": "send-a-costly-signal",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0124",
+    "pattern_id": "send-a-costly-signal",
+    "situation": "A private seller knows his used car is sound, but buyers assume every used car is a lemon.",
+    "options": [
+      "borrow-outside-capacity",
+      "keep-it-reversible",
+      "send-a-costly-signal",
+      "remove-the-step"
+    ],
+    "answer": "send-a-costly-signal",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0125",
+    "pattern_id": "send-a-costly-signal",
+    "situation": "Founders ask an investor to trust that they're fully committed to their startup.",
+    "options": [
+      "probe-before-committing",
+      "change-the-shape",
+      "send-a-costly-signal",
+      "build-from-what-is-on-hand"
+    ],
+    "answer": "send-a-costly-signal",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0126",
+    "pattern_id": "send-a-costly-signal",
+    "situation": "A job candidate says she writes brilliantly, and so does every other applicant.",
+    "options": [
+      "give-away-the-core",
+      "send-a-costly-signal",
+      "remeasure-the-given",
+      "mechanize-the-bottleneck"
+    ],
+    "answer": "send-a-costly-signal",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0127",
+    "pattern_id": "send-a-costly-signal",
+    "situation": "A builder tells homeowners her repairs last, which is what every builder says.",
+    "options": [
+      "ship-then-iterate",
+      "change-the-shape",
+      "probe-before-committing",
+      "send-a-costly-signal"
+    ],
+    "answer": "send-a-costly-signal",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0128",
+    "pattern_id": "send-a-costly-signal",
+    "situation": "A small online shop with no reviews competes with big, well-known sellers.",
+    "options": [
+      "send-a-costly-signal",
+      "run-paths-in-parallel",
+      "substitute-the-abundant",
+      "probe-before-committing"
+    ],
+    "answer": "send-a-costly-signal",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0129",
+    "pattern_id": "send-a-costly-signal",
+    "situation": "A country tells foreign investors it will never seize their factories, and investors don't believe it.",
+    "options": [
+      "send-a-costly-signal",
+      "probe-before-committing",
+      "mechanize-the-bottleneck",
+      "substitute-the-abundant"
+    ],
+    "answer": "send-a-costly-signal",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0130",
+    "pattern_id": "send-a-costly-signal",
+    "situation": "A tutoring company claims its students' grades go up, and parents are sceptical.",
+    "options": [
+      "send-a-costly-signal",
+      "map-the-effects",
+      "ship-then-iterate",
+      "mechanize-the-bottleneck"
+    ],
+    "answer": "send-a-costly-signal",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0131",
+    "pattern_id": "remeasure-the-given",
+    "situation": "Doctors 'know' stomach ulcers come from stress and acid, but a young researcher keeps finding bacteria in ulcer samples.",
+    "options": [
+      "ship-then-iterate",
+      "borrow-outside-capacity",
+      "remeasure-the-given",
+      "keep-it-reversible"
+    ],
+    "answer": "remeasure-the-given",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Barry_Marshall"
+  },
+  {
+    "id": "d-0132",
+    "pattern_id": "remeasure-the-given",
+    "situation": "Everyone at the company says customers would never pay for a premium plan, but nobody has ever offered one.",
+    "options": [
+      "admit-the-weakness",
+      "small-controlled-dose",
+      "remeasure-the-given",
+      "align-incentives"
+    ],
+    "answer": "remeasure-the-given",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0133",
+    "pattern_id": "remeasure-the-given",
+    "situation": "The map says the mountain pass is closed in winter, but it was printed ten years ago.",
+    "options": [
+      "stop-to-go-faster",
+      "remeasure-the-given",
+      "make-only-what-is-pulled",
+      "probe-before-committing"
+    ],
+    "answer": "remeasure-the-given",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0134",
+    "pattern_id": "remeasure-the-given",
+    "situation": "A manager is told the old machine 'can't run faster than 50 units an hour'. Nobody remembers who measured that, or when.",
+    "options": [
+      "remeasure-the-given",
+      "probe-before-committing",
+      "standardize-for-throughput",
+      "stop-to-go-faster"
+    ],
+    "answer": "remeasure-the-given",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0135",
+    "pattern_id": "remeasure-the-given",
+    "situation": "A bridge is posted as unable to carry trucks, based on a load rating made before it was fully strengthened.",
+    "options": [
+      "remeasure-the-given",
+      "scarcity-forces-focus",
+      "keep-it-reversible",
+      "make-the-mistake-impossible"
+    ],
+    "answer": "remeasure-the-given",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0136",
+    "pattern_id": "remeasure-the-given",
+    "situation": "The team is sure the slow website is the database's fault, though nobody has measured where the time goes.",
+    "options": [
+      "test-small-first",
+      "remeasure-the-given",
+      "waste-becomes-input",
+      "keep-it-reversible"
+    ],
+    "answer": "remeasure-the-given",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0137",
+    "pattern_id": "remeasure-the-given",
+    "situation": "A consultant says a new road is unaffordable. His estimate used land prices from the peak of a property boom.",
+    "options": [
+      "go-direct",
+      "align-incentives",
+      "remove-the-step",
+      "remeasure-the-given"
+    ],
+    "answer": "remeasure-the-given",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0138",
+    "pattern_id": "remeasure-the-given",
+    "situation": "Your family has always said you're 'bad at maths', and you've never tested it as an adult.",
+    "options": [
+      "remeasure-the-given",
+      "admit-the-weakness",
+      "align-incentives",
+      "borrow-outside-capacity"
+    ],
+    "answer": "remeasure-the-given",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0139",
+    "pattern_id": "remeasure-the-given",
+    "situation": "A rule says the warehouse may hold only 100 pallets 'for fire safety', and nobody can find the original assessment.",
+    "options": [
+      "send-a-costly-signal",
+      "standardize-for-throughput",
+      "decide-in-advance",
+      "remeasure-the-given"
+    ],
+    "answer": "remeasure-the-given",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0140",
+    "pattern_id": "remeasure-the-given",
+    "situation": "A supplier insists a part can't be made lighter. Its drawings date from before a new alloy became available.",
+    "options": [
+      "remove-the-step",
+      "change-the-shape",
+      "send-a-costly-signal",
+      "remeasure-the-given"
+    ],
+    "answer": "remeasure-the-given",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0141",
+    "pattern_id": "probe-before-committing",
+    "situation": "A campaign must pick its sign-up page design. Staff have a strong favourite, and millions of visitors will see whatever is chosen.",
+    "options": [
+      "stop-to-go-faster",
+      "probe-before-committing",
+      "scarcity-forces-focus",
+      "map-the-effects"
+    ],
+    "answer": "probe-before-committing",
+    "origin": "adapted",
+    "source": "https://www.optimizely.com/insights/blog/how-obama-raised-60-million-by-running-a-simple-experiment/"
+  },
+  {
+    "id": "d-0142",
+    "pattern_id": "probe-before-committing",
+    "situation": "A navy is losing sailors to scurvy, and people propose many cures: cider, vinegar, seawater, citrus fruit.",
+    "options": [
+      "waste-becomes-input",
+      "send-a-costly-signal",
+      "make-the-mistake-impossible",
+      "probe-before-committing"
+    ],
+    "answer": "probe-before-committing",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/James_Lind"
+  },
+  {
+    "id": "d-0143",
+    "pattern_id": "probe-before-committing",
+    "situation": "A shop owner is about to print 10,000 flyers with a slogan nobody has tried on customers.",
+    "options": [
+      "borrow-outside-capacity",
+      "send-a-costly-signal",
+      "build-from-what-is-on-hand",
+      "probe-before-committing"
+    ],
+    "answer": "probe-before-committing",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0144",
+    "pattern_id": "probe-before-committing",
+    "situation": "A company has argued for months over which of two product names customers will prefer.",
+    "options": [
+      "probe-before-committing",
+      "go-direct",
+      "sell-the-limitation",
+      "remeasure-the-given"
+    ],
+    "answer": "probe-before-committing",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0145",
+    "pattern_id": "probe-before-committing",
+    "situation": "A teacher can't decide whether weekly quizzes or essays will help her students remember more.",
+    "options": [
+      "buy-time",
+      "probe-before-committing",
+      "remeasure-the-given",
+      "make-the-mistake-impossible"
+    ],
+    "answer": "probe-before-committing",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0146",
+    "pattern_id": "probe-before-committing",
+    "situation": "An author can't choose between two book covers, and the print run is next month.",
+    "options": [
+      "map-the-effects",
+      "buy-time",
+      "probe-before-committing",
+      "standardize-for-throughput"
+    ],
+    "answer": "probe-before-committing",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0147",
+    "pattern_id": "probe-before-committing",
+    "situation": "A charity doesn't know whether its donors respond better to statistics or to one person's story.",
+    "options": [
+      "map-the-effects",
+      "probe-before-committing",
+      "admit-the-weakness",
+      "make-the-mistake-impossible"
+    ],
+    "answer": "probe-before-committing",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0148",
+    "pattern_id": "probe-before-committing",
+    "situation": "A software team has debated for weeks whether users want feature A or feature B first.",
+    "options": [
+      "make-the-mistake-impossible",
+      "map-the-effects",
+      "decide-in-advance",
+      "probe-before-committing"
+    ],
+    "answer": "probe-before-committing",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0149",
+    "pattern_id": "probe-before-committing",
+    "situation": "A restaurant wants to raise prices but fears losing regulars.",
+    "options": [
+      "probe-before-committing",
+      "buy-time",
+      "remeasure-the-given",
+      "go-direct"
+    ],
+    "answer": "probe-before-committing",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0150",
+    "pattern_id": "probe-before-committing",
+    "situation": "A recruiter doesn't know which of three job-ad wordings attracts better applicants.",
+    "options": [
+      "give-away-the-core",
+      "probe-before-committing",
+      "remove-the-step",
+      "send-a-costly-signal"
+    ],
+    "answer": "probe-before-committing",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0151",
+    "pattern_id": "align-incentives",
+    "situation": "A rental company relies on late fees, and customers hate them. It still needs discs to come back without punishing anyone.",
+    "options": [
+      "keep-it-reversible",
+      "ship-then-iterate",
+      "mechanize-the-bottleneck",
+      "align-incentives"
+    ],
+    "answer": "align-incentives",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Netflix,_Inc."
+  },
+  {
+    "id": "d-0152",
+    "pattern_id": "align-incentives",
+    "situation": "A factory must hire 300 workers a year to keep 100 jobs filled, because people keep quitting the monotonous line.",
+    "options": [
+      "test-small-first",
+      "go-direct",
+      "map-the-effects",
+      "align-incentives"
+    ],
+    "answer": "align-incentives",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Henry_Ford"
+  },
+  {
+    "id": "d-0153",
+    "pattern_id": "align-incentives",
+    "situation": "A landlord pays the repair contractor by the hour, and repairs drag on for weeks.",
+    "options": [
+      "run-paths-in-parallel",
+      "ship-then-iterate",
+      "send-a-costly-signal",
+      "align-incentives"
+    ],
+    "answer": "align-incentives",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0154",
+    "pattern_id": "align-incentives",
+    "situation": "Sales reps are paid on revenue, so they keep offering deep discounts to close deals.",
+    "options": [
+      "standardize-for-throughput",
+      "mechanize-the-bottleneck",
+      "keep-it-reversible",
+      "align-incentives"
+    ],
+    "answer": "align-incentives",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0155",
+    "pattern_id": "align-incentives",
+    "situation": "Nobody in a shared household ever refills the car's petrol tank.",
+    "options": [
+      "ship-then-iterate",
+      "recruit-the-resisters",
+      "send-a-costly-signal",
+      "align-incentives"
+    ],
+    "answer": "align-incentives",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0156",
+    "pattern_id": "align-incentives",
+    "situation": "A school pays tutors per session, and struggling students never seem to finish tutoring.",
+    "options": [
+      "recruit-the-resisters",
+      "probe-before-committing",
+      "remove-the-step",
+      "align-incentives"
+    ],
+    "answer": "align-incentives",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0157",
+    "pattern_id": "align-incentives",
+    "situation": "Clinic doctors are paid per procedure, and costs are soaring without patients getting healthier.",
+    "options": [
+      "borrow-outside-capacity",
+      "align-incentives",
+      "decide-in-advance",
+      "send-a-costly-signal"
+    ],
+    "answer": "align-incentives",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0158",
+    "pattern_id": "align-incentives",
+    "situation": "Contract programmers paid per line of code keep delivering bloated programs.",
+    "options": [
+      "probe-before-committing",
+      "align-incentives",
+      "scarcity-forces-focus",
+      "ship-then-iterate"
+    ],
+    "answer": "align-incentives",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0159",
+    "pattern_id": "align-incentives",
+    "situation": "A city pays its waste contractor per truckload collected, and trucks run half-empty.",
+    "options": [
+      "borrow-outside-capacity",
+      "align-incentives",
+      "standardize-for-throughput",
+      "map-the-effects"
+    ],
+    "answer": "align-incentives",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0160",
+    "pattern_id": "align-incentives",
+    "situation": "A hotel pays cleaners per room, and inspection keeps finding rushed rooms.",
+    "options": [
+      "sell-the-limitation",
+      "map-the-effects",
+      "align-incentives",
+      "build-from-what-is-on-hand"
+    ],
+    "answer": "align-incentives",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0161",
+    "pattern_id": "map-the-effects",
+    "situation": "A cholera outbreak kills hundreds in one neighbourhood. Experts blame bad air, but nobody can explain why some streets are hit and others aren't.",
+    "options": [
+      "borrow-outside-capacity",
+      "keep-it-reversible",
+      "run-paths-in-parallel",
+      "map-the-effects"
+    ],
+    "answer": "map-the-effects",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/1854_Broad_Street_cholera_outbreak"
+  },
+  {
+    "id": "d-0162",
+    "pattern_id": "map-the-effects",
+    "situation": "A hospital has two maternity clinics. Mothers in one die of fever more than twice as often as in the other, and nobody knows why.",
+    "options": [
+      "keep-it-reversible",
+      "map-the-effects",
+      "make-it-the-default",
+      "borrow-outside-capacity"
+    ],
+    "answer": "map-the-effects",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Ignaz_Semmelweis"
+  },
+  {
+    "id": "d-0163",
+    "pattern_id": "map-the-effects",
+    "situation": "Bombers come back from missions full of bullet holes. Armour is heavy, so it can cover only part of each plane.",
+    "options": [
+      "map-the-effects",
+      "substitute-the-abundant",
+      "run-paths-in-parallel",
+      "probe-before-committing"
+    ],
+    "answer": "map-the-effects",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Survivorship_bias"
+  },
+  {
+    "id": "d-0164",
+    "pattern_id": "map-the-effects",
+    "situation": "In a wartime hospital, far more soldiers die than their battle wounds alone would explain.",
+    "options": [
+      "standardize-for-throughput",
+      "map-the-effects",
+      "stop-to-go-faster",
+      "keep-it-reversible"
+    ],
+    "answer": "map-the-effects",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Florence_Nightingale"
+  },
+  {
+    "id": "d-0165",
+    "pattern_id": "map-the-effects",
+    "situation": "Your laptop crashes 'randomly' a few times a week.",
+    "options": [
+      "borrow-outside-capacity",
+      "map-the-effects",
+      "mechanize-the-bottleneck",
+      "send-a-costly-signal"
+    ],
+    "answer": "map-the-effects",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0166",
+    "pattern_id": "map-the-effects",
+    "situation": "Customers cancel their subscriptions, and nobody knows why.",
+    "options": [
+      "waste-becomes-input",
+      "keep-it-reversible",
+      "map-the-effects",
+      "small-controlled-dose"
+    ],
+    "answer": "map-the-effects",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0167",
+    "pattern_id": "map-the-effects",
+    "situation": "A restaurant gets scattered food-poisoning complaints over a month.",
+    "options": [
+      "waste-becomes-input",
+      "send-a-costly-signal",
+      "map-the-effects",
+      "scarcity-forces-focus"
+    ],
+    "answer": "map-the-effects",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0168",
+    "pattern_id": "map-the-effects",
+    "situation": "Some houses on a street get flooded basements after heavy rain, but not all of them.",
+    "options": [
+      "map-the-effects",
+      "keep-it-reversible",
+      "sell-the-limitation",
+      "admit-the-weakness"
+    ],
+    "answer": "map-the-effects",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0169",
+    "pattern_id": "map-the-effects",
+    "situation": "Students' grades drop sharply one term, and every teacher has a different theory.",
+    "options": [
+      "admit-the-weakness",
+      "send-a-costly-signal",
+      "recruit-the-resisters",
+      "map-the-effects"
+    ],
+    "answer": "map-the-effects",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0170",
+    "pattern_id": "map-the-effects",
+    "situation": "A website's error rate spikes at unpredictable moments.",
+    "options": [
+      "test-small-first",
+      "map-the-effects",
+      "go-direct",
+      "probe-before-committing"
+    ],
+    "answer": "map-the-effects",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0171",
+    "pattern_id": "keep-it-reversible",
+    "situation": "A city wants to charge drivers to enter the centre. Residents are strongly opposed, and nobody knows how traffic will really respond.",
+    "options": [
+      "give-away-the-core",
+      "scarcity-forces-focus",
+      "align-incentives",
+      "keep-it-reversible"
+    ],
+    "answer": "keep-it-reversible",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Stockholm_congestion_tax"
+  },
+  {
+    "id": "d-0172",
+    "pattern_id": "keep-it-reversible",
+    "situation": "A startup must choose its database before knowing how it will grow.",
+    "options": [
+      "keep-it-reversible",
+      "waste-becomes-input",
+      "stop-to-go-faster",
+      "map-the-effects"
+    ],
+    "answer": "keep-it-reversible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0173",
+    "pattern_id": "keep-it-reversible",
+    "situation": "You'd love a dog but aren't sure you can handle one.",
+    "options": [
+      "remeasure-the-given",
+      "admit-the-weakness",
+      "keep-it-reversible",
+      "sell-the-limitation"
+    ],
+    "answer": "keep-it-reversible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0174",
+    "pattern_id": "keep-it-reversible",
+    "situation": "A company is considering closing its office and going fully remote.",
+    "options": [
+      "admit-the-weakness",
+      "remeasure-the-given",
+      "keep-it-reversible",
+      "scarcity-forces-focus"
+    ],
+    "answer": "keep-it-reversible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0175",
+    "pattern_id": "keep-it-reversible",
+    "situation": "A shop is thinking of knocking down a wall to double its floor space, unsure customers will come.",
+    "options": [
+      "change-the-shape",
+      "align-incentives",
+      "keep-it-reversible",
+      "scarcity-forces-focus"
+    ],
+    "answer": "keep-it-reversible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0176",
+    "pattern_id": "keep-it-reversible",
+    "situation": "A town is debating whether to close a street to cars and turn it into a plaza.",
+    "options": [
+      "send-a-costly-signal",
+      "change-the-shape",
+      "stop-to-go-faster",
+      "keep-it-reversible"
+    ],
+    "answer": "keep-it-reversible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0177",
+    "pattern_id": "keep-it-reversible",
+    "situation": "You're offered a job abroad and can't tell whether you'd like living there.",
+    "options": [
+      "keep-it-reversible",
+      "change-the-shape",
+      "align-incentives",
+      "borrow-outside-capacity"
+    ],
+    "answer": "keep-it-reversible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0178",
+    "pattern_id": "keep-it-reversible",
+    "situation": "A team is choosing a project-management tool, and vendors are pushing three-year contracts.",
+    "options": [
+      "keep-it-reversible",
+      "map-the-effects",
+      "mechanize-the-bottleneck",
+      "buy-time"
+    ],
+    "answer": "keep-it-reversible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0179",
+    "pattern_id": "keep-it-reversible",
+    "situation": "A couple is unsure whether to merge all their finances.",
+    "options": [
+      "go-direct",
+      "mechanize-the-bottleneck",
+      "keep-it-reversible",
+      "map-the-effects"
+    ],
+    "answer": "keep-it-reversible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0180",
+    "pattern_id": "keep-it-reversible",
+    "situation": "A school wants to try a four-day week, and parents are divided.",
+    "options": [
+      "standardize-for-throughput",
+      "remeasure-the-given",
+      "keep-it-reversible",
+      "mechanize-the-bottleneck"
+    ],
+    "answer": "keep-it-reversible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0181",
+    "pattern_id": "go-direct",
+    "situation": "An inventor's vacuum cleaner beats everything on the market, but manufacturers and distributors refuse it because it would kill their profitable replacement bags.",
+    "options": [
+      "waste-becomes-input",
+      "make-the-mistake-impossible",
+      "go-direct",
+      "standardize-for-throughput"
+    ],
+    "answer": "go-direct",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/James_Dyson"
+  },
+  {
+    "id": "d-0182",
+    "pattern_id": "go-direct",
+    "situation": "A young PC maker's computers sit in retail shops that take a big cut and hold expensive stock.",
+    "options": [
+      "go-direct",
+      "make-it-the-default",
+      "stop-to-go-faster",
+      "run-paths-in-parallel"
+    ],
+    "answer": "go-direct",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Dell"
+  },
+  {
+    "id": "d-0183",
+    "pattern_id": "go-direct",
+    "situation": "A famous band's record contract has ended. The label system takes most of the money and controls when music comes out.",
+    "options": [
+      "send-a-costly-signal",
+      "align-incentives",
+      "go-direct",
+      "change-the-shape"
+    ],
+    "answer": "go-direct",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/In_Rainbows"
+  },
+  {
+    "id": "d-0184",
+    "pattern_id": "go-direct",
+    "situation": "A farmer sells to a wholesaler who pays a fraction of what supermarkets charge.",
+    "options": [
+      "run-paths-in-parallel",
+      "make-only-what-is-pulled",
+      "go-direct",
+      "stop-to-go-faster"
+    ],
+    "answer": "go-direct",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0185",
+    "pattern_id": "go-direct",
+    "situation": "A local author is turned down by every bookshop chain.",
+    "options": [
+      "make-the-mistake-impossible",
+      "go-direct",
+      "align-incentives",
+      "remeasure-the-given"
+    ],
+    "answer": "go-direct",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0186",
+    "pattern_id": "go-direct",
+    "situation": "A craftsman's work sells only through a gallery that keeps half the price.",
+    "options": [
+      "go-direct",
+      "change-the-shape",
+      "stop-to-go-faster",
+      "borrow-outside-capacity"
+    ],
+    "answer": "go-direct",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0187",
+    "pattern_id": "go-direct",
+    "situation": "An app developer loses 30% of every sale to the app store.",
+    "options": [
+      "go-direct",
+      "make-it-the-default",
+      "recruit-the-resisters",
+      "standardize-for-throughput"
+    ],
+    "answer": "go-direct",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0188",
+    "pattern_id": "go-direct",
+    "situation": "A comedian can't get booked by any of the clubs.",
+    "options": [
+      "remeasure-the-given",
+      "keep-it-reversible",
+      "go-direct",
+      "change-the-shape"
+    ],
+    "answer": "go-direct",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0189",
+    "pattern_id": "go-direct",
+    "situation": "A new hot-sauce brand can't get shelf space in supermarkets.",
+    "options": [
+      "stop-to-go-faster",
+      "make-it-the-default",
+      "go-direct",
+      "remeasure-the-given"
+    ],
+    "answer": "go-direct",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0190",
+    "pattern_id": "go-direct",
+    "situation": "A job hunter's applications vanish into automated HR portals.",
+    "options": [
+      "waste-becomes-input",
+      "build-from-what-is-on-hand",
+      "go-direct",
+      "change-the-shape"
+    ],
+    "answer": "go-direct",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0191",
+    "pattern_id": "make-only-what-is-pulled",
+    "situation": "A car factory's stores are full of parts built 'just in case'. Defects hide in the piles, and money sits idle on the shelves.",
+    "options": [
+      "give-away-the-core",
+      "make-it-the-default",
+      "make-only-what-is-pulled",
+      "send-a-costly-signal"
+    ],
+    "answer": "make-only-what-is-pulled",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Kanban"
+  },
+  {
+    "id": "d-0192",
+    "pattern_id": "make-only-what-is-pulled",
+    "situation": "A bakery bakes the same amount every day and throws away a third of it.",
+    "options": [
+      "make-the-mistake-impossible",
+      "mechanize-the-bottleneck",
+      "scarcity-forces-focus",
+      "make-only-what-is-pulled"
+    ],
+    "answer": "make-only-what-is-pulled",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0193",
+    "pattern_id": "make-only-what-is-pulled",
+    "situation": "A clothing brand orders a whole season's stock a year ahead, then discounts most of it.",
+    "options": [
+      "make-only-what-is-pulled",
+      "make-the-mistake-impossible",
+      "send-a-costly-signal",
+      "test-small-first"
+    ],
+    "answer": "make-only-what-is-pulled",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0194",
+    "pattern_id": "make-only-what-is-pulled",
+    "situation": "A software team designs features months before anyone asks for them, and half are never used.",
+    "options": [
+      "run-paths-in-parallel",
+      "make-only-what-is-pulled",
+      "go-direct",
+      "remeasure-the-given"
+    ],
+    "answer": "make-only-what-is-pulled",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0195",
+    "pattern_id": "make-only-what-is-pulled",
+    "situation": "A restaurant pre-cooks big batches every morning, and much of it is binned by evening.",
+    "options": [
+      "make-only-what-is-pulled",
+      "borrow-outside-capacity",
+      "buy-time",
+      "go-direct"
+    ],
+    "answer": "make-only-what-is-pulled",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0196",
+    "pattern_id": "make-only-what-is-pulled",
+    "situation": "A print shop prints brochures in huge runs that sit in storage until they're out of date.",
+    "options": [
+      "make-only-what-is-pulled",
+      "test-small-first",
+      "admit-the-weakness",
+      "go-direct"
+    ],
+    "answer": "make-only-what-is-pulled",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0197",
+    "pattern_id": "make-only-what-is-pulled",
+    "situation": "A household buys groceries for the whole month and throws out spoiled produce every week.",
+    "options": [
+      "give-away-the-core",
+      "change-the-shape",
+      "substitute-the-abundant",
+      "make-only-what-is-pulled"
+    ],
+    "answer": "make-only-what-is-pulled",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0198",
+    "pattern_id": "make-only-what-is-pulled",
+    "situation": "A warehouse restocks every shelf weekly, whether or not the items sold.",
+    "options": [
+      "waste-becomes-input",
+      "make-the-mistake-impossible",
+      "make-only-what-is-pulled",
+      "probe-before-committing"
+    ],
+    "answer": "make-only-what-is-pulled",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0199",
+    "pattern_id": "make-only-what-is-pulled",
+    "situation": "A publisher prints 10,000 copies of every book, and most get pulped.",
+    "options": [
+      "borrow-outside-capacity",
+      "make-only-what-is-pulled",
+      "make-the-mistake-impossible",
+      "scarcity-forces-focus"
+    ],
+    "answer": "make-only-what-is-pulled",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0200",
+    "pattern_id": "make-only-what-is-pulled",
+    "situation": "A factory's first machine runs flat out and piles parts in front of the slower machines downstream.",
+    "options": [
+      "make-only-what-is-pulled",
+      "align-incentives",
+      "make-it-the-default",
+      "build-from-what-is-on-hand"
+    ],
+    "answer": "make-only-what-is-pulled",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0201",
+    "pattern_id": "remove-the-step",
+    "situation": "Online shoppers abandon purchases at checkout, where they re-enter address and card details every time.",
+    "options": [
+      "waste-becomes-input",
+      "make-it-the-default",
+      "remove-the-step",
+      "borrow-outside-capacity"
+    ],
+    "answer": "remove-the-step",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/1-Click"
+  },
+  {
+    "id": "d-0202",
+    "pattern_id": "remove-the-step",
+    "situation": "Grocery shoppers hand their list to a clerk and wait while the clerk fetches each item.",
+    "options": [
+      "test-small-first",
+      "remove-the-step",
+      "decide-in-advance",
+      "make-it-the-default"
+    ],
+    "answer": "remove-the-step",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Piggly_Wiggly"
+  },
+  {
+    "id": "d-0203",
+    "pattern_id": "remove-the-step",
+    "situation": "A furniture seller's costs are dominated by assembling, storing and shipping bulky finished furniture.",
+    "options": [
+      "remove-the-step",
+      "build-from-what-is-on-hand",
+      "ship-then-iterate",
+      "change-the-shape"
+    ],
+    "answer": "remove-the-step",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/IKEA"
+  },
+  {
+    "id": "d-0204",
+    "pattern_id": "remove-the-step",
+    "situation": "Every expense claim needs a manager's signature, even for $5, and approvals take weeks.",
+    "options": [
+      "probe-before-committing",
+      "remove-the-step",
+      "waste-becomes-input",
+      "change-the-shape"
+    ],
+    "answer": "remove-the-step",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0205",
+    "pattern_id": "remove-the-step",
+    "situation": "Hotel guests queue at the front desk to check in after a long journey.",
+    "options": [
+      "remove-the-step",
+      "test-small-first",
+      "change-the-shape",
+      "small-controlled-dose"
+    ],
+    "answer": "remove-the-step",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0206",
+    "pattern_id": "remove-the-step",
+    "situation": "A government form asks for information the office already holds.",
+    "options": [
+      "buy-time",
+      "remove-the-step",
+      "give-away-the-core",
+      "make-it-the-default"
+    ],
+    "answer": "remove-the-step",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0207",
+    "pattern_id": "remove-the-step",
+    "situation": "Patients fill out the same medical-history form at every visit.",
+    "options": [
+      "decide-in-advance",
+      "make-it-the-default",
+      "probe-before-committing",
+      "remove-the-step"
+    ],
+    "answer": "remove-the-step",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0208",
+    "pattern_id": "remove-the-step",
+    "situation": "A weekly status meeting exists only to read out updates already in the tracker.",
+    "options": [
+      "remove-the-step",
+      "make-it-the-default",
+      "align-incentives",
+      "buy-time"
+    ],
+    "answer": "remove-the-step",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0209",
+    "pattern_id": "remove-the-step",
+    "situation": "A website makes customers create an account before they can buy anything.",
+    "options": [
+      "remove-the-step",
+      "give-away-the-core",
+      "align-incentives",
+      "make-the-mistake-impossible"
+    ],
+    "answer": "remove-the-step",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0210",
+    "pattern_id": "remove-the-step",
+    "situation": "Packages wait a day for a manual inspection that hasn't caught a problem in two years.",
+    "options": [
+      "waste-becomes-input",
+      "buy-time",
+      "remove-the-step",
+      "change-the-shape"
+    ],
+    "answer": "remove-the-step",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0211",
+    "pattern_id": "make-the-mistake-impossible",
+    "situation": "Hospital staff occasionally connect the wrong gas cylinder to an anaesthesia machine, with deadly results.",
+    "options": [
+      "make-it-the-default",
+      "make-the-mistake-impossible",
+      "remeasure-the-given",
+      "small-controlled-dose"
+    ],
+    "answer": "make-the-mistake-impossible",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Pin_Index_Safety_System"
+  },
+  {
+    "id": "d-0212",
+    "pattern_id": "make-the-mistake-impossible",
+    "situation": "People keep forcing a cable into a socket upside down and bending its pins.",
+    "options": [
+      "make-the-mistake-impossible",
+      "remove-the-step",
+      "align-incentives",
+      "map-the-effects"
+    ],
+    "answer": "make-the-mistake-impossible",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Poka-yoke"
+  },
+  {
+    "id": "d-0213",
+    "pattern_id": "make-the-mistake-impossible",
+    "situation": "Nurses occasionally give a drug meant for an IV line through a feeding tube.",
+    "options": [
+      "make-the-mistake-impossible",
+      "go-direct",
+      "probe-before-committing",
+      "map-the-effects"
+    ],
+    "answer": "make-the-mistake-impossible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0214",
+    "pattern_id": "make-the-mistake-impossible",
+    "situation": "Customers keep leaving their card in the cash machine after taking their money.",
+    "options": [
+      "probe-before-committing",
+      "align-incentives",
+      "make-it-the-default",
+      "make-the-mistake-impossible"
+    ],
+    "answer": "make-the-mistake-impossible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0215",
+    "pattern_id": "make-the-mistake-impossible",
+    "situation": "Drivers occasionally put diesel into petrol cars.",
+    "options": [
+      "sell-the-limitation",
+      "buy-time",
+      "remove-the-step",
+      "make-the-mistake-impossible"
+    ],
+    "answer": "make-the-mistake-impossible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0216",
+    "pattern_id": "make-the-mistake-impossible",
+    "situation": "Workers on a metal press sometimes have a hand inside it when it fires.",
+    "options": [
+      "small-controlled-dose",
+      "change-the-shape",
+      "build-from-what-is-on-hand",
+      "make-the-mistake-impossible"
+    ],
+    "answer": "make-the-mistake-impossible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0217",
+    "pattern_id": "make-the-mistake-impossible",
+    "situation": "A bakery sometimes ships an order with one item missing.",
+    "options": [
+      "build-from-what-is-on-hand",
+      "stop-to-go-faster",
+      "make-it-the-default",
+      "make-the-mistake-impossible"
+    ],
+    "answer": "make-the-mistake-impossible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0218",
+    "pattern_id": "make-the-mistake-impossible",
+    "situation": "Appliances get plugged into sockets of the wrong voltage and burn out.",
+    "options": [
+      "remove-the-step",
+      "send-a-costly-signal",
+      "make-the-mistake-impossible",
+      "align-incentives"
+    ],
+    "answer": "make-the-mistake-impossible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0219",
+    "pattern_id": "make-the-mistake-impossible",
+    "situation": "Drivers keep locking their keys inside their cars.",
+    "options": [
+      "borrow-outside-capacity",
+      "build-from-what-is-on-hand",
+      "make-the-mistake-impossible",
+      "make-only-what-is-pulled"
+    ],
+    "answer": "make-the-mistake-impossible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0220",
+    "pattern_id": "make-the-mistake-impossible",
+    "situation": "Users sometimes erase the wrong disk, including the one the computer is running from.",
+    "options": [
+      "remove-the-step",
+      "small-controlled-dose",
+      "make-the-mistake-impossible",
+      "stop-to-go-faster"
+    ],
+    "answer": "make-the-mistake-impossible",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0221",
+    "pattern_id": "change-the-shape",
+    "situation": "A wheat breeder feeds his crop much more fertilizer, and the heavier grain heads make the tall stalks collapse before harvest.",
+    "options": [
+      "remove-the-step",
+      "waste-becomes-input",
+      "change-the-shape",
+      "test-small-first"
+    ],
+    "answer": "change-the-shape",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Norman_Borlaug"
+  },
+  {
+    "id": "d-0222",
+    "pattern_id": "change-the-shape",
+    "situation": "A thin metal sheet is far too floppy for a roof unless it's made much thicker, which makes it heavy and expensive.",
+    "options": [
+      "go-direct",
+      "test-small-first",
+      "change-the-shape",
+      "borrow-outside-capacity"
+    ],
+    "answer": "change-the-shape",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Corrugated_galvanised_iron"
+  },
+  {
+    "id": "d-0223",
+    "pattern_id": "change-the-shape",
+    "situation": "A big ship's hull pushes up a large bow wave that wastes fuel, and a bigger engine would burn even more.",
+    "options": [
+      "change-the-shape",
+      "scarcity-forces-focus",
+      "make-the-mistake-impossible",
+      "sell-the-limitation"
+    ],
+    "answer": "change-the-shape",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Bulbous_bow"
+  },
+  {
+    "id": "d-0224",
+    "pattern_id": "change-the-shape",
+    "situation": "A paper bridge in a school contest collapses, and you're allowed only one more sheet.",
+    "options": [
+      "small-controlled-dose",
+      "align-incentives",
+      "change-the-shape",
+      "make-it-the-default"
+    ],
+    "answer": "change-the-shape",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0225",
+    "pattern_id": "change-the-shape",
+    "situation": "A long shelf sags under books, and thicker boards won't fit the brackets.",
+    "options": [
+      "change-the-shape",
+      "decide-in-advance",
+      "waste-becomes-input",
+      "remove-the-step"
+    ],
+    "answer": "change-the-shape",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0226",
+    "pattern_id": "change-the-shape",
+    "situation": "Snow piles up on a flat roof and threatens to collapse it.",
+    "options": [
+      "change-the-shape",
+      "borrow-outside-capacity",
+      "go-direct",
+      "align-incentives"
+    ],
+    "answer": "change-the-shape",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0227",
+    "pattern_id": "change-the-shape",
+    "situation": "A water pipe keeps bursting at one sharp bend.",
+    "options": [
+      "scarcity-forces-focus",
+      "make-only-what-is-pulled",
+      "buy-time",
+      "change-the-shape"
+    ],
+    "answer": "change-the-shape",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0228",
+    "pattern_id": "change-the-shape",
+    "situation": "A plastic bottle is too flimsy, and adding plastic costs too much.",
+    "options": [
+      "decide-in-advance",
+      "align-incentives",
+      "change-the-shape",
+      "make-only-what-is-pulled"
+    ],
+    "answer": "change-the-shape",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0229",
+    "pattern_id": "change-the-shape",
+    "situation": "A tent keeps blowing over in strong winds.",
+    "options": [
+      "make-only-what-is-pulled",
+      "recruit-the-resisters",
+      "buy-time",
+      "change-the-shape"
+    ],
+    "answer": "change-the-shape",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0230",
+    "pattern_id": "change-the-shape",
+    "situation": "A dam wall would have to be enormously thick to hold back the river.",
+    "options": [
+      "borrow-outside-capacity",
+      "change-the-shape",
+      "make-the-mistake-impossible",
+      "remeasure-the-given"
+    ],
+    "answer": "change-the-shape",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0231",
+    "pattern_id": "make-it-the-default",
+    "situation": "A company's retirement plan has generous matching, yet many new employees never get round to signing up.",
+    "options": [
+      "mechanize-the-bottleneck",
+      "give-away-the-core",
+      "go-direct",
+      "make-it-the-default"
+    ],
+    "answer": "make-it-the-default",
+    "origin": "adapted",
+    "source": "https://www.nber.org/papers/w7682"
+  },
+  {
+    "id": "d-0232",
+    "pattern_id": "make-it-the-default",
+    "situation": "A country's organ-donor register has few sign-ups, though most people say they support donation.",
+    "options": [
+      "buy-time",
+      "standardize-for-throughput",
+      "make-only-what-is-pulled",
+      "make-it-the-default"
+    ],
+    "answer": "make-it-the-default",
+    "origin": "adapted",
+    "source": "https://doi.org/10.1126/science.1091721"
+  },
+  {
+    "id": "d-0233",
+    "pattern_id": "make-it-the-default",
+    "situation": "An office wants to cut paper use, and almost every print job is single-sided.",
+    "options": [
+      "make-it-the-default",
+      "borrow-outside-capacity",
+      "recruit-the-resisters",
+      "change-the-shape"
+    ],
+    "answer": "make-it-the-default",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0234",
+    "pattern_id": "make-it-the-default",
+    "situation": "An energy company wants more customers on its renewable tariff.",
+    "options": [
+      "make-it-the-default",
+      "waste-becomes-input",
+      "substitute-the-abundant",
+      "make-only-what-is-pulled"
+    ],
+    "answer": "make-it-the-default",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0235",
+    "pattern_id": "make-it-the-default",
+    "situation": "Few parents ever open a savings account for their newborn.",
+    "options": [
+      "send-a-costly-signal",
+      "make-it-the-default",
+      "go-direct",
+      "standardize-for-throughput"
+    ],
+    "answer": "make-it-the-default",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0236",
+    "pattern_id": "make-it-the-default",
+    "situation": "A company wants staff to take their holiday, and most never book it.",
+    "options": [
+      "make-only-what-is-pulled",
+      "substitute-the-abundant",
+      "make-it-the-default",
+      "mechanize-the-bottleneck"
+    ],
+    "answer": "make-it-the-default",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0237",
+    "pattern_id": "make-it-the-default",
+    "situation": "A clinic wants more patients to get their annual flu jab.",
+    "options": [
+      "sell-the-limitation",
+      "change-the-shape",
+      "decide-in-advance",
+      "make-it-the-default"
+    ],
+    "answer": "make-it-the-default",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0238",
+    "pattern_id": "make-it-the-default",
+    "situation": "An app wants users to keep strong privacy settings.",
+    "options": [
+      "standardize-for-throughput",
+      "map-the-effects",
+      "make-only-what-is-pulled",
+      "make-it-the-default"
+    ],
+    "answer": "make-it-the-default",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0239",
+    "pattern_id": "make-it-the-default",
+    "situation": "A canteen wants people to choose the vegetable side more often.",
+    "options": [
+      "probe-before-committing",
+      "remove-the-step",
+      "send-a-costly-signal",
+      "make-it-the-default"
+    ],
+    "answer": "make-it-the-default",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0240",
+    "pattern_id": "make-it-the-default",
+    "situation": "A library wants more members to return books on time.",
+    "options": [
+      "standardize-for-throughput",
+      "go-direct",
+      "make-it-the-default",
+      "small-controlled-dose"
+    ],
+    "answer": "make-it-the-default",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0241",
+    "pattern_id": "sell-the-limitation",
+    "situation": "A carmaker sells a small, odd-looking car in a country where big cars signal success.",
+    "options": [
+      "decide-in-advance",
+      "small-controlled-dose",
+      "waste-becomes-input",
+      "sell-the-limitation"
+    ],
+    "answer": "sell-the-limitation",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Think_Small"
+  },
+  {
+    "id": "d-0242",
+    "pattern_id": "sell-the-limitation",
+    "situation": "A lab invents an adhesive so weak it peels off easily, useless as the super-strong glue it was meant to be.",
+    "options": [
+      "ship-then-iterate",
+      "sell-the-limitation",
+      "borrow-outside-capacity",
+      "recruit-the-resisters"
+    ],
+    "answer": "sell-the-limitation",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Post-it_note"
+  },
+  {
+    "id": "d-0243",
+    "pattern_id": "sell-the-limitation",
+    "situation": "A beer takes much longer to pour properly than other beers, and drinkers get impatient at the bar.",
+    "options": [
+      "ship-then-iterate",
+      "give-away-the-core",
+      "buy-time",
+      "sell-the-limitation"
+    ],
+    "answer": "sell-the-limitation",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Guinness"
+  },
+  {
+    "id": "d-0244",
+    "pattern_id": "sell-the-limitation",
+    "situation": "A tiny hotel has only six rooms and can't compete with big hotels on facilities.",
+    "options": [
+      "sell-the-limitation",
+      "give-away-the-core",
+      "standardize-for-throughput",
+      "map-the-effects"
+    ],
+    "answer": "sell-the-limitation",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0245",
+    "pattern_id": "sell-the-limitation",
+    "situation": "A handmade-soap maker can produce only 100 bars a month.",
+    "options": [
+      "sell-the-limitation",
+      "stop-to-go-faster",
+      "build-from-what-is-on-hand",
+      "mechanize-the-bottleneck"
+    ],
+    "answer": "sell-the-limitation",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0246",
+    "pattern_id": "sell-the-limitation",
+    "situation": "A small restaurant's kitchen is so tiny it can offer only four dishes.",
+    "options": [
+      "make-the-mistake-impossible",
+      "sell-the-limitation",
+      "recruit-the-resisters",
+      "build-from-what-is-on-hand"
+    ],
+    "answer": "sell-the-limitation",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0247",
+    "pattern_id": "sell-the-limitation",
+    "situation": "A phone maker's basic phone has no apps and no internet.",
+    "options": [
+      "make-the-mistake-impossible",
+      "sell-the-limitation",
+      "small-controlled-dose",
+      "go-direct"
+    ],
+    "answer": "sell-the-limitation",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0248",
+    "pattern_id": "sell-the-limitation",
+    "situation": "A mountain cabin has no Wi-Fi and no phone signal.",
+    "options": [
+      "give-away-the-core",
+      "align-incentives",
+      "probe-before-committing",
+      "sell-the-limitation"
+    ],
+    "answer": "sell-the-limitation",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0249",
+    "pattern_id": "sell-the-limitation",
+    "situation": "An indie video game looks primitive because the developer can't afford artists.",
+    "options": [
+      "waste-becomes-input",
+      "sell-the-limitation",
+      "recruit-the-resisters",
+      "change-the-shape"
+    ],
+    "answer": "sell-the-limitation",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0250",
+    "pattern_id": "sell-the-limitation",
+    "situation": "A farm's vegetables look misshapen and blemished next to supermarket produce.",
+    "options": [
+      "test-small-first",
+      "small-controlled-dose",
+      "standardize-for-throughput",
+      "sell-the-limitation"
+    ],
+    "answer": "sell-the-limitation",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0251",
+    "pattern_id": "give-away-the-core",
+    "situation": "A music startup can't beat free piracy by charging for every song.",
+    "options": [
+      "run-paths-in-parallel",
+      "stop-to-go-faster",
+      "give-away-the-core",
+      "make-the-mistake-impossible"
+    ],
+    "answer": "give-away-the-core",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Spotify"
+  },
+  {
+    "id": "d-0252",
+    "pattern_id": "give-away-the-core",
+    "situation": "A company's main product is a free, open-source operating system that anyone can download.",
+    "options": [
+      "waste-becomes-input",
+      "give-away-the-core",
+      "sell-the-limitation",
+      "build-from-what-is-on-hand"
+    ],
+    "answer": "give-away-the-core",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Red_Hat"
+  },
+  {
+    "id": "d-0253",
+    "pattern_id": "give-away-the-core",
+    "situation": "A new recipe blogger has no audience and competes with countless free recipe sites.",
+    "options": [
+      "give-away-the-core",
+      "substitute-the-abundant",
+      "make-the-mistake-impossible",
+      "small-controlled-dose"
+    ],
+    "answer": "give-away-the-core",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0254",
+    "pattern_id": "give-away-the-core",
+    "situation": "A consultant can't get clients to pay for an initial assessment.",
+    "options": [
+      "give-away-the-core",
+      "probe-before-committing",
+      "stop-to-go-faster",
+      "buy-time"
+    ],
+    "answer": "give-away-the-core",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0255",
+    "pattern_id": "give-away-the-core",
+    "situation": "A board-game designer's game isn't selling in shops.",
+    "options": [
+      "give-away-the-core",
+      "run-paths-in-parallel",
+      "small-controlled-dose",
+      "test-small-first"
+    ],
+    "answer": "give-away-the-core",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0256",
+    "pattern_id": "give-away-the-core",
+    "situation": "A small team's software library competes with a big company's paid product.",
+    "options": [
+      "give-away-the-core",
+      "remove-the-step",
+      "stop-to-go-faster",
+      "go-direct"
+    ],
+    "answer": "give-away-the-core",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0257",
+    "pattern_id": "give-away-the-core",
+    "situation": "A musician's album sales are tiny.",
+    "options": [
+      "mechanize-the-bottleneck",
+      "stop-to-go-faster",
+      "go-direct",
+      "give-away-the-core"
+    ],
+    "answer": "give-away-the-core",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0258",
+    "pattern_id": "give-away-the-core",
+    "situation": "A printer maker's printers are too expensive for most households.",
+    "options": [
+      "align-incentives",
+      "test-small-first",
+      "give-away-the-core",
+      "stop-to-go-faster"
+    ],
+    "answer": "give-away-the-core",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0259",
+    "pattern_id": "give-away-the-core",
+    "situation": "An online course creator struggles to sell a $300 course.",
+    "options": [
+      "remove-the-step",
+      "give-away-the-core",
+      "admit-the-weakness",
+      "probe-before-committing"
+    ],
+    "answer": "give-away-the-core",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0260",
+    "pattern_id": "give-away-the-core",
+    "situation": "A new mapping app competes with established paid navigation devices.",
+    "options": [
+      "admit-the-weakness",
+      "make-it-the-default",
+      "buy-time",
+      "give-away-the-core"
+    ],
+    "answer": "give-away-the-core",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0261",
+    "pattern_id": "stop-to-go-faster",
+    "situation": "On a car assembly line, workers who spot a defect let the car pass to keep the line moving, and defects pile up for expensive rework at the end.",
+    "options": [
+      "buy-time",
+      "probe-before-committing",
+      "admit-the-weakness",
+      "stop-to-go-faster"
+    ],
+    "answer": "stop-to-go-faster",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Andon_(manufacturing)"
+  },
+  {
+    "id": "d-0262",
+    "pattern_id": "stop-to-go-faster",
+    "situation": "A writer races through drafts and then spends weeks fixing the same structural problems.",
+    "options": [
+      "borrow-outside-capacity",
+      "admit-the-weakness",
+      "remeasure-the-given",
+      "stop-to-go-faster"
+    ],
+    "answer": "stop-to-go-faster",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0263",
+    "pattern_id": "stop-to-go-faster",
+    "situation": "A software team ships fast but spends half of every week fixing bugs from the last release.",
+    "options": [
+      "build-from-what-is-on-hand",
+      "map-the-effects",
+      "stop-to-go-faster",
+      "sell-the-limitation"
+    ],
+    "answer": "stop-to-go-faster",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0264",
+    "pattern_id": "stop-to-go-faster",
+    "situation": "A runner trains hard every day without rest and keeps getting injured.",
+    "options": [
+      "stop-to-go-faster",
+      "recruit-the-resisters",
+      "run-paths-in-parallel",
+      "buy-time"
+    ],
+    "answer": "stop-to-go-faster",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0265",
+    "pattern_id": "stop-to-go-faster",
+    "situation": "In the dinner rush, a kitchen keeps sending out wrong orders that come back to be redone.",
+    "options": [
+      "stop-to-go-faster",
+      "decide-in-advance",
+      "make-it-the-default",
+      "sell-the-limitation"
+    ],
+    "answer": "stop-to-go-faster",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0266",
+    "pattern_id": "stop-to-go-faster",
+    "situation": "A student rushes through homework and then has to redo it after it's marked.",
+    "options": [
+      "small-controlled-dose",
+      "probe-before-committing",
+      "standardize-for-throughput",
+      "stop-to-go-faster"
+    ],
+    "answer": "stop-to-go-faster",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0267",
+    "pattern_id": "stop-to-go-faster",
+    "situation": "A team skips planning to 'save time' and keeps building the wrong thing.",
+    "options": [
+      "standardize-for-throughput",
+      "admit-the-weakness",
+      "send-a-costly-signal",
+      "stop-to-go-faster"
+    ],
+    "answer": "stop-to-go-faster",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0268",
+    "pattern_id": "stop-to-go-faster",
+    "situation": "A decorator skips sanding and priming to finish sooner, and the paint peels within a month.",
+    "options": [
+      "sell-the-limitation",
+      "stop-to-go-faster",
+      "make-the-mistake-impossible",
+      "mechanize-the-bottleneck"
+    ],
+    "answer": "stop-to-go-faster",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0269",
+    "pattern_id": "stop-to-go-faster",
+    "situation": "A call centre pushes agents to end calls fast, and customers keep calling back with the same problem.",
+    "options": [
+      "recruit-the-resisters",
+      "scarcity-forces-focus",
+      "borrow-outside-capacity",
+      "stop-to-go-faster"
+    ],
+    "answer": "stop-to-go-faster",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0270",
+    "pattern_id": "stop-to-go-faster",
+    "situation": "A delivery driver skips loading the van in route order to leave sooner, then spends the day doubling back.",
+    "options": [
+      "change-the-shape",
+      "admit-the-weakness",
+      "waste-becomes-input",
+      "stop-to-go-faster"
+    ],
+    "answer": "stop-to-go-faster",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0271",
+    "pattern_id": "admit-the-weakness",
+    "situation": "A car-rental company is only the second-largest in the market and keeps losing customers to the leader's bigger network.",
+    "options": [
+      "scarcity-forces-focus",
+      "make-only-what-is-pulled",
+      "give-away-the-core",
+      "admit-the-weakness"
+    ],
+    "answer": "admit-the-weakness",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Avis_Car_Rental"
+  },
+  {
+    "id": "d-0272",
+    "pattern_id": "admit-the-weakness",
+    "situation": "A pizza chain's customers say the pizza tastes bad, and ads claiming it's delicious aren't believed.",
+    "options": [
+      "stop-to-go-faster",
+      "remove-the-step",
+      "admit-the-weakness",
+      "waste-becomes-input"
+    ],
+    "answer": "admit-the-weakness",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Domino%27s"
+  },
+  {
+    "id": "d-0273",
+    "pattern_id": "admit-the-weakness",
+    "situation": "A structural engineer discovers his own landmark skyscraper could topple in a severe storm because of a design change he never knew about.",
+    "options": [
+      "give-away-the-core",
+      "mechanize-the-bottleneck",
+      "align-incentives",
+      "admit-the-weakness"
+    ],
+    "answer": "admit-the-weakness",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Citigroup_Center"
+  },
+  {
+    "id": "d-0274",
+    "pattern_id": "admit-the-weakness",
+    "situation": "A small airline has a reputation for delays.",
+    "options": [
+      "small-controlled-dose",
+      "admit-the-weakness",
+      "keep-it-reversible",
+      "map-the-effects"
+    ],
+    "answer": "admit-the-weakness",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0275",
+    "pattern_id": "admit-the-weakness",
+    "situation": "A job candidate has a two-year gap in their CV.",
+    "options": [
+      "make-it-the-default",
+      "recruit-the-resisters",
+      "remeasure-the-given",
+      "admit-the-weakness"
+    ],
+    "answer": "admit-the-weakness",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0276",
+    "pattern_id": "admit-the-weakness",
+    "situation": "A new product shipped with a serious bug that many users have noticed.",
+    "options": [
+      "recruit-the-resisters",
+      "run-paths-in-parallel",
+      "mechanize-the-bottleneck",
+      "admit-the-weakness"
+    ],
+    "answer": "admit-the-weakness",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0277",
+    "pattern_id": "admit-the-weakness",
+    "situation": "A politician is known to have changed position on a big issue.",
+    "options": [
+      "run-paths-in-parallel",
+      "scarcity-forces-focus",
+      "admit-the-weakness",
+      "stop-to-go-faster"
+    ],
+    "answer": "admit-the-weakness",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0278",
+    "pattern_id": "admit-the-weakness",
+    "situation": "A used-car dealer's cars all have small cosmetic flaws that buyers spot anyway.",
+    "options": [
+      "make-the-mistake-impossible",
+      "scarcity-forces-focus",
+      "admit-the-weakness",
+      "small-controlled-dose"
+    ],
+    "answer": "admit-the-weakness",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0279",
+    "pattern_id": "admit-the-weakness",
+    "situation": "A company has just found a data leak internally, and customers don't know yet.",
+    "options": [
+      "substitute-the-abundant",
+      "admit-the-weakness",
+      "remeasure-the-given",
+      "small-controlled-dose"
+    ],
+    "answer": "admit-the-weakness",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0280",
+    "pattern_id": "admit-the-weakness",
+    "situation": "A team leader made a decision that clearly failed, and the whole team knows it.",
+    "options": [
+      "test-small-first",
+      "admit-the-weakness",
+      "recruit-the-resisters",
+      "map-the-effects"
+    ],
+    "answer": "admit-the-weakness",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0281",
+    "pattern_id": "small-controlled-dose",
+    "situation": "A forest floor has built up decades of dry brush because every small fire was put out at once.",
+    "options": [
+      "decide-in-advance",
+      "recruit-the-resisters",
+      "build-from-what-is-on-hand",
+      "small-controlled-dose"
+    ],
+    "answer": "small-controlled-dose",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Controlled_burn"
+  },
+  {
+    "id": "d-0282",
+    "pattern_id": "small-controlled-dose",
+    "situation": "A streaming company moving to the cloud worries that servers will fail at random during peak hours.",
+    "options": [
+      "build-from-what-is-on-hand",
+      "admit-the-weakness",
+      "remove-the-step",
+      "small-controlled-dose"
+    ],
+    "answer": "small-controlled-dose",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Chaos_engineering"
+  },
+  {
+    "id": "d-0283",
+    "pattern_id": "small-controlled-dose",
+    "situation": "A disease kills a large share of those it infects, and survivors never catch it again.",
+    "options": [
+      "admit-the-weakness",
+      "small-controlled-dose",
+      "scarcity-forces-focus",
+      "send-a-costly-signal"
+    ],
+    "answer": "small-controlled-dose",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Variolation"
+  },
+  {
+    "id": "d-0284",
+    "pattern_id": "small-controlled-dose",
+    "situation": "A city's emergency services have never handled a major disaster.",
+    "options": [
+      "run-paths-in-parallel",
+      "small-controlled-dose",
+      "make-it-the-default",
+      "recruit-the-resisters"
+    ],
+    "answer": "small-controlled-dose",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0285",
+    "pattern_id": "small-controlled-dose",
+    "situation": "A company fears a phishing email will fool its staff.",
+    "options": [
+      "standardize-for-throughput",
+      "give-away-the-core",
+      "make-only-what-is-pulled",
+      "small-controlled-dose"
+    ],
+    "answer": "small-controlled-dose",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0286",
+    "pattern_id": "small-controlled-dose",
+    "situation": "River levees keep the floodplain dry until a huge flood breaks through.",
+    "options": [
+      "remove-the-step",
+      "map-the-effects",
+      "sell-the-limitation",
+      "small-controlled-dose"
+    ],
+    "answer": "small-controlled-dose",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0287",
+    "pattern_id": "small-controlled-dose",
+    "situation": "A new manager dreads giving criticism and lets problems pile up until there's a blow-up.",
+    "options": [
+      "waste-becomes-input",
+      "small-controlled-dose",
+      "give-away-the-core",
+      "change-the-shape"
+    ],
+    "answer": "small-controlled-dose",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0288",
+    "pattern_id": "small-controlled-dose",
+    "situation": "A company's backups have never actually been restored.",
+    "options": [
+      "small-controlled-dose",
+      "send-a-costly-signal",
+      "admit-the-weakness",
+      "make-only-what-is-pulled"
+    ],
+    "answer": "small-controlled-dose",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0289",
+    "pattern_id": "small-controlled-dose",
+    "situation": "Every software release breaks something when it goes out to all users at once.",
+    "options": [
+      "map-the-effects",
+      "small-controlled-dose",
+      "align-incentives",
+      "sell-the-limitation"
+    ],
+    "answer": "small-controlled-dose",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0290",
+    "pattern_id": "small-controlled-dose",
+    "situation": "A theatre troupe freezes in front of big opening-night audiences.",
+    "options": [
+      "small-controlled-dose",
+      "make-only-what-is-pulled",
+      "map-the-effects",
+      "admit-the-weakness"
+    ],
+    "answer": "small-controlled-dose",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0291",
+    "pattern_id": "recruit-the-resisters",
+    "situation": "A huge vaccine trial needs about a million children, and many parents are frightened of an untested vaccine.",
+    "options": [
+      "decide-in-advance",
+      "stop-to-go-faster",
+      "go-direct",
+      "recruit-the-resisters"
+    ],
+    "answer": "recruit-the-resisters",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Jonas_Salk"
+  },
+  {
+    "id": "d-0292",
+    "pattern_id": "recruit-the-resisters",
+    "situation": "Outside hackers keep finding holes in a browser company's software.",
+    "options": [
+      "recruit-the-resisters",
+      "align-incentives",
+      "change-the-shape",
+      "sell-the-limitation"
+    ],
+    "answer": "recruit-the-resisters",
+    "origin": "adapted",
+    "source": "https://en.wikipedia.org/wiki/Bug_bounty_program"
+  },
+  {
+    "id": "d-0293",
+    "pattern_id": "recruit-the-resisters",
+    "situation": "Residents fiercely oppose a park redesign the city drew up without them.",
+    "options": [
+      "remeasure-the-given",
+      "recruit-the-resisters",
+      "probe-before-committing",
+      "stop-to-go-faster"
+    ],
+    "answer": "recruit-the-resisters",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0294",
+    "pattern_id": "recruit-the-resisters",
+    "situation": "Teenagers keep spray-painting the town's walls.",
+    "options": [
+      "remove-the-step",
+      "change-the-shape",
+      "recruit-the-resisters",
+      "sell-the-limitation"
+    ],
+    "answer": "recruit-the-resisters",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0295",
+    "pattern_id": "recruit-the-resisters",
+    "situation": "Nurses resist a new hospital computer system that management imposed.",
+    "options": [
+      "substitute-the-abundant",
+      "make-the-mistake-impossible",
+      "recruit-the-resisters",
+      "admit-the-weakness"
+    ],
+    "answer": "recruit-the-resisters",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0296",
+    "pattern_id": "recruit-the-resisters",
+    "situation": "Your project's loudest critic in the company keeps blocking it.",
+    "options": [
+      "remeasure-the-given",
+      "recruit-the-resisters",
+      "ship-then-iterate",
+      "stop-to-go-faster"
+    ],
+    "answer": "recruit-the-resisters",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0297",
+    "pattern_id": "recruit-the-resisters",
+    "situation": "Fishermen ignore conservation rules written by distant officials.",
+    "options": [
+      "admit-the-weakness",
+      "remeasure-the-given",
+      "build-from-what-is-on-hand",
+      "recruit-the-resisters"
+    ],
+    "answer": "recruit-the-resisters",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0298",
+    "pattern_id": "recruit-the-resisters",
+    "situation": "Students hate the school's new phone policy and keep breaking it.",
+    "options": [
+      "scarcity-forces-focus",
+      "buy-time",
+      "small-controlled-dose",
+      "recruit-the-resisters"
+    ],
+    "answer": "recruit-the-resisters",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0299",
+    "pattern_id": "recruit-the-resisters",
+    "situation": "Neighbours keep complaining about noise from a new bar.",
+    "options": [
+      "small-controlled-dose",
+      "go-direct",
+      "build-from-what-is-on-hand",
+      "recruit-the-resisters"
+    ],
+    "answer": "recruit-the-resisters",
+    "origin": "synthetic",
+    "source": null
+  },
+  {
+    "id": "d-0300",
+    "pattern_id": "recruit-the-resisters",
+    "situation": "The customers who complain loudest online keep scaring off new buyers.",
+    "options": [
+      "recruit-the-resisters",
+      "stop-to-go-faster",
+      "mechanize-the-bottleneck",
+      "ship-then-iterate"
+    ],
+    "answer": "recruit-the-resisters",
+    "origin": "synthetic",
+    "source": null
+  }
+]

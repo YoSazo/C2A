@@ -1,0 +1,360 @@
+[
+  {
+    "id": "c-0001",
+    "origin": "real",
+    "title": "Apollo 13: the CO2 crisis",
+    "year": 1970,
+    "domain": "Spaceflight",
+    "obscurity": "low",
+    "pattern_ids": [
+      "build-from-what-is-on-hand"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Apollo_13",
+    "situation": "April 1970. An oxygen tank explodes on a spacecraft heading for the Moon. The three astronauts move into the lunar landing craft, built to support two people for about two days. Carbon dioxide is building up: the landing craft's filters are saturating, and the spare filter canisters from the main ship are a different shape from the landing craft's system. Mission Control can only talk to them by radio.",
+    "outcome": "Engineers on the ground devised an adapter from plastic covers torn off procedure manuals, duct tape and other items on board, and talked the crew through building it. The crew returned safely on April 17."
+  },
+  {
+    "id": "c-0002",
+    "origin": "real",
+    "title": "The Berlin Airlift",
+    "year": 1948,
+    "domain": "Logistics",
+    "obscurity": "low",
+    "pattern_ids": [
+      "go-direct",
+      "standardize-for-throughput"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Berlin_Blockade",
+    "situation": "June 1948. The Soviet Union cuts all road, rail and canal access to West Berlin, a city of about two million people inside the Soviet zone. The Western Allies don't want to start a war by forcing a convoy through.",
+    "outcome": "The US and Britain supplied the city entirely by air. Under William Tunner the operation was tightly standardized, and at its peak an aircraft reached West Berlin about every thirty seconds. 101 people died in accidents. The blockade was lifted on 12 May 1949."
+  },
+  {
+    "id": "c-0003",
+    "origin": "real",
+    "title": "Singapore's water",
+    "year": 1965,
+    "domain": "Infrastructure",
+    "obscurity": "low",
+    "pattern_ids": [
+      "waste-becomes-input",
+      "substitute-the-abundant"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Water_supply_and_sanitation_in_Singapore",
+    "situation": "1965. Singapore separates from Malaysia and becomes independent. It's a small island with little natural fresh water, and much of its supply comes from Malaysia under long-term agreements.",
+    "outcome": "Singapore built a 'Four National Taps' strategy: local catchment (including urban catchments and estuary reservoirs), imported water, reclaimed wastewater (NEWater) and seawater desalination. Wikipedia's account says it has been self-sufficient in water since the mid-2010s; the Malaysian agreement runs to 2061. (v1 claimed it 'exports water'; that's dropped.)"
+  },
+  {
+    "id": "c-0004",
+    "origin": "real",
+    "title": "Bletchley Park and the Bombe",
+    "year": 1939,
+    "domain": "Intelligence",
+    "obscurity": "low",
+    "pattern_ids": [
+      "mechanize-the-bottleneck"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Bombe",
+    "situation": "1939. British codebreakers can read German Enigma messages once they know that day's machine settings. The settings change daily, the possibilities are enormous, and intelligence is useless if it arrives late.",
+    "outcome": "Alan Turing designed the British Bombe in 1939, developed from the Polish 'bomba', with a key refinement by Gordon Welchman in 1940. The electro-mechanical machines searched for settings far faster than people could. (The popular claim that this shortened the war by two years is an estimate, not an established fact.)"
+  },
+  {
+    "id": "c-0005",
+    "origin": "real",
+    "title": "Edison's filament",
+    "year": 1879,
+    "domain": "Invention",
+    "obscurity": "low",
+    "pattern_ids": [
+      "substitute-the-abundant"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Incandescent_light_bulb",
+    "situation": "1879. An inventor is racing to build an electric lamp cheap enough for homes. The glowing filament keeps burning out, and long-lasting materials are too expensive for a cheap product.",
+    "outcome": "After trying cotton and linen thread, wood splints and coiled papers, Edison's team found that a carbonized Japanese bamboo filament could last more than 1,200 hours."
+  },
+  {
+    "id": "c-0006",
+    "origin": "real",
+    "title": "Manhattan Project: separating uranium",
+    "year": 1942,
+    "domain": "Physics",
+    "obscurity": "low",
+    "pattern_ids": [
+      "run-paths-in-parallel"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Manhattan_Project",
+    "situation": "1942. A wartime project needs a usable quantity of uranium-235, under 1% of natural uranium and chemically identical to the rest. Several physical separation methods have been proposed. None is proven at scale, and there may be no time to try them one after another.",
+    "outcome": "The project pursued electromagnetic separation, gaseous diffusion and thermal diffusion in parallel, at enormous cost, rather than betting on one method."
+  },
+  {
+    "id": "c-0007",
+    "origin": "real",
+    "title": "The 1954 polio vaccine trial",
+    "year": 1954,
+    "domain": "Medicine",
+    "obscurity": "low",
+    "pattern_ids": [
+      "recruit-the-resisters"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Jonas_Salk",
+    "situation": "1954. A new polio vaccine needs a field trial big enough to show whether it works, which means well over a million children. Parents are terrified of polio and wary of an untested vaccine.",
+    "outcome": "The field trial involved over 1.8 million schoolchildren, 20,000 physicians and public health officers, 64,000 school staff and 220,000 volunteers. The children were known as 'polio pioneers'. The vaccine was announced as safe on April 12, 1955."
+  },
+  {
+    "id": "c-0008",
+    "origin": "real",
+    "title": "Dyson's bagless vacuum",
+    "year": 1983,
+    "domain": "Product",
+    "obscurity": "low",
+    "pattern_ids": [
+      "go-direct"
+    ],
+    "source": "https://en.wikipedia.org/wiki/James_Dyson",
+    "situation": "Early 1980s. An inventor has a bagless vacuum that doesn't lose suction as it fills. Manufacturers and distributors earn a lot from replacement dust bags.",
+    "outcome": "No UK manufacturer or distributor would handle it, because it threatened the market for replacement bags, so Dyson launched it in Japan through catalogue sales."
+  },
+  {
+    "id": "c-0009",
+    "origin": "real",
+    "title": "The Wright brothers",
+    "year": 1900,
+    "domain": "Aviation",
+    "obscurity": "low",
+    "pattern_ids": [
+      "test-small-first"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Wright_brothers",
+    "situation": "1900. Two bicycle makers want to build a powered, controllable flying machine. Rivals are concentrating on more powerful engines. Crashes can kill, and the published data on wing performance is unreliable.",
+    "outcome": "The Wrights concentrated on control. With a small home-built wind tunnel they collected more accurate data than anyone before, which let them design more efficient wings and propellers. They made the first controlled, sustained powered flight on December 17, 1903."
+  },
+  {
+    "id": "c-0010",
+    "origin": "real",
+    "title": "Netflix and late fees",
+    "year": 1999,
+    "domain": "Business",
+    "obscurity": "low",
+    "pattern_ids": [
+      "align-incentives"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Netflix,_Inc.",
+    "situation": "Late 1990s. Rental stores earn a lot from late fees, and customers hate them. A small startup rents DVDs by mail, priced per rental, and needs discs to come back.",
+    "outcome": "Netflix introduced a monthly subscription in September 1999 and dropped per-rental pricing by early 2000: unlimited rentals with no due dates or late fees. Keeping a disc just delayed the next one. (The story that Reed Hastings founded Netflix after a $40 late fee for 'Apollo 13' has since been repudiated.)"
+  },
+  {
+    "id": "c-0011",
+    "origin": "real",
+    "title": "Apple in 1997",
+    "year": 1997,
+    "domain": "Business",
+    "obscurity": "low",
+    "pattern_ids": [
+      "buy-time"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Apple_Inc.",
+    "situation": "1997. A personal-computer maker is losing money and confidence, and its co-founder has just returned as CEO. New products are still a year away. Its biggest rival profits from selling software for its machines.",
+    "outcome": "In August 1997 Jobs secured a $150 million investment from Microsoft and a commitment to keep developing Mac software. Apple later returned to profitability with products starting with the iMac. (v1's '47 product lines cut to 4' detail isn't in this source, so it's left out.)"
+  },
+  {
+    "id": "c-0012",
+    "origin": "real",
+    "title": "Linux",
+    "year": 1991,
+    "domain": "Software",
+    "obscurity": "low",
+    "pattern_ids": [
+      "borrow-outside-capacity",
+      "ship-then-iterate"
+    ],
+    "source": "https://en.wikipedia.org/wiki/History_of_Linux",
+    "situation": "1991. A Finnish student starts writing an operating system kernel for his own PC, as a hobby. He has no money and no team.",
+    "outcome": "Linus Torvalds used the comp.os.minix newsgroup and released Linux 0.01 in 1991, unfinished, and outside programmers joined in. (v1 framed this as a deliberate strategy against Microsoft because there was 'no money for engineers'. It began as a hobby project.)"
+  },
+  {
+    "id": "c-0013",
+    "origin": "real",
+    "title": "Airbnb's cereal",
+    "year": 2008,
+    "domain": "Startup",
+    "obscurity": "low",
+    "pattern_ids": [
+      "buy-time"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Airbnb",
+    "situation": "2008. Two founders who rented air mattresses to conference visitors have a website, mounting debt, and no interested investors. They need money to survive long enough to prove the idea.",
+    "outcome": "They raised $30,000 selling cereal named after the two 2008 presidential candidates, then joined Y Combinator in January 2009, which gave them $20,000 for a 6% stake."
+  },
+  {
+    "id": "c-0014",
+    "origin": "real",
+    "title": "Toyota's production system",
+    "year": 1950,
+    "domain": "Manufacturing",
+    "obscurity": "low",
+    "pattern_ids": [
+      "make-only-what-is-pulled"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Toyota_Production_System",
+    "situation": "Postwar Japan. A small carmaker can't afford the huge stocks of parts and finished cars that the big American mass producers keep.",
+    "outcome": "Toyota developed just-in-time production, inspired by how supermarkets restock shelves rather than by the American car industry. Overproduction and excess inventory are treated as waste to be designed out."
+  },
+  {
+    "id": "c-0015",
+    "origin": "real",
+    "title": "Spotify and piracy",
+    "year": 2006,
+    "domain": "Music",
+    "obscurity": "low",
+    "pattern_ids": [
+      "give-away-the-core"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Spotify",
+    "situation": "2006. Music piracy is everywhere: buying songs costs money, downloading them illegally is free, and record labels' revenue is falling.",
+    "outcome": "Spotify, founded in 2006, offered a free ad-supported tier alongside a paid Premium tier (freemium) and paid rights holders per play. Some musicians praise it as a lawful alternative to piracy; others object to its royalty rates."
+  },
+  {
+    "id": "c-0016",
+    "origin": "real",
+    "title": "Borlaug's wheat",
+    "year": 1953,
+    "domain": "Agriculture",
+    "obscurity": "low",
+    "pattern_ids": [
+      "change-the-shape"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Norman_Borlaug",
+    "situation": "1940s–50s, Mexico. A wheat breeder raises yields with nitrogen fertilizer, but the heavier grain makes the tall, thin stalks collapse before harvest.",
+    "outcome": "Borlaug bred semi-dwarf wheat with shorter, stronger stalks that held the heavier grain. These varieties spread to Mexico, Pakistan and India; Mexico became a net wheat exporter by 1963."
+  },
+  {
+    "id": "c-0017",
+    "origin": "real",
+    "title": "Citicorp Center",
+    "year": 1978,
+    "domain": "Structural engineering",
+    "obscurity": "medium",
+    "pattern_ids": [
+      "admit-the-weakness",
+      "remeasure-the-given"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Citigroup_Center",
+    "situation": "June 1978. A new 59-storey New York tower stands on four huge columns set at the middle of each side, not at the corners. After a question from an engineering student, its structural engineer checks the loads from winds hitting the corners diagonally, which the building code didn't require. He also learns the welded joints in his bracing design were switched to bolted joints during construction to save money.",
+    "outcome": "The building was vulnerable to collapse in high winds. Starting in August 1978, crews welded steel panels over the bolted joints at night; the repairs were finished that October."
+  },
+  {
+    "id": "c-0018",
+    "origin": "real",
+    "title": "Hyatt Regency walkways",
+    "year": 1981,
+    "domain": "Structural engineering",
+    "obscurity": "medium",
+    "pattern_ids": [
+      "remeasure-the-given"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Hyatt_Regency_walkway_collapse",
+    "situation": "A hotel atrium has two walkways, one above the other, hung from the ceiling on steel rods. In the original design both walkways hang from the same long rods. During construction the design is changed: one set of rods holds the upper walkway, and a second set hangs the lower walkway from the upper one. It's easier to build.",
+    "outcome": "The revised design doubled the force on the upper walkway's connection. On July 17, 1981, during a crowded event, the connection failed and the walkways fell: 114 people died and 216 were injured."
+  },
+  {
+    "id": "c-0019",
+    "origin": "real",
+    "title": "Mars Climate Orbiter",
+    "year": 1999,
+    "domain": "Spaceflight",
+    "obscurity": "medium",
+    "pattern_ids": [
+      "make-the-mistake-impossible",
+      "remeasure-the-given"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Mars_Climate_Orbiter",
+    "situation": "1999. A Mars orbiter is approaching orbit insertion. One team's software computes the impulse from each thruster firing; another team's trajectory software uses those numbers to predict the spacecraft's position.",
+    "outcome": "Contact was permanently lost on September 23, 1999, during orbit insertion. One program reported impulse in pound-force seconds; the trajectory software expected newton-seconds, a factor of 4.45, so the spacecraft arrived on the wrong trajectory."
+  },
+  {
+    "id": "c-0020",
+    "origin": "real",
+    "title": "Knight Capital",
+    "year": 2012,
+    "domain": "Finance / software",
+    "obscurity": "medium",
+    "pattern_ids": [
+      "keep-it-reversible",
+      "make-the-mistake-impossible"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Knight_Capital_Group",
+    "situation": "August 2012. A trading firm deploys new order-routing code to its eight servers. The new code reuses a flag that once switched on an old, retired function, and the old code is still present on the servers.",
+    "outcome": "The eighth server didn't get the new code. Orders carrying the reused flag triggered the old 'Power Peg' code there, which produced about 4 million executions in 154 stocks in roughly 45 minutes. Knight took a $440 million pre-tax loss, needed a rescue investment, and merged with Getco in 2013."
+  },
+  {
+    "id": "c-0021",
+    "origin": "real",
+    "title": "The Gimli Glider",
+    "year": 1983,
+    "domain": "Aviation",
+    "obscurity": "medium",
+    "pattern_ids": [
+      "build-from-what-is-on-hand",
+      "make-the-mistake-impossible"
+    ],
+    "source": "https://en.wikipedia.org/wiki/Gimli_Glider",
+    "situation": "July 1983. A new Boeing 767's fuel gauge isn't working, so the fuel load is calculated by hand from a density figure on the refueller's slip. Over Canada, at 41,000 feet, both engines stop.",
+    "outcome": "The density used was in pounds per litre when kilograms per litre was needed, so the plane carried far too little fuel. The crew glided to a former air force base at Gimli, by then a racetrack, and the captain used a forward slip to lose height. All 69 people on board survived; 10 were injured."
+  },
+  {
+    "id": "c-0022",
+    "origin": "real",
+    "title": "United 232",
+    "year": 1989,
+    "domain": "Aviation",
+    "obscurity": "medium",
+    "pattern_ids": [
+      "build-from-what-is-on-hand"
+    ],
+    "source": "https://en.wikipedia.org/wiki/United_Airlines_Flight_232",
+    "situation": "July 1989. A DC-10's tail engine fails explosively and the debris knocks out its hydraulics. The pilots' controls no longer move the control surfaces. The two wing engines still run.",
+    "outcome": "The crew steered by adjusting engine thrust, with a training check pilot who was travelling as a passenger working the throttles, and reached Sioux City, Iowa. Of 296 people on board, 112 died and 184 survived."
+  },
+  {
+    "id": "c-0023",
+    "origin": "real",
+    "title": "GitLab's database outage",
+    "year": 2017,
+    "domain": "Software operations",
+    "obscurity": "high",
+    "pattern_ids": [
+      "small-controlled-dose"
+    ],
+    "source": "https://about.gitlab.com/blog/2017/02/10/postmortem-of-database-outage-of-january-31/",
+    "situation": "January 2017. A code-hosting company's production database is under heavy load, and replication to the secondary has failed. An engineer is rebuilding the secondary, which involves deleting its data directory. The company has several backup procedures on paper.",
+    "outcome": "Data was accidentally removed from the primary database server. Azure disk snapshots weren't enabled and the periodic pg_dump backups weren't working; the most useful copy was a snapshot taken manually about 6 hours earlier, so production data was lost. GitLab published a detailed public postmortem."
+  },
+  {
+    "id": "c-0024",
+    "origin": "real",
+    "title": "Cloudflare's regex outage",
+    "year": 2019,
+    "domain": "Software operations",
+    "obscurity": "high",
+    "pattern_ids": [
+      "keep-it-reversible",
+      "test-small-first"
+    ],
+    "source": "https://blog.cloudflare.com/details-of-the-cloudflare-outage-on-july-2-2019/",
+    "situation": "July 2019. A web-security company can push new firewall rules to its entire global network almost instantly, which matters because attacks spread fast. A routine new rule contains a regular expression.",
+    "outcome": "The regular expression backtracked enormously and exhausted the CPUs serving HTTP/HTTPS traffic worldwide, taking the service down for 27 minutes. The postmortem notes that a non-emergency rule change could go global without a staged rollout, and the rollback took too long."
+  },
+  {
+    "id": "c-0025",
+    "origin": "real",
+    "title": "AWS S3 outage",
+    "year": 2017,
+    "domain": "Cloud operations",
+    "obscurity": "high",
+    "pattern_ids": [
+      "make-the-mistake-impossible"
+    ],
+    "source": "https://aws.amazon.com/message/41926/",
+    "situation": "February 2017. An engineer at a large cloud storage service is debugging a slow billing system and follows an established playbook to take a small number of servers out of service.",
+    "outcome": "One input to the command was entered incorrectly, and a much larger set of servers was removed, including ones supporting two other subsystems; they needed a full restart, during which S3 couldn't serve requests. Amazon changed the tool to remove capacity more slowly and to refuse to take any subsystem below its minimum required capacity."
+  }
+]

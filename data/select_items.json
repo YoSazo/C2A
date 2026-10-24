@@ -1,0 +1,213 @@
+[
+  {
+    "id": "s-0001",
+    "origin": "real",
+    "situation": "A presidential campaign's sign-up page shows one big image or video above a single button. Staff strongly favour an inspiring campaign video. Millions of people will see the page.",
+    "goal": "Get the largest share of visitors to sign up.",
+    "options": [
+      "The campaign video, with a 'Sign Up' button",
+      "A family photo, with a 'Learn More' button",
+      "The campaign video, with a 'Learn More' button"
+    ],
+    "answer_index": 1,
+    "outcome": "In a test of 4 buttons x 6 media, 'Learn More' with the family image won: an 11.6% sign-up rate versus 8.26% for the original, a 40.6% improvement. Every video did worse than every image.",
+    "source": "https://www.optimizely.com/insights/blog/how-obama-raised-60-million-by-running-a-simple-experiment/"
+  },
+  {
+    "id": "s-0002",
+    "origin": "real",
+    "situation": "1747. Twelve sailors on a navy ship have scurvy. You can give each pair of patients one of several proposed remedies for a few days.",
+    "goal": "Find out which remedy actually cures scurvy.",
+    "options": [
+      "Cider",
+      "Elixir of vitriol (dilute sulfuric acid)",
+      "Vinegar",
+      "Seawater",
+      "Two oranges and a lemon",
+      "A spicy paste with barley water"
+    ],
+    "answer_index": 4,
+    "outcome": "James Lind ran this comparison in 1747. The pair given oranges and a lemon recovered; it was an early controlled trial of competing remedies.",
+    "source": "https://en.wikipedia.org/wiki/James_Lind"
+  },
+  {
+    "id": "s-0003",
+    "origin": "real",
+    "situation": "Nigeria, 1966. Smallpox outbreaks are flaring up, and there is far too little vaccine to vaccinate everyone. The standard approach at the time is mass vaccination.",
+    "goal": "Stop the outbreaks with the vaccine available.",
+    "options": [
+      "Vaccinate as many people as possible, wherever teams can reach",
+      "Find cases fast and vaccinate the people exposed to them",
+      "Reserve the vaccine for the biggest cities"
+    ],
+    "answer_index": 1,
+    "outcome": "William Foege's surveillance and ring-vaccination strategy targeted people exposed to cases, so limited vaccine sufficed to stop outbreaks. The approach became key to global eradication.",
+    "source": "https://en.wikipedia.org/wiki/William_Foege"
+  },
+  {
+    "id": "s-0004",
+    "origin": "real",
+    "situation": "Parents at several day-care centres keep picking their children up late, so staff have to stay on.",
+    "goal": "Reduce late pickups.",
+    "options": [
+      "Introduce a small fine for each late pickup",
+      "Don't fine; keep relying on parents' sense of obligation",
+      "Try the fine, and remove it if lateness doesn't fall"
+    ],
+    "answer_index": 1,
+    "outcome": "In Israeli day-care centres a fine for lateness increased late pickups: parents treated it as a price. When the fine was removed, lateness stayed at the higher level (Gneezy & Rustichini, 'A Fine is a Price', 2000).",
+    "source": "https://doi.org/10.1086/468061"
+  },
+  {
+    "id": "s-0005",
+    "origin": "real",
+    "situation": "A company runs free on-site flu-shot clinics and mails every employee a reminder with the clinic times.",
+    "goal": "Raise the share of employees who get vaccinated.",
+    "options": [
+      "The standard reminder mailer",
+      "The mailer plus a blank to write down the date you plan to go",
+      "The mailer plus a blank to write down the date and the time you plan to go"
+    ],
+    "answer_index": 2,
+    "outcome": "Against a 33.1% control rate, the date-only prompt raised vaccination 1.5 percentage points (not statistically significant); the date-and-time prompt raised it 4.2 points (significant).",
+    "source": "https://www.nber.org/papers/w17183"
+  },
+  {
+    "id": "s-0006",
+    "origin": "real",
+    "situation": "A company's retirement plan has generous matching, but many new hires never enrol.",
+    "goal": "Raise participation among new employees.",
+    "options": [
+      "Keep enrolment opt-in and send clearer reminders",
+      "Enrol new hires automatically and let them opt out"
+    ],
+    "answer_index": 1,
+    "outcome": "When the company switched to automatic enrolment, with no change to the plan's economics, savings behaviour 'dramatically changed' (Madrian & Shea). A side effect: many people stayed at the low default rate.",
+    "source": "https://www.nber.org/papers/w7682"
+  },
+  {
+    "id": "s-0007",
+    "origin": "real",
+    "situation": "A country's organ-donor register has few sign-ups, though most people say they support donation.",
+    "goal": "Raise the share of people who are donors.",
+    "options": [
+      "Keep opt-in registration and run awareness campaigns",
+      "Make everyone a donor by default, with an easy opt-out"
+    ],
+    "answer_index": 1,
+    "outcome": "Across European countries, those with opt-out (presumed consent) defaults had far higher effective consent rates than opt-in countries (Johnson & Goldstein, 'Do Defaults Save Lives?', 2003). This is a comparison between countries, not a randomized trial.",
+    "source": "https://doi.org/10.1126/science.1091721"
+  },
+  {
+    "id": "s-0008",
+    "origin": "real",
+    "situation": "A city wants to charge drivers to enter its centre to cut congestion. Many residents oppose it, and nobody knows how traffic will respond.",
+    "goal": "Get a lasting traffic reduction that the public accepts.",
+    "options": [
+      "Introduce it permanently now",
+      "Run it as a time-limited trial, then put it to a referendum",
+      "Shelve the idea until opinion shifts"
+    ],
+    "answer_index": 1,
+    "outcome": "Stockholm ran a seven-month trial in 2006 and held a referendum afterwards. Stockholm municipality voted yes, and the charge became permanent on 1 August 2007.",
+    "source": "https://en.wikipedia.org/wiki/Stockholm_congestion_tax"
+  },
+  {
+    "id": "s-0009",
+    "origin": "real",
+    "situation": "1978. A structural engineer finds that his own new skyscraper could collapse in a strong storm: the welded joints he designed were switched to bolted ones during construction, and diagonal winds were never checked.",
+    "goal": "Prevent a collapse.",
+    "options": [
+      "Keep quiet; a storm that strong is unlikely",
+      "Tell the owners and officials, and reinforce the joints",
+      "Quietly check the numbers again next year"
+    ],
+    "answer_index": 1,
+    "outcome": "William LeMessurier disclosed the problem. From August 1978 crews welded steel panels over the bolted joints at night, finishing that October.",
+    "source": "https://en.wikipedia.org/wiki/Citigroup_Center"
+  },
+  {
+    "id": "s-0010",
+    "origin": "real",
+    "situation": "World War II. Bombers return from missions with bullet holes clustered in some areas and few in others. Armour is heavy, so only part of each plane can be protected.",
+    "goal": "Get more bombers home.",
+    "options": [
+      "Armour the areas with the most holes on returning planes",
+      "Armour the areas where returning planes show few or no holes",
+      "Spread thin armour evenly over the whole plane"
+    ],
+    "answer_index": 1,
+    "outcome": "Abraham Wald's analysis treated the returning planes as survivors: hits in the areas that show few holes are the ones that bring planes down. Reinforcing only where survivors were hit would miss the point.",
+    "source": "https://en.wikipedia.org/wiki/Survivorship_bias"
+  },
+  {
+    "id": "s-0011",
+    "origin": "real",
+    "situation": "1847, Vienna. In one of a hospital's two maternity clinics, run by doctors who also perform autopsies, mothers die of childbed fever far more often than in the clinic run by midwives.",
+    "goal": "Cut maternal deaths in the doctors' clinic.",
+    "options": [
+      "Improve ventilation in the doctors' clinic",
+      "Have doctors wash their hands in chlorinated lime solution before examining patients",
+      "Move more births to the midwives' clinic"
+    ],
+    "answer_index": 1,
+    "outcome": "Semmelweis introduced hand-washing with chlorinated lime, and maternal mortality dropped from 18% to under 2%. Many doctors rejected his findings at the time.",
+    "source": "https://en.wikipedia.org/wiki/Ignaz_Semmelweis"
+  },
+  {
+    "id": "s-0012",
+    "origin": "real",
+    "situation": "ICU patients keep getting bloodstream infections from central lines, though the prevention steps are well known.",
+    "goal": "Cut central-line infections across a state's ICUs.",
+    "options": [
+      "More lectures on infection control",
+      "A short checklist of the key steps, used for every line",
+      "Switch to more expensive catheters"
+    ],
+    "answer_index": 1,
+    "outcome": "Peter Pronovost's ICU checklist protocol was credited with saving about 1,500 lives and $100 million in Michigan over 18 months.",
+    "source": "https://en.wikipedia.org/wiki/Peter_Pronovost"
+  },
+  {
+    "id": "s-0013",
+    "origin": "real",
+    "situation": "A carmaker's early models were unreliable, and its sales collapsed with its reputation. Its newer cars are much better, but buyers don't believe it.",
+    "goal": "Win back buyers.",
+    "options": [
+      "Cut prices further",
+      "Offer a 10-year / 100,000-mile powertrain warranty",
+      "Run an ad campaign about the improved quality"
+    ],
+    "answer_index": 1,
+    "outcome": "Hyundai added a 10-year / 100,000-mile powertrain warranty in the US. By 2004 sales had increased dramatically and its reputation had improved.",
+    "source": "https://en.wikipedia.org/wiki/Hyundai_Motor_America"
+  },
+  {
+    "id": "s-0014",
+    "origin": "real",
+    "situation": "1982. Someone has poisoned bottles of a leading painkiller on store shelves, and several people have died. The tampering seems to be local.",
+    "goal": "Protect the public and the brand.",
+    "options": [
+      "Recall only the affected batch",
+      "Recall the product nationwide",
+      "Say nothing until the police finish investigating"
+    ],
+    "answer_index": 1,
+    "outcome": "Johnson & Johnson issued a nationwide recall of an estimated 31 million bottles. Tylenol's market share fell from 35% to 8% but rebounded within a year, which is credited to the prompt reaction.",
+    "source": "https://en.wikipedia.org/wiki/Chicago_Tylenol_murders"
+  },
+  {
+    "id": "s-0015",
+    "origin": "real",
+    "situation": "An inventor's bagless vacuum outperforms everything on the market, but UK manufacturers and distributors refuse it because it would kill their dust-bag sales.",
+    "goal": "Get the product to buyers.",
+    "options": [
+      "Keep pitching UK manufacturers",
+      "Launch it abroad through a channel that doesn't depend on them",
+      "Sell the patent and move on"
+    ],
+    "answer_index": 1,
+    "outcome": "Dyson launched the vacuum in Japan through catalogue sales, and later made it under his own name.",
+    "source": "https://en.wikipedia.org/wiki/James_Dyson"
+  }
+]
