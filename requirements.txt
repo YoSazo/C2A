@@ -1,15 +1,5 @@
-# C2A runtime (python C2A.py)
-requests>=2.31.0
-numpy>=1.24.0
+numpy>=1.24
+pytest>=7
 
-# Memory / vector store (c2a_elegant_main.py, ai_researcher.py)
-chromadb>=0.4.0
-sentence-transformers>=2.2.0
-
-# LLM: OpenAI only. Set OPENAI_API_KEY, or put your key in
-# config/api_keys.json as {"openai_api_key": "sk-..."} (gitignored).
-# The client talks to the REST API directly via requests — no SDK needed.
-
-# Extras (only if you use those scripts):
-# - extras/ PDF ingestion: pymupdf, pytesseract, Pillow (and Tesseract OCR binary)
-# - extras/c2a_game_physics.py: streamlit, pymunk
+# The LLM (live mode only) is OpenAI, called with the standard library.
+# Set OPENAI_API_KEY; no SDK needed.
